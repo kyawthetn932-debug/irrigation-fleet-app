@@ -22,15 +22,13 @@ jobs:
         with:
           channel: 'stable'
 
-      - name: Create Flutter Skeleton
-        run: |
-          flutter create --template=app .
-          rm -rf test
+      - name: Create Flutter Setup
+        run: flutter create --template=app .
 
       - name: Build APK
         run: flutter build apk --release
 
-      - name: Upload APK Artifact
+      - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: irrigation-fleet-app
