@@ -35,7 +35,6 @@ class MainDashboardScreen extends StatefulWidget {
 class _MainDashboardScreenState extends State<MainDashboardScreen> {
   String _currentView = "Dashboard";
 
-  // State values for exact numeric calculations (No Sliders)
   final TextEditingController _driverNameController = TextEditingController(text: "ဦးအောင်");
   final TextEditingController _morningTrips = TextEditingController(text: "0");
   final TextEditingController _afternoonTrips = TextEditingController(text: "0");
@@ -50,13 +49,11 @@ class _MainDashboardScreenState extends State<MainDashboardScreen> {
     return Scaffold(
       body: Row(
         children: [
-          // 30% Left Sidebar (Collapsible Tree/Accordion Concept)
           Container(
             width: 280,
             color: const Color(0xFF1E1E1E),
             child: Column(
               children: [
-                // Custom Icon Header: Sky Blue Upper / Black Lower / Gold Dump Truck Profile
                 Container(
                   padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 20),
                   decoration: const BoxDecoration(
@@ -84,7 +81,6 @@ class _MainDashboardScreenState extends State<MainDashboardScreen> {
                   ),
                 ),
                 const Divider(height: 1),
-                // Accordion Tree Sidebar Menus
                 Expanded(
                   child: ListView(
                     children: [
@@ -101,8 +97,6 @@ class _MainDashboardScreenState extends State<MainDashboardScreen> {
               ],
             ),
           ),
-          
-          // 70% Right Main View Area
           Expanded(
             child: Container(
               padding: const EdgeInsets.all(25),
@@ -261,3 +255,7 @@ class _MainDashboardScreenState extends State<MainDashboardScreen> {
           const SizedBox(height: 35),
           const Divider(),
           
+          const Text("📊 တွက်ချက်မှု ရလဒ်များ (Auto Calculations)", style: TextStyle(fontSize: 18, color: Colors.green)),
+          const SizedBox(height: 15),
+          Text("စုစုပေါင်း ခေါက်ရေ: $totalTrips ခေါက်", style: const TextStyle(fontSize: 16)),
+          Text("ဒရိုင်ဘာ မောင်းကြေး စုစုပေါင်း: $totalDriverSalary ကျပ်", style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
