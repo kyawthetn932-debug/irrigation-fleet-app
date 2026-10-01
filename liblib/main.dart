@@ -258,4 +258,4 @@ class _MainDashboardScreenState extends State<MainDashboardScreen> {
           const Text("📊 တွက်ချက်မှု ရလဒ်များ (Auto Calculations)", style: TextStyle(fontSize: 18, color: Colors.green)),
           const SizedBox(height: 15),
           Text("စုစုပေါင်း ခေါက်ရေ: $totalTrips ခေါက်", style: const TextStyle(fontSize: 16)),
-          Text("ဒရိုင်ဘာ မောင်းကြေး စစုပေါင်း: $totalDriverSalary ကျပ်", style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+          Text("ဒရိုင်ဘာ မောင်းကြေး စုစုပေါင်း: $totalDriverSalary ကျပ်", style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
