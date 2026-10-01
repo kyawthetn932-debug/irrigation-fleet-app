@@ -24,7 +24,7 @@ jobs:
 
       - name: Create Flutter Skeleton
         run: |
-          flutter create --template=app . --force
+          flutter create --template=app .
           rm -rf test
 
       - name: Build APK
