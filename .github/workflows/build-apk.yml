@@ -76,7 +76,7 @@ jobs:
                                 ListTile(leading: const Icon(Icons.people, color: Colors.amber), title: const Text("၂။ ကားပိုင်ရှင်များ & ပြိုင်ဆိုင်မှု")),
                                 ListTile(leading: const Icon(Icons.table_chart, color: Colors.amber), title: const Text("၃။ နေ့စဉ် ကားခနှင့် ဆီစာရင်း")),
                                 ListTile(leading: const Icon(Icons.star, color: Colors.amber), title: const Text("၄။ ကိုကျော်သက်နိုင် သီးသန့်"), onTap: () => setState(() => _view = "KoKyawThetNaing")),
-                                ListTile(leading: const Icon(Icons.settings, color: Colors.amber), title: const Text("७။ စနစ် ဆက်တင်များ (Update)"), onTap: () => setState(() => _view = "Settings")),
+                                ListTile(leading: const Icon(Icons.settings, color: Colors.amber), title: const Text("၇။ စနစ် ဆက်တင်များ (Update)"), onTap: () => setState(() => _view = "Settings")),
                               ],
                             ),
                           )
@@ -116,7 +116,7 @@ jobs:
                       const SizedBox(height: 20),
                       const Text("၁ ပေပါလျှင် သတ်မှတ်ဂါလံ ပမာဏရွေးချယ်ရန်", style: TextStyle(fontSize: 15, color: Colors.blue)),
                       const SizedBox(height: 10),
-                      Row(children:.map((g) => Padding(padding: const EdgeInsets.only(right: 15), child: ChoiceChip(label: Text("$g ဂါလံ"), selected: _selectedBarrelGallons == g, onSelected: (s) => setState(() => _selectedBarrelGallons = g)))).toList()),
+                      Row(children: [50, 51, 52].map((g) => Padding(padding: const EdgeInsets.only(right: 15), child: ChoiceChip(label: Text("$g ဂါလံ"), selected: _selectedBarrelGallons == g, onSelected: (s) => setState(() => _selectedBarrelGallons = g)))).toList()),
                       const SizedBox(height: 15),
                       TextField(controller: _fuelPrice, keyboardType: TextInputType.number, decoration: const InputDecoration(labelText: "ဆီပေပါဈေးနှုန်း (ကျပ်)", border: OutlineInputBorder()), onChanged: (v) => setState(() {})),
                       const Divider(height: 40, color: Colors.white24),
