@@ -20,16 +20,18 @@ jobs:
         with:
           channel: 'stable'
 
-      - name: Overwrite and Force Clean Project
+      - name: Force App Clean Build
         run: |
           mv lib/main.dart temporary_main.dart
-          rm -rf pubspec.yaml lib
+          rm -rf pubspec.yaml lib test
           flutter create --template=app --project-name=irrigation_fleet .
-          rm -rf lib/main.dart test
+          rm -rf lib/main.dart
           mv temporary_main.dart lib/main.dart
 
-      - name: Build APK
-        run: flutter build apk --release
+      - name: Build APK with Network Retry
+        run: |
+          flutter pub get
+          flutter build apk --release || (sleep 10 && flutter build apk --release)
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
