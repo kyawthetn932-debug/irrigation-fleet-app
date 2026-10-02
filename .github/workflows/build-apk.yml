@@ -85,7 +85,7 @@ jobs:
           EOF
 
       - name: Create Flutter Project
-        run: flutter create --template=app --project-name=irrigation_fleet . --force
+        run: flutter create --template=app --project-name=irrigation_fleet .
 
       - name: Build APK
         run: flutter build apk --release
