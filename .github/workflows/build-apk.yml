@@ -28,7 +28,6 @@ jobs:
 
       - name: Inject Gestures Drawer App Code
         run: |
-          // ကုဒ်များ ပြတ်တောက်မှုမရှိစေရန် တိုတိုကျစ်ကျစ်နှင့် ရာနှုန်းပြည့် ပေါင်းစပ်ပေးထားပါသည်
           cat << 'EOF' > lib/main.dart
           import 'package:flutter/material.dart';
 
@@ -146,7 +145,7 @@ jobs:
                       const SizedBox(height: 15),
                       TextField(controller: _rate, keyboardType: TextInputType.number, style: const TextStyle(color: Colors.black87), decoration: const InputDecoration(labelText: "ဒရိုင်ဘာ သတ်မှတ်ခေါက်ကြေးနှုန်း (ကျပ်)", labelStyle: TextStyle(color: Colors.black54), border: OutlineInputBorder()), onChanged: (v) => setState(() {})),
                       const SizedBox(height: 20),
-                      const Text("ကော်လံခေါဉ်းစဉ် - ၁ ပေပါလျှင် သတ်မှတ်ဂါလံ ပမာဏရွေးချယ်ရန်", style: TextStyle(fontSize: 15, color: Colors.blueGrey, fontWeight: FontWeight.bold)),
+                      const Text("ကော်လံခေါင်းစဉ် - ၁ ပေပါလျှင် သတ်မှတ်ဂါလံ ပမာဏရွေးချယ်ရန်", style: TextStyle(fontSize: 15, color: Colors.blueGrey, fontWeight: FontWeight.bold)),
                       const SizedBox(height: 10),
                       Row(children:.map((g) => Padding(padding: const EdgeInsets.only(right: 15), child: ChoiceChip(label: Text("$g ဂါလံ"), selected: _selectedBarrelGallons == g, onSelected: (s) => setState(() => _selectedBarrelGallons = g)))).toList()),
                       const SizedBox(height: 15),
@@ -155,7 +154,7 @@ jobs:
                       const Text("📊 တွက်ချက်မှု ရလဒ်များ", style: TextStyle(fontSize: 18, color: Colors.green, fontWeight: FontWeight.bold)),
                       const SizedBox(height: 15),
                       Text("စုစုပေါင်း ခေါက်ရေ: $totalTrips ခေါက်", style: const TextStyle(fontSize: 16, color: Colors.black87)),
-                      Text("ဒရိုင်ဘာ မောင်းကြေး စုစုပေါင်း: $totalSalary ကျပ်", style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.deep確range ?? Colors.deepOrange)),
+                      Text("ဒရိုင်ဘာ မောင်းကြေး စုစုပေါင်း: $totalSalary ကျပ်", style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.deepOrange)),
                       Text("၁ ဂါလံကျသင့်ဈေးနှုန်း: ${pricePerGallon.toStringAsFixed(2)} ကျပ်", style: const TextStyle(fontSize: 16, color: Colors.blue, fontWeight: FontWeight.bold)),
                     ],
                   ),
@@ -164,3 +163,5 @@ jobs:
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    const Text("⚙️ စနစ် ဆက်တင်များနှင့် နောက်ခံအရောင် ပြောင်းလဲခြင်း", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.orange)),
+                    const SizedBox(height: 25),
