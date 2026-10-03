@@ -7,18 +7,19 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Actions/checkout@v4
+        uses: actions/checkout@v4
 
       - name: Set up Java
         uses: actions/setup-java@v4
         with:
-          distribution: 'zulu'
-          java-version: '17'
+          distribution: "zulu"
+          java-version: "17"
 
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          channel: 'stable'
+          channel: "stable"
 
       - name: Generate Fresh Project Layout
         run: |
@@ -26,7 +27,7 @@ jobs:
           flutter create --template=app --project-name=irrigation_fleet .
           rm -rf lib/main.dart
 
-      - name: Inject Gestures Drawer App Code
+      - name: Inject Features Drawer App Code
         run: |
           cat << 'EOF' > lib/main.dart
           import 'package:flutter/material.dart';
@@ -40,19 +41,28 @@ jobs:
           }
 
           class _IrrigationFleetAppState extends State<IrrigationFleetApp> {
-            String _view = "Dashboard"; 
-            Color _currentBgColor = const Color(0xFFFDFBF7); 
-            String _bgColorName = "နို့နှစ်ရောင်ဖျော့ (Creamy White)";
+            @override
+            Widget build(BuildContext context) {
+              return const MaterialApp(
+                home: IrrigationFleetHomePage(),
+              );
+            }
+          }
 
-            final _driver = TextEditingController(text: "ဦးအောင်");
+          class _IrrigationFleetHomePageState extends State<IrrigationFleetHomePage> {
+            String _selectedBarrelGallons = '50';
+            Color _currentBgColor = const Color(0xFFFBFBFB);
+            String _bgColorName = "မူလအရောင် (Creamy White)";
+
+            final _driver = TextEditingController(text: "မောင်မောင်");
             final _morning = TextEditingController(text: "0");
             final _afternoon = TextEditingController(text: "0");
             final _evening = TextEditingController(text: "0");
             final _rate = TextEditingController(text: "5000");
-            final _fuelPrice = TextEditingController(text: "450000");
+            final _fuelPrice = TextEditingController(text: "610000");
             int _selectedBarrelGallons = 50;
 
-            void _changeTheme(Color newColor, String name) {
+            void _changeThemeColor(NewColor, String name) {
               setState(() {
                 _currentBgColor = newColor;
                 _bgColorName = name;
@@ -63,47 +73,53 @@ jobs:
             Widget build(BuildContext context) {
               int totalTrips = (int.tryParse(_morning.text) ?? 0) + (int.tryParse(_afternoon.text) ?? 0) + (int.tryParse(_evening.text) ?? 0);
               int totalSalary = totalTrips * (int.tryParse(_rate.text) ?? 0);
-              int barrelPrice = int.tryParse(_fuelPrice.text) ?? 0;
-              double pricePerGallon = barrelPrice / _selectedBarrelGallons;
+              int barrelPrice = (int.tryParse(_fuelPrice.text) ?? 0);
+              double pricePerGallon = barrelPrice / selectedBarrelGallons;
 
               return Scaffold(
                 backgroundColor: _currentBgColor,
                 appBar: AppBar(
-                  title: Text('ဆည်မြောင်း ကားစာရင်း ($_view)', style: const TextStyle(color: Colors.amber, fontWeight: FontWeight.bold)),
-                  backgroundColor: const Color(0xFF2C3E50),
+                  title: const Text("ရေဖျန်းလုပ်ငန်းသုံး App (Title)"),
+                  backgroundColor: const Color(0xFF1C3E5D),
                   iconTheme: const IconThemeData(color: Colors.amber),
                 ),
                 drawer: Drawer(
                   width: 230,
                   backgroundColor: const Color(0xFFFAFAFA),
-                  child: Column(
+                  child: ListView(
+                    padding: EdgeInsets.zero,
                     children: [
                       Container(
+                        height: 200,
                         width: double.infinity,
                         padding: const EdgeInsets.symmetric(vertical: 25, horizontal: 15),
                         decoration: const BoxDecoration(
-                          gradient: LinearGradient(colors: [Colors.blueAccent, Color(0xFFF0F3F4)], begin: Alignment.topCenter, end: Alignment.bottomCenter)
+                          gradient: LinearGradient(colors: [Colors.blueAccent, Color(0xFF3F91F1)], begin: Alignment.topCenter, end: Alignment.bottomCenter),
                         ),
                         child: const Row(
                           children: [
-                            Icon(Icons.local_shipping, color: Colors.orange, size: 30), 
-                            SizedBox(width: 8), 
-                            Text('ကားစာရင်း မီနူး', style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Color(0xFF2C3E50)))
-                          ]
-                        ),
-                      ),
-                      Expanded(
-                        child: ListView(
-                          padding: EdgeInsets.zero,
-                          children: [
-                            _buildDrawerItem("၁။ ပင်မ ဒက်ရှ်ဘုတ်", Icons.dashboard, "Dashboard", context),
-                            _buildDrawerItem("၂။ ကားပိုင်ရှင်များ", Icons.people, "Owners", context),
-                            _buildDrawerItem("၃။ နေ့စဉ် ကားခ/ဆီစာရင်း", Icons.table_chart, "DailyLogs", context),
-                            _buildDrawerItem("၄။ ကိုကျော်သက်နိုင် သီးသန့်", Icons.star, "KoKyawThetNaing", context),
-                            _buildDrawerItem("၇။ စနစ် ဆက်တင်များ", Icons.settings, "Settings", context),
+                            Icon(Icons.local_shipping, color: Colors.orange, size: 30),
+                            SizedBox(width: 8),
+                            Text("ရေဖျန်းလုပ်ငန်းသုံး App", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white)),
                           ],
                         ),
-                      )
+                      ),
+                      ExpansionTile(
+                        title: const Row(
+                          children: [
+                            Icon(Icons.dashboard, color: Colors.indigo, size: 20),
+                            SizedBox(width: 8),
+                            Text("Dashboard", style: TextStyle(fontSize: 14)),
+                          ],
+                        ),
+                        childrenPadding: const EdgeInsets.only(left: 20),
+                        children: [
+                          _buildDrawerItem("ပင်မစာမျက်နှာ", const Icon(Icons.home, color: Colors.blue, size: 18), () {}),
+                          _buildDrawerItem("လုပ်ငန်းမှတ်တမ်းများ", const Icon(Icons.table_chart, color: Colors.teal, size: 18), () {}),
+                          _buildDrawerItem("ဝင်ငွေ/ထွက်ငွေ တွက်ချက်ရန်", const Icon(Icons.calculate, color: Colors.purple, size: 18), () {}),
+                          _buildDrawerItem("ဆက်တင်များ", const Icon(Icons.settings, color: Colors.grey, size: 18), () {}),
+                        ],
+                      ),
                     ],
                   ),
                 ),
@@ -114,54 +130,55 @@ jobs:
               );
             }
 
-            Widget _buildDrawerItem(String title, IconData icon, String viewName, BuildContext context) {
+            Widget _buildDrawerItem(String title, Icon iconData, VoidCallback onTap) {
               return ListTile(
-                leading: Icon(icon, color: Colors.orange, size: 20),
+                leading: iconData,
                 title: Text(title, style: const TextStyle(color: Color(0xFF2C3E50), fontSize: 14, fontWeight: FontWeight.w500)),
                 onTap: () {
-                  setState(() => _view = viewName);
-                  Navigator.pop(context); 
+                  onTap();
+                  Navigator.pop(context);
                 },
               );
             }
 
             Widget _buildMainContent(int totalTrips, int totalSalary, double pricePerGallon) {
-              if (_view == "KoKyawThetNaing") {
-                return SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text("👑 ကိုကျော်သက်နိုင် သီးသန့် ကားစာရင်း (ဒရိုင်ဘာ/ဆီ တွက်ချက်မှု)", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.orange)),
-                      const SizedBox(height: 20),
-                      TextField(controller: _driver, style: const TextStyle(color: Colors.black87), decoration: const InputDecoration(labelText: "ယာဉ်မောင်းအမည်", labelStyle: TextStyle(color: Colors.black54), border: OutlineInputBorder())),
-                      const SizedBox(height: 15),
-                      Row(children: [
-                        Expanded(child: TextField(controller: _morning, keyboardType: TextInputType.number, style: const TextStyle(color: Colors.black87), decoration: const InputDecoration(labelText: "နံနက် ခေါက်ရေ", labelStyle: TextStyle(color: Colors.black54), border: OutlineInputBorder()), onChanged: (v) => setState(() {}))),
-                        const SizedBox(width: 10),
-                        Expanded(child: TextField(controller: _afternoon, keyboardType: TextInputType.number, style: const TextStyle(color: Colors.black87), decoration: const InputDecoration(labelText: "နေ့လယ် ခေါက်ရေ", labelStyle: TextStyle(color: Colors.black54), border: OutlineInputBorder()), onChanged: (v) => setState(() {}))),
-                        const SizedBox(width: 10),
-                        Expanded(child: TextField(controller: _evening, keyboardType: TextInputType.number, style: const TextStyle(color: Colors.black87), decoration: const InputDecoration(labelText: "ည ခေါက်ရေ", labelStyle: TextStyle(color: Colors.black54), border: OutlineInputBorder()), onChanged: (v) => setState(() {}))),
-                      ]),
-                      const SizedBox(height: 15),
-                      TextField(controller: _rate, keyboardType: TextInputType.number, style: const TextStyle(color: Colors.black87), decoration: const InputDecoration(labelText: "ဒရိုင်ဘာ သတ်မှတ်ခေါက်ကြေးနှုန်း (ကျပ်)", labelStyle: TextStyle(color: Colors.black54), border: OutlineInputBorder()), onChanged: (v) => setState(() {})),
-                      const SizedBox(height: 20),
-                      const Text("ကော်လံခေါင်းစဉ် - ၁ ပေပါလျှင် သတ်မှတ်ဂါလံ ပမာဏရွေးချယ်ရန်", style: TextStyle(fontSize: 15, color: Colors.blueGrey, fontWeight: FontWeight.bold)),
-                      const SizedBox(height: 10),
-                      Row(children:.map((g) => Padding(padding: const EdgeInsets.only(right: 15), child: ChoiceChip(label: Text("$g ဂါလံ"), selected: _selectedBarrelGallons == g, onSelected: (s) => setState(() => _selectedBarrelGallons = g)))).toList()),
-                      const SizedBox(height: 15),
-                      TextField(controller: _fuelPrice, keyboardType: TextInputType.number, style: const TextStyle(color: Colors.black87), decoration: const InputDecoration(labelText: "ဆီပေပါဈေးနှုန်း (ကျပ်)", labelStyle: TextStyle(color: Colors.black54), border: OutlineInputBorder()), onChanged: (v) => setState(() {})),
-                      const Divider(height: 40, color: Colors.black26),
-                      const Text("📊 တွက်ချက်မှု ရလဒ်များ", style: TextStyle(fontSize: 18, color: Colors.green, fontWeight: FontWeight.bold)),
-                      const SizedBox(height: 15),
-                      Text("စုစုပေါင်း ခေါက်ရေ: $totalTrips ခေါက်", style: const TextStyle(fontSize: 16, color: Colors.black87)),
-                      Text("ဒရိုင်ဘာ မောင်းကြေး စုစုပေါင်း: $totalSalary ကျပ်", style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.deepOrange)),
-                      Text("၁ ဂါလံကျသင့်ဈေးနှုန်း: ${pricePerGallon.toStringAsFixed(2)} ကျပ်", style: const TextStyle(fontSize: 16, color: Colors.blue, fontWeight: FontWeight.bold)),
-                    ],
-                  ),
-                );
-              } else if (_view == "Settings") {
-                return Column(
+              return SingleChildScrollView(
+                child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text("⚙️ စနစ် ဆက်တင်များနှင့် နောက်ခံအရောင် ပြောင်းလဲခြင်း", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.orange)),
-                    const SizedBox(height: 25),
+                    Text("ရေဖျန်းလုပ်ငန်းတွက်ချက်မှုစနစ်", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.blueGrey)),
+                    const SizedBox(height: 20),
+                    Text("ယာဉ်မောင်းအမည်: ${_driver.text}", style: const TextStyle(fontSize: 16, color: Colors.black87)),
+                    const SizedBox(height: 10),
+                    Row(
+                      children: [
+                        Expanded(child: TextField(controller: _morning, keyboardType: TextInputType.number, decoration: const InputDecoration(labelText: "နံနက်ခင်းခေါက်ရေ"))),
+                        const SizedBox(width: 10),
+                        Expanded(child: TextField(controller: _afternoon, keyboardType: TextInputType.number, decoration: const InputDecoration(labelText: "မွန်းလွဲခေါက်ရေ"))),
+                        const SizedBox(width: 10),
+                        Expanded(child: TextField(controller: _evening, keyboardType: TextInputType.number, decoration: const InputDecoration(labelText: "ညနေခင်းခေါက်ရေ"))),
+                      ],
+                    ),
+                    const SizedBox(height: 15),
+                    TextField(controller: _rate, keyboardType: TextInputType.number, decoration: const InputDecoration(labelText: "တစ်ခေါက်နှုန်း")),
+                    const SizedBox(height: 15),
+                    TextField(controller: _fuelPrice, keyboardType: TextInputType.number, decoration: const InputDecoration(labelText: "ဆီဖိုးကျသင့်ငွေ")),
+                    const SizedBox(height: 20),
+                    Text("စုစုပေါင်းခေါက်ရေ: $totalTrips ခေါက်", style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                    Text("စုစုပေါင်းရရှိငွေ: $totalSalary ကျပ်", style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.green)),
+                    Text("တစ်ဂါလံနှုန်း: ${pricePerGallon.toStringAsFixed(2)} ကျပ်", style: const TextStyle(fontSize: 16, color: Colors.blue)),
+                  ],
+                ),
+              );
+            }
+          }
+          EOF
+
+      - name: Build APK
+        run: flutter build apk --release --no-tree-shake-icons
+
+      - name: Upload APK Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Irrigation-Fleet-APK
+          path: build/app/outputs/flutter-apk/app-release.apk
