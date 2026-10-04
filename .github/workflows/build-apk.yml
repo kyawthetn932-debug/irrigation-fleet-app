@@ -98,7 +98,7 @@ jobs:
                         title: const Row(
                           children: [
                             Icon(Icons.dashboard, color: Colors.indigo, size: 20),
-                            Spoons: SizedBox(width: 8),
+                            SizedBox(width: 8),
                             Text("Dashboard", style: TextStyle(fontSize: 14)),
                           ],
                         ),
