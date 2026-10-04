@@ -165,10 +165,10 @@ jobs:
           EOF
 
       - name: Build APK
-        run: flutter build apk --release --no-tree-shake-icons
+        run: flutter build apk --debug --no-tree-shake-icons
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: Irrigation-Fleet-APK
-          path: build/app/outputs/flutter-apk/app-release.apk
+          name: Irrigation-Fleet-Debug-APK
+          path: build/app/outputs/flutter-apk/app-debug.apk
