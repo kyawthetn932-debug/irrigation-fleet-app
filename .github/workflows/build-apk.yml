@@ -6,183 +6,31 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Actions/checkout@v4
+      - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Set up Java
         uses: actions/setup-java@v4
         with:
-          distribution: "zulu"
-          java-version: "17"
+          distribution: 'zulu'
+          java-version: '17'
 
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          channel: "stable"
+          flutter-version: '3.24.3'
+          channel: 'stable'
 
-      - name: Generate Fresh Project Layout
-        run: |
-          rm -rf pubspec.yaml lib test
-          flutter create --template=app --project-name=irrigation_fleet .
-          rm -rf lib/main.dart
+      - name: Get dependencies
+        run: flutter pub get
 
-      - name: Inject Features Drawer App Code
-        run: |
-          cat << 'EOF' > lib/main.dart
-          import 'package:flutter/material.dart';
+      - name: Build Debug APK
+        run: flutter build apk --debug
 
-          void main() => runApp(const MaterialApp(home: IrrigationFleetHomePage(), debugShowCheckedModeBanner: false));
-
-          class IrrigationFleetHomePage extends StatefulWidget {
-            const IrrigationFleetHomePage({super.key});
-            @override
-            State<IrrigationFleetHomePage> createState() => _IrrigationFleetHomePageState();
-          }
-
-          class _IrrigationFleetHomePageState extends State<IrrigationFleetHomePage> {
-            final Color _currentBgColor = const Color(0xFFF5F7FA);
-
-            final _driver = TextEditingController(text: "မောင်မောင်");
-            final _morning = TextEditingController(text: "0");
-            final _afternoon = TextEditingController(text: "0");
-            final _evening = TextEditingController(text: "0");
-            final _rate = TextEditingController(text: "5000");
-            final _fuelPrice = TextEditingController(text: "610000");
-            final int _selectedBarrelGallons = 50;
-
-            @override
-            Widget build(BuildContext context) {
-              int totalTrips = (int.tryParse(_morning.text) ?? 0) + (int.tryParse(_afternoon.text) ?? 0) + (int.tryParse(_evening.text) ?? 0);
-              int totalSalary = totalTrips * (int.tryParse(_rate.text) ?? 0);
-              int barrelPrice = (int.tryParse(_fuelPrice.text) ?? 0);
-              double pricePerGallon = barrelPrice / _selectedBarrelGallons;
-
-              return Scaffold(
-                backgroundColor: _currentBgColor,
-                appBar: AppBar(
-                  title: const Text("ဆည်မြောင်း မြေသယ်ကား Fleet App", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-                  backgroundColor: const Color(0xFF1C3E5D),
-                  iconTheme: const IconThemeData(color: Colors.amber),
-                ),
-                drawer: Drawer(
-                  width: 240,
-                  backgroundColor: const Color(0xFFFAFAFA),
-                  child: ListView(
-                    padding: EdgeInsets.zero,
-                    children: [
-                      Container(
-                        height: 220,
-                        width: double.infinity,
-                        padding: const EdgeInsets.symmetric(vertical: 25, horizontal: 15),
-                        decoration: const BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: [Color(0xFF1C3E5D), Color(0xFF2C5E8A)],
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
-                          ),
-                        ),
-                        child: const Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Icon(Icons.local_shipping, color: Colors.amber, size: 50),
-                            SizedBox(height: 12),
-                            Text("ရတနာနိုင် (Yatanar Naing)", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
-                            Text("ဆည်မြောင်း မြေသယ်ယာဉ်တန်း", style: TextStyle(fontSize: 13, color: Colors.amber)),
-                          ],
-                        ),
-                      ),
-                      const Padding(
-                        padding: EdgeInsets.only(left: 16, top: 15, bottom: 5),
-                        child: Text("POS စနစ်သုံး မီနူး", style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.grey)),
-                      ),
-                      _buildDrawerItem("ပင်မ Grid စာမျက်နှာ", const Icon(Icons.apps, color: Colors.indigo, size: 22), () {}),
-                      _buildDrawerItem("မြေစာရင်း မှတ်တမ်းများ", const Icon(Icons.assignment, color: Colors.teal, size: 22), () {}),
-                      _buildDrawerItem("ယာဉ်မောင်း ခေါက်ကြေးရှင်းရန်", const Icon(Icons.calculate, color: Colors.purple, size: 22), () {}),
-                      _buildDrawerItem("ဆီဖိုးနှင့် အထွေထွေစာရင်းရှင်းတမ်း", const Icon(Icons.receipt_long, color: Colors.orange, size: 22), () {}),
-                      const Divider(),
-                      _buildDrawerItem("စနစ်ဆက်တင်များ", const Icon(Icons.settings, color: Colors.grey, size: 22), () {}),
-                    ],
-                  ),
-                ),
-                body: Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: _buildMainContent(totalTrips, totalSalary, pricePerGallon),
-                ),
-              );
-            }
-
-            Widget _buildDrawerItem(String title, Icon iconData, VoidCallback onTap) {
-              return ListTile(
-                leading: iconData,
-                title: Text(title, style: const TextStyle(color: Color(0xFF2C3E50), fontSize: 14, fontWeight: FontWeight.w600)),
-                onTap: () {
-                  onTap();
-                  Navigator.pop(context);
-                },
-              );
-            }
-
-            Widget _buildMainContent(int totalTrips, int totalSalary, double pricePerGallon) {
-              return SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text("မြေသယ်ယာဉ်လုပ်ငန်း တွက်ချက်မှုစနစ်", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Color(0xFF1C3E5D))),
-                    const SizedBox(height: 20),
-                    Card(
-                      elevation: 2,
-                      color: Colors.white,
-                      child: Padding(
-                        padding: const EdgeInsets.all(15),
-                        child: Column(
-                          children: [
-                            TextField(
-                              controller: _driver,
-                              decoration: const InputDecoration(labelText: "ယာဉ်မောင်းအမည်", border: OutlineInputBorder()),
-                            ),
-                            const SizedBox(height: 15),
-                            Row(
-                              children: [
-                                Expanded(child: TextField(controller: _morning, keyboardType: TextInputType.number, decoration: const InputDecoration(labelText: "နံနက်ခေါက်ရေ", border: OutlineInputBorder()))),
-                                const SizedBox(width: 8),
-                                Expanded(child: TextField(controller: _afternoon, keyboardType: TextInputType.number, decoration: const InputDecoration(labelText: "မွန်းလွဲခေါက်ရေ", border: OutlineInputBorder()))),
-                                const SizedBox(width: 8),
-                                Expanded(child: TextField(controller: _evening, keyboardType: TextInputType.number, decoration: const InputDecoration(labelText: "ညနေခေါက်ရေ", border: OutlineInputBorder()))),
-                              ],
-                            ),
-                            const SizedBox(height: 15),
-                            TextField(
-                              controller: _rate,
-                              keyboardType: TextInputType.number,
-                              decoration: const InputDecoration(labelText: "တစ်ခေါက်နှုန်း (ကျပ်ငွေစာသားရိုက်ထည့်ရန်)", border: OutlineInputBorder()),
-                            ),
-                            const SizedBox(height: 15),
-                            TextField(
-                              controller: _fuelPrice,
-                              keyboardType: TextInputType.number,
-                              decoration: const InputDecoration(labelText: "ဆီဖိုးစုစုပေါင်း ကျသင့်ငွေ", border: OutlineInputBorder()),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    const Text("ရှင်းတမ်းအကျဉ်းချုပ် (Ledger Summary)", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.blueGrey)),
-                    const SizedBox(height: 10),
-                    Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.all(15),
-                      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(8), border: Border.all(color: Colors.grey.shade300)),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text("စုစုပေါင်း မြေတင်ခေါက်ရေ: $totalTrips ခေါက်", style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w500)),
-                          const Divider(),
-                          Text("ယာဉ်မောင်း စုစုပေါင်းလုပ်အားခ: $totalSalary ကျပ်", style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.green)),
-                          const Divider(),
-                          Text("ဆီတစ်ဂါလံ ပျမ်းမျှကျသင့်နှုန်း: ${pricePerGallon.toStringAsFixed(2)} ကျပ်", style: const TextStyle(fontSize: 15, color: Colors.blue, fontWeight: FontWeight.w500)),
-                        ],
-                      ),
-                    ),
+      - name: Upload APK Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: irrigation-fleet-app-debug
+          path: build/app/outputs/flutter-apk/app-debug.apk
