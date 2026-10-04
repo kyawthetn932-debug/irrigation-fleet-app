@@ -41,7 +41,7 @@ jobs:
           }
 
           class _IrrigationFleetHomePageState extends State<IrrigationFleetHomePage> {
-            Color _currentBgColor = const Color(0xFFF5F7FA);
+            final Color _currentBgColor = const Color(0xFFF5F7FA);
 
             final _driver = TextEditingController(text: "မောင်မောင်");
             final _morning = TextEditingController(text: "0");
@@ -49,7 +49,7 @@ jobs:
             final _evening = TextEditingController(text: "0");
             final _rate = TextEditingController(text: "5000");
             final _fuelPrice = TextEditingController(text: "610000");
-            int _selectedBarrelGallons = 50;
+            final int _selectedBarrelGallons = 50;
 
             @override
             Widget build(BuildContext context) {
@@ -86,7 +86,7 @@ jobs:
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Icon(Icons.local_shipping, color: Colors.amber, size: 50), // Gold Dump Truck Icon
+                            Icon(Icons.local_shipping, color: Colors.amber, size: 50),
                             SizedBox(height: 12),
                             Text("ရတနာနိုင် (Yatanar Naing)", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
                             Text("ဆည်မြောင်း မြေသယ်ယာဉ်တန်း", style: TextStyle(fontSize: 13, color: Colors.amber)),
@@ -100,7 +100,7 @@ jobs:
                       _buildDrawerItem("ပင်မ Grid စာမျက်နှာ", const Icon(Icons.apps, color: Colors.indigo, size: 22), () {}),
                       _buildDrawerItem("မြေစာရင်း မှတ်တမ်းများ", const Icon(Icons.assignment, color: Colors.teal, size: 22), () {}),
                       _buildDrawerItem("ယာဉ်မောင်း ခေါက်ကြေးရှင်းရန်", const Icon(Icons.calculate, color: Colors.purple, size: 22), () {}),
-                      _buildDrawerItem("ဆီဖိုးနှင့် အထွေထွေစာရင်းရှင်းတမ်း", const Icon(Icons.ledger, color: Colors.orange, size: 22), () {}),
+                      _buildDrawerItem("ဆီဖိုးနှင့် အထွေထွေစာရင်းရှင်းတမ်း", const Icon(Icons.receipt_long, color: Colors.orange, size: 22), () {}),
                       const Divider(),
                       _buildDrawerItem("စနစ်ဆက်တင်များ", const Icon(Icons.settings, color: Colors.grey, size: 22), () {}),
                     ],
