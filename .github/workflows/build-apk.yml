@@ -32,25 +32,15 @@ jobs:
           cat << 'EOF' > lib/main.dart
           import 'package:flutter/material.dart';
 
-          void main() => runApp(const MaterialApp(home: IrrigationFleetApp(), debugShowCheckedModeBanner: false));
+          void main() => runApp(const MaterialApp(home: IrrigationFleetHomePage(), debugShowCheckedModeBanner: false));
 
-          class IrrigationFleetApp extends StatefulWidget {
-            const IrrigationFleetApp({super.key});
+          class IrrigationFleetHomePage extends StatefulWidget {
+            const IrrigationFleetHomePage({super.key});
             @override
-            State<IrrigationFleetApp> createState() => _IrrigationFleetAppState();
-          }
-
-          class _IrrigationFleetAppState extends State<IrrigationFleetApp> {
-            @override
-            Widget build(BuildContext context) {
-              return const MaterialApp(
-                home: IrrigationFleetHomePage(),
-              );
-            }
+            State<IrrigationFleetHomePage> createState() => _IrrigationFleetHomePageState();
           }
 
           class _IrrigationFleetHomePageState extends State<IrrigationFleetHomePage> {
-            String _selectedBarrelGallons = '50';
             Color _currentBgColor = const Color(0xFFFBFBFB);
             String _bgColorName = "မူလအရောင် (Creamy White)";
 
@@ -62,7 +52,7 @@ jobs:
             final _fuelPrice = TextEditingController(text: "610000");
             int _selectedBarrelGallons = 50;
 
-            void _changeThemeColor(NewColor, String name) {
+            void _changeThemeColor(Color newColor, String name) {
               setState(() {
                 _currentBgColor = newColor;
                 _bgColorName = name;
@@ -74,7 +64,7 @@ jobs:
               int totalTrips = (int.tryParse(_morning.text) ?? 0) + (int.tryParse(_afternoon.text) ?? 0) + (int.tryParse(_evening.text) ?? 0);
               int totalSalary = totalTrips * (int.tryParse(_rate.text) ?? 0);
               int barrelPrice = (int.tryParse(_fuelPrice.text) ?? 0);
-              double pricePerGallon = barrelPrice / selectedBarrelGallons;
+              double pricePerGallon = barrelPrice / _selectedBarrelGallons;
 
               return Scaffold(
                 backgroundColor: _currentBgColor,
@@ -108,7 +98,7 @@ jobs:
                         title: const Row(
                           children: [
                             Icon(Icons.dashboard, color: Colors.indigo, size: 20),
-                            SizedBox(width: 8),
+                            Spoons: SizedBox(width: 8),
                             Text("Dashboard", style: TextStyle(fontSize: 14)),
                           ],
                         ),
@@ -146,7 +136,7 @@ jobs:
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("ရေဖျန်းလုပ်ငန်းတွက်ချက်မှုစနစ်", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.blueGrey)),
+                    Text("ရေဖျန်းလုပ်ငန်းတွက်ချက်မှုစနစ်", style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.blueGrey)),
                     const SizedBox(height: 20),
                     Text("ယာဉ်မောင်းအမည်: ${_driver.text}", style: const TextStyle(fontSize: 16, color: Colors.black87)),
                     const SizedBox(height: 10),
