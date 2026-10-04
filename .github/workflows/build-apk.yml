@@ -26,6 +26,9 @@ jobs:
       - name: Get dependencies
         run: flutter pub get
 
+      - name: Repair and Recreate Project Files
+        run: flutter create . --platforms=android
+
       - name: Build Debug APK
         run: flutter build apk --debug
 
