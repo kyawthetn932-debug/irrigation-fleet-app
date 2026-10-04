@@ -41,8 +41,7 @@ jobs:
           }
 
           class _IrrigationFleetHomePageState extends State<IrrigationFleetHomePage> {
-            Color _currentBgColor = const Color(0xFFFBFBFB);
-            String _bgColorName = "မူလအရောင် (Creamy White)";
+            Color _currentBgColor = const Color(0xFFF5F7FA);
 
             final _driver = TextEditingController(text: "မောင်မောင်");
             final _morning = TextEditingController(text: "0");
@@ -51,13 +50,6 @@ jobs:
             final _rate = TextEditingController(text: "5000");
             final _fuelPrice = TextEditingController(text: "610000");
             int _selectedBarrelGallons = 50;
-
-            void _changeThemeColor(Color newColor, String name) {
-              setState(() {
-                _currentBgColor = newColor;
-                _bgColorName = name;
-              });
-            }
 
             @override
             Widget build(BuildContext context) {
@@ -69,47 +61,48 @@ jobs:
               return Scaffold(
                 backgroundColor: _currentBgColor,
                 appBar: AppBar(
-                  title: const Text("ရေဖျန်းလုပ်ငန်းသုံး App (Title)"),
+                  title: const Text("ဆည်မြောင်း မြေသယ်ကား Fleet App", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
                   backgroundColor: const Color(0xFF1C3E5D),
                   iconTheme: const IconThemeData(color: Colors.amber),
                 ),
                 drawer: Drawer(
-                  width: 230,
+                  width: 240,
                   backgroundColor: const Color(0xFFFAFAFA),
                   child: ListView(
                     padding: EdgeInsets.zero,
                     children: [
                       Container(
-                        height: 200,
+                        height: 220,
                         width: double.infinity,
                         padding: const EdgeInsets.symmetric(vertical: 25, horizontal: 15),
                         decoration: const BoxDecoration(
-                          gradient: LinearGradient(colors: [Colors.blueAccent, Color(0xFF3F91F1)], begin: Alignment.topCenter, end: Alignment.bottomCenter),
+                          gradient: LinearGradient(
+                            colors: [Color(0xFF1C3E5D), Color(0xFF2C5E8A)],
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                          ),
                         ),
-                        child: const Row(
+                        child: const Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Icon(Icons.local_shipping, color: Colors.orange, size: 30),
-                            SizedBox(width: 8),
-                            Text("ရေဖျန်းလုပ်ငန်းသုံး App", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white)),
+                            Icon(Icons.local_shipping, color: Colors.amber, size: 50), // Gold Dump Truck Icon
+                            SizedBox(height: 12),
+                            Text("ရတနာနိုင် (Yatanar Naing)", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
+                            Text("ဆည်မြောင်း မြေသယ်ယာဉ်တန်း", style: TextStyle(fontSize: 13, color: Colors.amber)),
                           ],
                         ),
                       ),
-                      ExpansionTile(
-                        title: const Row(
-                          children: [
-                            Icon(Icons.dashboard, color: Colors.indigo, size: 20),
-                            SizedBox(width: 8),
-                            Text("Dashboard", style: TextStyle(fontSize: 14)),
-                          ],
-                        ),
-                        childrenPadding: const EdgeInsets.only(left: 20),
-                        children: [
-                          _buildDrawerItem("ပင်မစာမျက်နှာ", const Icon(Icons.home, color: Colors.blue, size: 18), () {}),
-                          _buildDrawerItem("လုပ်ငန်းမှတ်တမ်းများ", const Icon(Icons.table_chart, color: Colors.teal, size: 18), () {}),
-                          _buildDrawerItem("ဝင်ငွေ/ထွက်ငွေ တွက်ချက်ရန်", const Icon(Icons.calculate, color: Colors.purple, size: 18), () {}),
-                          _buildDrawerItem("ဆက်တင်များ", const Icon(Icons.settings, color: Colors.grey, size: 18), () {}),
-                        ],
+                      const Padding(
+                        padding: EdgeInsets.only(left: 16, top: 15, bottom: 5),
+                        child: Text("POS စနစ်သုံး မီနူး", style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.grey)),
                       ),
+                      _buildDrawerItem("ပင်မ Grid စာမျက်နှာ", const Icon(Icons.apps, color: Colors.indigo, size: 22), () {}),
+                      _buildDrawerItem("မြေစာရင်း မှတ်တမ်းများ", const Icon(Icons.assignment, color: Colors.teal, size: 22), () {}),
+                      _buildDrawerItem("ယာဉ်မောင်း ခေါက်ကြေးရှင်းရန်", const Icon(Icons.calculate, color: Colors.purple, size: 22), () {}),
+                      _buildDrawerItem("ဆီဖိုးနှင့် အထွေထွေစာရင်းရှင်းတမ်း", const Icon(Icons.ledger, color: Colors.orange, size: 22), () {}),
+                      const Divider(),
+                      _buildDrawerItem("စနစ်ဆက်တင်များ", const Icon(Icons.settings, color: Colors.grey, size: 22), () {}),
                     ],
                   ),
                 ),
@@ -123,7 +116,7 @@ jobs:
             Widget _buildDrawerItem(String title, Icon iconData, VoidCallback onTap) {
               return ListTile(
                 leading: iconData,
-                title: Text(title, style: const TextStyle(color: Color(0xFF2C3E50), fontSize: 14, fontWeight: FontWeight.w500)),
+                title: Text(title, style: const TextStyle(color: Color(0xFF2C3E50), fontSize: 14, fontWeight: FontWeight.w600)),
                 onTap: () {
                   onTap();
                   Navigator.pop(context);
@@ -136,39 +129,60 @@ jobs:
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("ရေဖျန်းလုပ်ငန်းတွက်ချက်မှုစနစ်", style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.blueGrey)),
+                    const Text("မြေသယ်ယာဉ်လုပ်ငန်း တွက်ချက်မှုစနစ်", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Color(0xFF1C3E5D))),
                     const SizedBox(height: 20),
-                    Text("ယာဉ်မောင်းအမည်: ${_driver.text}", style: const TextStyle(fontSize: 16, color: Colors.black87)),
-                    const SizedBox(height: 10),
-                    Row(
-                      children: [
-                        Expanded(child: TextField(controller: _morning, keyboardType: TextInputType.number, decoration: const InputDecoration(labelText: "နံနက်ခင်းခေါက်ရေ"))),
-                        const SizedBox(width: 10),
-                        Expanded(child: TextField(controller: _afternoon, keyboardType: TextInputType.number, decoration: const InputDecoration(labelText: "မွန်းလွဲခေါက်ရေ"))),
-                        const SizedBox(width: 10),
-                        Expanded(child: TextField(controller: _evening, keyboardType: TextInputType.number, decoration: const InputDecoration(labelText: "ညနေခင်းခေါက်ရေ"))),
-                      ],
+                    Card(
+                      elevation: 2,
+                      color: Colors.white,
+                      child: Padding(
+                        padding: const EdgeInsets.all(15),
+                        child: Column(
+                          children: [
+                            TextField(
+                              controller: _driver,
+                              decoration: const InputDecoration(labelText: "ယာဉ်မောင်းအမည်", border: OutlineInputBorder()),
+                            ),
+                            const SizedBox(height: 15),
+                            Row(
+                              children: [
+                                Expanded(child: TextField(controller: _morning, keyboardType: TextInputType.number, decoration: const InputDecoration(labelText: "နံနက်ခေါက်ရေ", border: OutlineInputBorder()))),
+                                const SizedBox(width: 8),
+                                Expanded(child: TextField(controller: _afternoon, keyboardType: TextInputType.number, decoration: const InputDecoration(labelText: "မွန်းလွဲခေါက်ရေ", border: OutlineInputBorder()))),
+                                const SizedBox(width: 8),
+                                Expanded(child: TextField(controller: _evening, keyboardType: TextInputType.number, decoration: const InputDecoration(labelText: "ညနေခေါက်ရေ", border: OutlineInputBorder()))),
+                              ],
+                            ),
+                            const SizedBox(height: 15),
+                            TextField(
+                              controller: _rate,
+                              keyboardType: TextInputType.number,
+                              decoration: const InputDecoration(labelText: "တစ်ခေါက်နှုန်း (ကျပ်ငွေစာသားရိုက်ထည့်ရန်)", border: OutlineInputBorder()),
+                            ),
+                            const SizedBox(height: 15),
+                            TextField(
+                              controller: _fuelPrice,
+                              keyboardType: TextInputType.number,
+                              decoration: const InputDecoration(labelText: "ဆီဖိုးစုစုပေါင်း ကျသင့်ငွေ", border: OutlineInputBorder()),
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
-                    const SizedBox(height: 15),
-                    TextField(controller: _rate, keyboardType: TextInputType.number, decoration: const InputDecoration(labelText: "တစ်ခေါက်နှုန်း")),
-                    const SizedBox(height: 15),
-                    TextField(controller: _fuelPrice, keyboardType: TextInputType.number, decoration: const InputDecoration(labelText: "ဆီဖိုးကျသင့်ငွေ")),
                     const SizedBox(height: 20),
-                    Text("စုစုပေါင်းခေါက်ရေ: $totalTrips ခေါက်", style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                    Text("စုစုပေါင်းရရှိငွေ: $totalSalary ကျပ်", style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.green)),
-                    Text("တစ်ဂါလံနှုန်း: ${pricePerGallon.toStringAsFixed(2)} ကျပ်", style: const TextStyle(fontSize: 16, color: Colors.blue)),
-                  ],
-                ),
-              );
-            }
-          }
-          EOF
-
-      - name: Build APK
-        run: flutter build apk --debug --no-tree-shake-icons
-
-      - name: Upload APK Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: Irrigation-Fleet-Debug-APK
-          path: build/app/outputs/flutter-apk/app-debug.apk
+                    const Text("ရှင်းတမ်းအကျဉ်းချုပ် (Ledger Summary)", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.blueGrey)),
+                    const SizedBox(height: 10),
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(15),
+                      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(8), border: Border.all(color: Colors.grey.shade300)),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text("စုစုပေါင်း မြေတင်ခေါက်ရေ: $totalTrips ခေါက်", style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w500)),
+                          const Divider(),
+                          Text("ယာဉ်မောင်း စုစုပေါင်းလုပ်အားခ: $totalSalary ကျပ်", style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.green)),
+                          const Divider(),
+                          Text("ဆီတစ်ဂါလံ ပျမ်းမျှကျသင့်နှုန်း: ${pricePerGallon.toStringAsFixed(2)} ကျပ်", style: const TextStyle(fontSize: 15, color: Colors.blue, fontWeight: FontWeight.w500)),
+                        ],
+                      ),
+                    ),
