@@ -242,7 +242,8 @@ class _IrrigationFleetAppState extends State<IrrigationFleetApp> {
           ),
           const SizedBox(height: 8),
           if (_driverOption == 2) _buildNumInput("စိတ်ကြိုက် ရာခိုင်နှုန်း ထည့်ရန် (%)", _customPercentCtrl),
+          if (_driverOption == 2) const SizedBox(height: 8),
 
-          const SizedBox(height: 20),
-          
-          // 📊 စာရင်းဇယားအပိုင်းလိုက် Tree View ဖွဲ့စည်းမှုပုံစံ
+          const Text("📊 ကားပိုင်ရှင်အလိုက် တစ်စီးချင်း ကားခစာရင်း (Tree Table)", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
+          const SizedBox(height: 5),
+
