@@ -1,190 +1,243 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(const MaterialApp(
-    home: IrrigationFleetApp(),
-    debugShowCheckedModeBanner: false,
-  ));
+  runApp(const MaterialColorApp());
+}
+
+class MaterialColorApp extends StatelessWidget {
+  const MaterialColorApp({super.key});
+  
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'ရတနာနိုင် - ဆည်မြောင်းကားစာရင်း',
+      theme: ThemeData.dark().copyWith(
+        scaffoldBackgroundColor: const Color(0xFF121212), // Premium Dark Mode
+        primaryColor: const Color(0xFFFFD700), // Amber Gold Accent
+      ),
+      debugShowCheckedModeBanner: false,
+      home: const IrrigationFleetApp(),
+    );
+  }
 }
 
 class IrrigationFleetApp extends StatefulWidget {
   const IrrigationFleetApp({super.key});
+
   @override
   State<IrrigationFleetApp> createState() => _IrrigationFleetAppState();
 }
 
 class _IrrigationFleetAppState extends State<IrrigationFleetApp> {
-  String _view = "Dashboard";
-  final _morning = TextEditingController(text: "0");
-  final _afternoon = TextEditingController(text: "0");
-  final _evening = TextEditingController(text: "0");
-  final _rate = TextEditingController(text: "5000");
-  final _fuelPrice = TextEditingController(text: "10000");
-  int _selectedBarrelGallons = 50;
+  // ပင်မ စာမျက်နှာ လက်ရှိ ပြသမည့် ခြေရာခံခေါင်းစဉ်
+  String _currentView = "Dashboard"; 
 
-  TableRow _buildTableRow(String title, String value) {
-    return TableRow(
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text(title, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500)),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text(value, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold)),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildNumberInput(String label, TextEditingController controller) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 10.0),
-      child: TextField(
-        controller: controller,
-        keyboardType: TextInputType.number,
-        decoration: InputDecoration(
-          labelText: label,
-          labelStyle: const TextStyle(fontSize: 13),
-          contentPadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
-          border: const OutlineInputBorder(),
-        ),
-        onChanged: (value) => setState(() {}),
-      ),
-    );
-  }
+  // ဖုန်း Screen မရှုပ်စေရန် ကျစ်ကျစ်လျစ်လျစ် (Compact) ဖြစ်စေမည့် Controller များ
+  final _morningCtrl = TextEditingController(text: "0");
+  final _afternoonCtrl = TextEditingController(text: "0");
+  final _eveningCtrl = TextEditingController(text: "0");
+  final _rateCtrl = TextEditingController(text: "50000");
+  final _fuelCtrl = TextEditingController(text: "150000");
+  final _customPercentCtrl = TextEditingController(text: "10");
+  
+  // 🧮 Driver မောင်းကြေးတွက်ချက်မှု စနစ် (၃) မျိုးအတွက် Variable
+  int _driverOption = 1; // 1: (ကားခ-ဆီဖိုး)%, 2: စိတ်ကြိုက် %, 3: အပြတ်ပေး
 
   @override
   Widget build(BuildContext context) {
-    int totalTrips = (int.tryParse(_morning.text) ?? 0) + (int.tryParse(_afternoon.text) ?? 0) + (int.tryParse(_evening.text) ?? 0);
-    int totalSalary = totalTrips * (int.tryParse(_rate.text) ?? 0);
-    double pricePerGallon = (int.tryParse(_fuelPrice.text) ?? 0) / _selectedBarrelGallons;
-
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F5F5), // မီးခိုးနုရောင် နောက်ခံ
+      appBar: AppBar(
+        title: Text(
+          _currentView, 
+          style: const TextStyle(color: Color(0xFFFFD700), fontWeight: FontWeight.bold)
+        ),
+        backgroundColor: const Color(0xFF1E1E2C),
+        elevation: 4,
+      ),
+      
+      // 📱 ၁။ လက်လှုပ်ရှားမှုဖြင့် ဆွဲထုတ်နိုင်သော (Swipe-to-reveal) Sidebar Dynamic Drawer
       drawer: Drawer(
-        width: 220, // Sidebar အကျဉ်း
+        width: 190, // ၂။ ဖုန်း Screen ပေါ်တွင် ကျဉ်းမြောင်းကျစ်ကျစ်လျစ်လျစ်ဖြစ်စေမည့် ဘားအကျဉ်းစနစ် (Narrow POS Width)
         child: Container(
-          color: const Color(0xFF1E1E2C),
+          color: const Color(0xFF1E1E2C), // Premium Dark
           child: Column(
             children: [
-              Container(
-                padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 15),
-                color: const Color(0xFF2C2C3E),
-                child: const Row(
-                  children: [
-                    Icon(Icons.local_shipping, color: Colors.amber, size: 28), // ရွှေရောင်ကားအိုင်ကွန်
-                    SizedBox(width: 10),
-                    Text("ဆည်မြောင်း ကားစာရင်း", style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.white)),
-                  ],
+              // Sidebar Header ပိုင်း
+              const DrawerHeader(
+                decoration: BoxDecoration(color: Color(0xFF121212)),
+                child: Center(
+                  child: Text(
+                    "ရတနာနိုင်\nFLEET SYSTEM", 
+                    style: TextStyle(color: Color(0xFFFFD700), fontWeight: FontWeight.bold, fontSize: 16),
+                    textAlign: TextAlign.center
+                  ),
                 ),
               ),
+              
+              // မီနူးများစာရင်း (Tree & Collapse List Layout)
               Expanded(
                 child: ListView(
                   padding: EdgeInsets.zero,
                   children: [
+                    _buildSidebarItem(Icons.dashboard, "Dashboard"),
+                    
+                    // 🌳 ၃။ အဆင့်ဆင့် လိပ်သွင်း/ဖြန့်ချနိုင်သော Tree Navigation Menu (ExpansionTile)
                     ExpansionTile(
-                      leading: const Icon(Icons.apps, color: Colors.amber),
-                      title: const Text("လုပ်ငန်းခွင် မီနူးများ", style: TextStyle(color: Colors.white, fontSize: 14)),
-                      iconColor: Colors.amber,
-                      collapsedIconColor: Colors.white,
-                      initiallyExpanded: true,
+                      leading: const Icon(Icons.people, color: Color(0xFFFFD700)),
+                      title: const Text("ကားပိုင်ရှင်များ", style: TextStyle(fontSize: 13, color: Colors.white)),
+                      iconColor: const Color(0xFFFFD700),
+                      collapsedIconColor: Colors.white70,
                       children: [
-                        ListTile(
-                          leading: const Icon(Icons.dashboard, color: Colors.white70, size: 20),
-                          title: const Text("ဒိုင်ယာရီ စာရင်းသွင်း", style: TextStyle(color: Colors.white70, fontSize: 13)),
-                          onTap: () { setState(() => _view = "Dashboard"); Navigator.pop(context); },
-                        ),
-                        ListTile(
-                          leading: const Icon(Icons.settings, color: Colors.white70, size: 20),
-                          title: const Text("ဆော့ဖ်ဝဲ စနစ်များ", style: TextStyle(color: Colors.white70, fontSize: 13)),
-                          onTap: () { setState(() => _view = "Settings"); Navigator.pop(context); },
-                        ),
+                        _buildSidebarSubItem("ဦးဖြူ စာရင်း"),
+                        _buildSidebarSubItem("ဦးနီ စာရင်း"),
                       ],
                     ),
+                    
+                    _buildSidebarItem(Icons.local_shipping, "ကိုကျော်သက်နိုင် စာရင်း"),
+                    _buildSidebarItem(Icons.settings, "စနစ်ဆက်တင်များ"),
                   ],
                 ),
               ),
+              
+              // 💬 အောက်ခြေ Viber Customer Support Line ခလုတ်
+              Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: ElevatedButton.icon(
+                  onPressed: () {
+                    // TODO: Viber Chat Link ချိတ်ဆက်ရန် နေရာ
+                  },
+                  icon: const Icon(Icons.phone_android, size: 14, color: Colors.white),
+                  label: const Text("Viber Support", style: TextStyle(fontSize: 11, color: Colors.white)),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.deepPurple, // Viber ခရမ်းရောင်
+                    minimumSize: const Size(double.infinity, 38),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                  ),
+                ),
+              )
             ],
           ),
         ),
       ),
-      appBar: AppBar(
-        title: const Text("ဆည်မြောင်း ကားစာရင်း", style: TextStyle(color: Colors.white, fontSize: 18)),
-        backgroundColor: const Color(0xFF1E1E2C),
-        iconTheme: const IconThemeData(color: Colors.white),
-      ),
+      
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(12.0),
-          child: _view == "Dashboard" ? _buildDashboard(totalTrips, totalSalary, pricePerGallon) : _buildSettings(),
+          child: _buildMainContent(),
         ),
       ),
     );
   }
 
-  Widget _buildDashboard(int totalTrips, int totalSalary, double pricePerGallon) {
+  // Sidebar ပင်မ မီနူးခလုတ်များနှင့် နှိပ်ပြီးလျှင် Auto-Collapse ပိတ်မည့်စနစ်
+  Widget _buildSidebarItem(IconData icon, String title) {
+    return ListTile(
+      leading: Icon(icon, color: const Color(0xFFFFD700)),
+      title: Text(title, style: const TextStyle(fontSize: 13, color: Colors.white)),
+      onTap: () {
+        setState(() { _currentView = title; });
+        Navigator.pop(context); // 🔄 ၄။ ရွေးချယ်ပြီးလျှင် အလိုအလျောက် နောက်ပြန်စုတ်ပိတ်ခြင်း
+      },
+    );
+  }
+
+  // Tree ခွဲအောက်က Sub-menu ခလုတ်များနှင့် ပိတ်မည့်စနစ်
+  Widget _buildSidebarSubItem(String title) {
+    return ListTile(
+      contentPadding: const EdgeInsets.only(left: 45),
+      title: Text(title, style: const TextStyle(fontSize: 12, color: Colors.white70)),
+      dense: true,
+      onTap: () {
+        setState(() { _currentView = title; });
+        Navigator.pop(context); // 🔄 Sub-menu ကိုနှိပ်လျှင်လည်း ဘားပြန်ပိတ်ပေးမည်
+      },
+    );
+  }
+
+  // ညာဘက်မျက်နှာပြင်တွင် ဒေတာများ ပြောင်းလဲပြသမည့် စနစ်
+  Widget _buildMainContent() {
+    if (_currentView == "ကိုကျော်သက်နိုင် စာရင်း") {
+      return _buildKyawThetNaingLedger();
+    }
+    return Center(
+      child: Text(
+        "Welcome to $_currentView\n(Google Sheets Auto-Sync Active)", 
+        textAlign: TextAlign.center,
+        style: const TextStyle(color: Colors.white70)
+      )
+    );
+  }
+
+  // 👑 ကိုကျော်သက်နိုင် သီးသန့် ကားစာရင်းမျက်နှာပြင်
+  Widget _buildKyawThetNaingLedger() {
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text("နေ့စဉ် ခေါင်းအလှည့် စာရင်းသွင်းရန်", style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
-          const SizedBox(height: 10),
-          _buildNumberInput("နံနက်ပိုင်း ခေါင်းအလှည့်အရေအတွက်", _morning),
-          _buildNumberInput("မွန်းလွဲပိုင်း ခေါင်းအလှည့်အရေအတွက်", _afternoon),
-          _buildNumberInput("ညနေပိုင်း ခေါင်းအလှည့်အရေအတွက်", _evening),
-          _buildNumberInput("ယာဉ်မောင်းခနှုန်းထား (Rate)", _rate),
-          _buildNumberInput("ဆီစျေးနှုန်း (Fuel Price)", _fuelPrice),
-          const SizedBox(height: 10),
-          const Text("ဆီပီပါ ဂါလံရွေးချယ်မှု", style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold)),
-          Row(
-            children: [50, 51, 52].map((g) => Padding(
-              padding: const EdgeInsets.only(right: 8.0),
-              child: ChoiceChip(
-                label: Text("$g ဂါလံ"),
-                selected: _selectedBarrelGallons == g,
-                onSelected: (val) { if (val) setState(() => _selectedBarrelGallons = g); },
-              ),
-            )).toList(),
+          // 🧊 3D Floating KPI Card ပုံစံ (Depth Effect & Shadow)
+          Container(
+            padding: const EdgeInsets.all(15),
+            decoration: BoxDecoration(
+              color: const Color(0xFF1E1E2C),
+              borderRadius: BorderRadius.circular(12),
+              boxShadow: const [
+                BoxShadow(color: Colors.black54, offset: Offset(4, 4), blurRadius: 6),
+              ]
+            ),
+            child: const Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Column(
+                  children: [
+                    Text("စုစုပေါင်း ကားခ", style: TextStyle(color: Colors.grey, fontSize: 11)),
+                    SizedBox(height: 4),
+                    Text("၅၀၀,၀၀၀ ကျပ်", style: TextStyle(color: Colors.greenAccent, fontSize: 16, fontWeight: FontWeight.bold))
+                  ]
+                ),
+                Column(
+                  children: [
+                    Text("အသားတင် အမြတ်", style: TextStyle(color: Colors.grey, fontSize: 11)),
+                    SizedBox(height: 4),
+                    Text("၃၂၀,၀၀၀ ကျပ်", style: TextStyle(color: Color(0xFFFFD700), fontSize: 16, fontWeight: FontWeight.bold))
+                  ]
+                ),
+              ],
+            ),
           ),
-          const SizedBox(height: 15),
-          const Divider(),
-          const Text("တွက်ချက်မှု ရလဒ်ဇယား (Compact Table)", style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.blue)),
-          const SizedBox(height: 5),
-          Table(
-            border: TableBorder.all(color: Colors.black12),
+          const SizedBox(height: 18),
+          
+          const Text("🚜 ခေါက်ရေနှင့် ကားခထည့်သွင်းရန် (Numeric Inputs Only)", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Color(0xFFFFD700))),
+          const SizedBox(height: 8),
+          Row(
             children: [
-              _buildTableRow("စုစုပေါင်းခေါင်းခေါက်", "$totalTrips ကြိမ်"),
-              _buildTableRow("စုစုပေါင်း ယာဉ်မောင်းခ", "$totalSalary ကျပ်"),
-              _buildTableRow("ရွေးချယ်ထားသည့် ဂါလံ", "$_selectedBarrelGallons ဂါလံ"),
-              _buildTableRow("၁ ဂါလံနှုန်း", "${pricePerGallon.toStringAsFixed(2)} ကျပ်"),
+              Expanded(child: _buildNumInput("မနက်ခေါက်", _morningCtrl)),
+              const SizedBox(width: 8),
+              Expanded(child: _buildNumInput("နေ့လည်ခေါက်", _afternoonCtrl)),
+              const SizedBox(width: 8),
+              Expanded(child: _buildNumInput("ညခေါက်", _eveningCtrl)),
             ],
           ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildSettings() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        ListTile(
-          leading: const Icon(Icons.system_update, color: Colors.blue),
-          title: const Text("ဆော့ဖ်ဝဲ ဗားရှင်း"),
-          subtitle: const Text("v1.0.0 (Latest)"),
-        ),
-        const Divider(),
-        const Text("ဆော့ဖ်ဝဲ ပြင်ဆင်မွမ်းမံရန် ဆက်သွယ်ရန်", style: TextStyle(fontSize: 13, color: Colors.grey)),
-        const SizedBox(height: 10),
-        Card(
-          child: ListTile(
-            leading: const Icon(Icons.phone_android, color: Colors.purple),
-            title: const Text("Viber Customer Support"),
-            subtitle: const Text("လုပ်ငန်းခွင်အချက်အလက်များ ပြင်ဆင်လိုပါက ဆက်သွယ်ရန်"),
+          _buildNumInput("တစ်စီးချင်းကားခ (Fare)", _rateCtrl),
+          _buildNumInput("ဆီဖိုး နှုတ်ရန် (-)", _fuelCtrl),
+          
+          const SizedBox(height: 12),
+          const Text("🧮 ဒရိုင်ဘာ မောင်းကြေး တွက်ချက်မှု စနစ် ရွေးချယ်ရန်", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Color(0xFFFFD700))),
+          const SizedBox(height: 6),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            decoration: BoxDecoration(border: Border.all(color: Colors.white24), borderRadius: BorderRadius.circular(6)),
+            child: DropdownButtonHideUnderline(
+              child: DropdownButton<int>(
+                value: _driverOption,
+                isExpanded: true,
+                dropdownColor: const Color(0xFF1E1E2C),
+                items: const [
+                  DropdownMenuItem(value: 1, child: Text("Option 1: (ကားခ - ဆီဖိုး) ၏ ရာခိုင်နှုန်း %", style: TextStyle(fontSize: 12))),
+                  DropdownMenuItem(value: 2, child: Text("Option 2: စိတ်ကြိုက် ရာခိုင်နှုန်း သတ်မှတ်ရန်", style: TextStyle(fontSize: 12))),
+                  DropdownMenuItem(value: 3, child: Text("Option 3: တစ်ခေါက်ချင်း အပြတ်ပေးစနစ်", style: TextStyle(fontSize: 12))),
+                ],
+                onChanged: (val) { setState(() { _driverOption = val!; }); },
+              ),
+            ),
           ),
-        ),
-      ],
-    );
-  }
-}
+          if (_driverOption == 2) const SizedBox(height: 8),
