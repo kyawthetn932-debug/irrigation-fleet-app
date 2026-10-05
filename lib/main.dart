@@ -40,7 +40,7 @@ class _IrrigationFleetAppState extends State<IrrigationFleetApp> {
   final _fuelCtrl = TextEditingController(text: "150000");
   final _customPercentCtrl = TextEditingController(text: "10");
   
-  // 🧮 Driver မောင်းကြေးတွက်ချက်မှု စနစ် (၃) မျိုးအတွက် Variable
+  // ဒရိုင်ဘာ မောင်းကြေးတွက်ချက်မှု စနစ် (၃) မျိုးအတွက် Variable
   int _driverOption = 1; // 1: (ကားခ-ဆီဖိုး)%, 2: စိတ်ကြိုက် %, 3: အပြတ်ပေး
 
   @override
@@ -55,11 +55,11 @@ class _IrrigationFleetAppState extends State<IrrigationFleetApp> {
         elevation: 4,
       ),
       
-      // 📱 ၁။ လက်လှုပ်ရှားမှုဖြင့် ဆွဲထုတ်နိုင်သော (Swipe-to-reveal) Sidebar Dynamic Drawer
+      // လက်လှုပ်ရှားမှုဖြင့် ဆွဲထုတ်နိုင်သော Sidebar Dynamic Drawer (Swipe-to-reveal)
       drawer: Drawer(
-        width: 190, // ၂။ ဖုန်း Screen ပေါ်တွင် ကျဉ်းမြောင်းကျစ်ကျစ်လျစ်လျစ်ဖြစ်စေမည့် ဘားအကျဉ်းစနစ် (Narrow POS Width)
+        width: 190, // ဘားအကျဉ်းစနစ် (Narrow POS Width)
         child: Container(
-          color: const Color(0xFF1E1E2C), // Premium Dark
+          color: const Color(0xFF1E1E2C), 
           child: Column(
             children: [
               // Sidebar Header ပိုင်း
@@ -81,7 +81,7 @@ class _IrrigationFleetAppState extends State<IrrigationFleetApp> {
                   children: [
                     _buildSidebarItem(Icons.dashboard, "Dashboard"),
                     
-                    // 🌳 ၃။ အဆင့်ဆင့် လိပ်သွင်း/ဖြန့်ချနိုင်သော Tree Navigation Menu (ExpansionTile)
+                    // အဆင့်ဆင့် လိပ်သွင်း/ဖြန့်ချနိုင်သော Tree Navigation Menu (ExpansionTile)
                     ExpansionTile(
                       leading: const Icon(Icons.people, color: Color(0xFFFFD700)),
                       title: const Text("ကားပိုင်ရှင်များ", style: TextStyle(fontSize: 13, color: Colors.white)),
@@ -99,17 +99,15 @@ class _IrrigationFleetAppState extends State<IrrigationFleetApp> {
                 ),
               ),
               
-              // 💬 အောက်ခြေ Viber Customer Support Line ခလုတ်
+              // အောက်ခြေ Viber Customer Support Line ခလုတ်
               Padding(
                 padding: const EdgeInsets.all(12.0),
                 child: ElevatedButton.icon(
-                  onPressed: () {
-                    // TODO: Viber Chat Link ချိတ်ဆက်ရန် နေရာ
-                  },
+                  onPressed: () {},
                   icon: const Icon(Icons.phone_android, size: 14, color: Colors.white),
                   label: const Text("Viber Support", style: TextStyle(fontSize: 11, color: Colors.white)),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.deepPurple, // Viber ခရမ်းရောင်
+                    backgroundColor: Colors.deepPurple, 
                     minimumSize: const Size(double.infinity, 38),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                   ),
@@ -136,7 +134,7 @@ class _IrrigationFleetAppState extends State<IrrigationFleetApp> {
       title: Text(title, style: const TextStyle(fontSize: 13, color: Colors.white)),
       onTap: () {
         setState(() { _currentView = title; });
-        Navigator.pop(context); // 🔄 ၄။ ရွေးချယ်ပြီးလျှင် အလိုအလျောက် နောက်ပြန်စုတ်ပိတ်ခြင်း
+        Navigator.pop(context); // ရွေးချယ်ပြီးလျှင် အလိုအလျောက် ပိတ်ခြင်း
       },
     );
   }
@@ -149,7 +147,7 @@ class _IrrigationFleetAppState extends State<IrrigationFleetApp> {
       dense: true,
       onTap: () {
         setState(() { _currentView = title; });
-        Navigator.pop(context); // 🔄 Sub-menu ကိုနှိပ်လျှင်လည်း ဘားပြန်ပိတ်ပေးမည်
+        Navigator.pop(context); 
       },
     );
   }
@@ -168,7 +166,7 @@ class _IrrigationFleetAppState extends State<IrrigationFleetApp> {
     );
   }
 
-  // 👑 ကိုကျော်သက်နိုင် သီးသန့် ကားစာရင်းမျက်နှာပြင်
+  // ကိုကျော်သက်နိုင် သီးသန့် ကားစာရင်းမျက်နှာပြင်
   Widget _buildKyawThetNaingLedger() {
     return SingleChildScrollView(
       child: Column(
@@ -206,7 +204,7 @@ class _IrrigationFleetAppState extends State<IrrigationFleetApp> {
           ),
           const SizedBox(height: 18),
           
-          const Text("🚜 ခေါက်ရေနှင့် ကားခထည့်သွင်းရန် (Numeric Inputs Only)", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Color(0xFFFFD700))),
+          const Text("🚜 ခေါက်ရေနှင့် ကားခထည့်သွင်းရန် (Numeric Inputs)", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Color(0xFFFFD700))),
           const SizedBox(height: 8),
           Row(
             children: [
@@ -236,8 +234,15 @@ class _IrrigationFleetAppState extends State<IrrigationFleetApp> {
                   DropdownMenuItem(value: 2, child: Text("Option 2: စိတ်ကြိုက် ရာခိုင်နှုန်း သတ်မှတ်ရန်", style: TextStyle(fontSize: 12))),
                   DropdownMenuItem(value: 3, child: Text("Option 3: တစ်ခေါက်ချင်း အပြတ်ပေးစနစ်", style: TextStyle(fontSize: 12))),
                 ],
-                onChanged: (val) { setState(() { _driverOption = val!; }); },
+                onChanged: (val) { 
+                  setState(() { _driverOption = val!; }); 
+                },
               ),
             ),
           ),
-          if (_driverOption == 2) const SizedBox(height: 8),
+          const SizedBox(height: 8),
+          if (_driverOption == 2) _buildNumInput("စိတ်ကြိုက် ရာခိုင်နှုန်း ထည့်ရန် (%)", _customPercentCtrl),
+
+          const SizedBox(height: 20),
+          
+          // 📊 စာရင်းဇယားအပိုင်းလိုက် Tree View ဖွဲ့စည်းမှုပုံစံ
