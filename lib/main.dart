@@ -1,154 +1,3 @@
-import 'package:flutter/material.dart';
-
-void main() {
-  runApp(const MaterialColorApp());
-}
-
-class MaterialColorApp extends StatelessWidget {
-  const MaterialColorApp({super.key});
-  
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'ရတနာနိုင် - ဆည်မြောင်းကားစာရင်း',
-      theme: ThemeData.dark().copyWith(
-        scaffoldBackgroundColor: const Color(0xFF121212),
-        primaryColor: const Color(0xFFFFD700),
-      ),
-      debugShowCheckedModeBanner: false,
-      home: const IrrigationFleetApp(),
-    );
-  }
-}
-
-class IrrigationFleetApp extends StatefulWidget {
-  const IrrigationFleetApp({super.key});
-
-  @override
-  State<IrrigationFleetApp> createState() => _IrrigationFleetAppState();
-}
-
-class _IrrigationFleetAppState extends State<IrrigationFleetApp> {
-  String _currentView = "Dashboard"; 
-
-  final _morningCtrl = TextEditingController(text: "0");
-  final _afternoonCtrl = TextEditingController(text: "0");
-  final _eveningCtrl = TextEditingController(text: "0");
-  final _rateCtrl = TextEditingController(text: "50000");
-  final _fuelCtrl = TextEditingController(text: "150000");
-  final _customPercentCtrl = TextEditingController(text: "10");
-  
-  int _driverOption = 1;
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          _currentView, 
-          style: const TextStyle(color: Color(0xFFFFD700), fontWeight: FontWeight.bold)
-        ),
-        backgroundColor: const Color(0xFF1E1E2C),
-        elevation: 4,
-      ),
-      drawer: Drawer(
-        width: 190, 
-        child: Container(
-          color: const Color(0xFF1E1E2C), 
-          child: Column(
-            children: [
-              const DrawerHeader(
-                decoration: BoxDecoration(color: Color(0xFF121212)),
-                child: Center(
-                  child: Text(
-                    "ရတနာနိုင်\nFLEET SYSTEM", 
-                    style: TextStyle(color: Color(0xFFFFD700), fontWeight: FontWeight.bold, fontSize: 16),
-                    textAlign: TextAlign.center
-                  ),
-                ),
-              ),
-              Expanded(
-                child: ListView(
-                  padding: EdgeInsets.zero,
-                  children: [
-                    _buildSidebarItem(Icons.dashboard, "Dashboard"),
-                    ExpansionTile(
-                      leading: const Icon(Icons.people, color: Color(0xFFFFD700)),
-                      title: const Text("ကားပိုင်ရှင်များ", style: TextStyle(fontSize: 13, color: Colors.white)),
-                      iconColor: const Color(0xFFFFD700),
-                      collapsedIconColor: Colors.white70,
-                      children: [
-                        _buildSidebarSubItem("ဦးဖြူ စာရင်း"),
-                        _buildSidebarSubItem("ဦးနီ စာရင်း"),
-                      ],
-                    ),
-                    _buildSidebarItem(Icons.local_shipping, "ကိုကျော်သက်နိုင် စာရင်း"),
-                    _buildSidebarItem(Icons.settings, "စနစ်ဆက်တင်များ"),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: ElevatedButton.icon(
-                  onPressed: () {},
-                  icon: const Icon(Icons.phone_android, size: 14, color: Colors.white),
-                  label: const Text("Viber Support", style: TextStyle(fontSize: 11, color: Colors.white)),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.deepPurple, 
-                    minimumSize: const Size(double.infinity, 38),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                  ),
-                ),
-              )
-            ],
-          ),
-        ),
-      ),
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(12.0),
-          child: _buildMainContent(),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildSidebarItem(IconData icon, String title) {
-    return ListTile(
-      leading: Icon(icon, color: const Color(0xFFFFD700)),
-      title: Text(title, style: const TextStyle(fontSize: 13, color: Colors.white)),
-      onTap: () {
-        setState(() { _currentView = title; });
-        Navigator.pop(context); 
-      },
-    );
-  }
-
-  Widget _buildSidebarSubItem(String title) {
-    return ListTile(
-      contentPadding: const EdgeInsets.only(left: 45),
-      title: Text(title, style: const TextStyle(fontSize: 12, color: Colors.white70)),
-      dense: true,
-      onTap: () {
-        setState(() { _currentView = title; });
-        Navigator.pop(context); 
-      },
-    );
-  }
-
-  Widget _buildMainContent() {
-    if (_currentView == "ကိုကျော်သက်နိုင် စာရင်း") {
-      return _buildKyawThetNaingLedger();
-    }
-    return Center(
-      child: Text(
-        "Welcome to $_currentView\n(Google Sheets Auto-Sync Active)", 
-        textAlign: TextAlign.center,
-        style: const TextStyle(color: Colors.white70)
-      )
-    );
-  }
-
   Widget _buildKyawThetNaingLedger() {
     return SingleChildScrollView(
       child: Column(
@@ -243,3 +92,48 @@ class _IrrigationFleetAppState extends State<IrrigationFleetApp> {
                           Padding(padding: EdgeInsets.all(6), child: Text("ရရန်ကျန်ငွေ", style: TextStyle(fontSize: 11)))
                         ]
                       ),
+                      TableRow(
+                        children: [
+                          Padding(padding: EdgeInsets.all(6), child: Text("YTN-1111", style: TextStyle(fontSize: 11))),
+                          Padding(padding: EdgeInsets.all(6), child: Text("၅၀၀,၀၀၀", style: TextStyle(fontSize: 11))),
+                          Padding(padding: EdgeInsets.all(6), child: Text("၃၂၀,၀၀၀", style: TextStyle(fontSize: 11, color: Colors.greenAccent)))
+                        ]
+                      ),
+                      TableRow(
+                        children: [
+                          Padding(padding: EdgeInsets.all(6), child: Text("YTN-2222", style: TextStyle(fontSize: 11))),
+                          Padding(padding: EdgeInsets.all(6), child: Text("၄၅၀,၀၀၀", style: TextStyle(fontSize: 11))),
+                          Padding(padding: EdgeInsets.all(6), child: Text("၂၈၀,၀၀၀", style: TextStyle(fontSize: 11, color: Colors.greenAccent)))
+                        ]
+                      ),
+                    ],
+                  ),
+                )
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildNumInput(String label, TextEditingController controller) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8.0),
+      child: TextField(
+        controller: controller,
+        keyboardType: TextInputType.number,
+        style: const TextStyle(fontSize: 13),
+        decoration: InputDecoration(
+          labelText: label,
+          labelStyle: const TextStyle(fontSize: 11, color: Colors.white60),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+          border: const OutlineInputBorder(),
+          focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: Color(0xFFFFD700))),
+        ),
+        onChanged: (val) => setState(() {}),
+      ),
+    );
+  }
+}
+
