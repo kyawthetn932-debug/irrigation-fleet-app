@@ -64,7 +64,7 @@ class MenuSidebar extends StatelessWidget {
     return ListTile(
       dense: true,
       title: Padding(
-        padding: const EdgeInsets.left(12.0),
+        padding: const EdgeInsets.only(left: 12.0), // <- ကျနော် ဒီနေရာကို မှန်အောင် ပြင်ပေးထားပါတယ်
         child: Text(title, style: TextStyle(color: isSelected ? Colors.amber : (isDrawer ? Colors.black54 : Colors.white70), fontSize: fontSize, fontWeight: isSelected ? FontWeight.bold : FontWeight.normal)),
       ),
       selected: isSelected,
@@ -76,4 +76,3 @@ class MenuSidebar extends StatelessWidget {
     );
   }
 }
-
