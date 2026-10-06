@@ -1,41 +1,53 @@
 import 'package:flutter/material.dart';
 import 'menu_sidebar.dart';
-import 'dashboard_sheet.dart';
-import 'owner_sheet.dart';
-import 'fleet_daily_sheet.dart';
-import 'single_owner_sheet.dart';
 import 'kyawthetnaing_sheet.dart';
-import 'finance_share_sheet.dart';
 
 void main() {
   runApp(const IrrigationFleetApp());
 }
 
-class IrrigationFleetApp extends StatelessWidget {
+class IrrigationFleetApp extends StatefulWidget {
   const IrrigationFleetApp({super.key});
+
+  @override
+  State<IrrigationFleetApp> createState() => _IrrigationFleetAppState();
+}
+
+class _IrrigationFleetAppState extends State<IrrigationFleetApp> {
+  // 🌗 နေ့စွဲ/ညစွဲ Theme ပြောင်းလဲရန် ဗဟိုချက် State စနစ်
+  bool _isLightMode = false;
+
+  void _toggleTheme() {
+    setState(() {
+      _isLightMode = !_isLightMode;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Irrigation Fleet & POS System',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData.dark().copyWith(
-        scaffoldBackgroundColor: const Color(0xFF121824),
+      theme: ThemeData(
+        brightness: _isLightMode ? Brightness.light : Brightness.dark,
+        scaffoldBackgroundColor: _isLightMode ? const Color(0xFFF4F6F9) : const Color(0xFF121824), // ☀️ နေ့ဘက်သုံး အဖြူမှိုင်း / 🌙 ညဘက်သုံး Slate Dark
       ),
-      home: const MainFleetNavigationScreen(),
+      home: MainFleetNavigationScreen(isLightMode: _isLightMode, onThemeToggle: _toggleTheme),
     );
   }
 }
 
 class MainFleetNavigationScreen extends StatefulWidget {
-  const MainFleetNavigationScreen({super.key});
+  final bool isLightMode;
+  final VoidCallback onThemeToggle;
+  const MainFleetNavigationScreen({super.key, required this.isLightMode, required this.onThemeToggle});
 
   @override
   State<MainFleetNavigationScreen> createState() => _MainFleetNavigationScreenState();
 }
 
 class _MainFleetNavigationScreenState extends State<MainFleetNavigationScreen> {
-  String _activeMenuTitle = "👑 ကိုကျော်သက်နိုင် သီးသန့် ကားစာရင်း (၅)";
+  String _activeMenuTitle = "📄 (၅.၁) နေ့စဉ် ခေါက်ရေနှင့် ဝင်ငွေဇယား";
 
   void _onMenuSelected(String selectedTitle) {
     setState(() {
@@ -47,15 +59,35 @@ class _MainFleetNavigationScreenState extends State<MainFleetNavigationScreen> {
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     bool isLargeScreen = screenWidth > 800;
+    double titleFontSize = isLargeScreen ? 18.0 : 14.0;
+
+    // နေ့/ည အလိုက် AppBar အရောင် ပြောင်းလဲခြင်း
+    Color appBarBg = widget.isLightMode ? Colors.white : const Color(0xFF1A2333);
+    Color textColor = widget.isLightMode ? const Color(0xFF121824) : Colors.amber;
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(_activeMenuTitle, style: TextStyle(color: Colors.amber, fontWeight: FontWeight.bold, fontSize: isLargeScreen ? 20.0 : 15.0)),
-        backgroundColor: const Color(0xFF1A2333),
-        elevation: 0,
+        title: Text(_activeMenuTitle, style: TextStyle(color: textColor, fontWeight: FontWeight.bold, fontSize: titleFontSize)),
+        backgroundColor: appBarBg,
+        elevation: 1,
+        actions: [
+          // 🌗 နေ့ဘက်/ညဘက် လျှပ်တပြက် အမြန်ပြောင်း Toggle ခလုတ်
+          IconButton(
+            icon: Icon(widget.isLightMode ? Icons.dark_mode : Icons.light_mode, color: Colors.amber),
+            onPressed: widget.onThemeToggle,
+          ),
+        ],
+        leading: !isLargeScreen
+            ? Builder(
+                builder: (context) => IconButton(
+                  icon: Icon(Icons.menu, color: widget.isLightMode ? Colors.black87 : Colors.amber),
+                  onPressed: () => Scaffold.of(context).openDrawer(),
+                ),
+              )
+            : const Icon(Icons.local_shipping, color: Colors.amber),
       ),
       drawer: !isLargeScreen
-          ? Drawer(child: MenuSidebar(activeMenu: _activeMenuTitle, onMenuTap: _onMenuSelected, isDrawer: true))
+          ? Drawer(child: MenuSidebar(activeMenu: _activeMenuTitle, onMenuTap: _onMenuSelected, isDrawer: true, isLightMode: widget.isLightMode))
           : null,
       body: Row(
         children: [
@@ -63,19 +95,27 @@ class _MainFleetNavigationScreenState extends State<MainFleetNavigationScreen> {
             SizedBox(
               width: screenWidth * 0.20,
               child: Container(
-                decoration: const BoxDecoration(color: Color(0xFF1A2333), border: Border(right: BorderSide(color: Colors.white12))),
-                child: MenuSidebar(activeMenu: _activeMenuTitle, onMenuTap: _onMenuSelected, isDrawer: false),
+                decoration: BoxDecoration(
+                  color: appBarBg,
+                  border: const Border(right: BorderSide(color: Colors.white12)),
+                ),
+                child: MenuSidebar(activeMenu: _activeMenuTitle, onMenuTap: _onMenuSelected, isDrawer: false, isLightMode: widget.isLightMode),
               ),
             ),
           Expanded(
             child: Container(
               width: isLargeScreen ? screenWidth * 0.80 : screenWidth,
-              padding: const EdgeInsets.all(12.0),
+              padding: const EdgeInsets.all(6.0),
               child: Card(
-                color: const Color(0xFF1A2333),
+                color: widget.isLightMode ? Colors.white : const Color(0xFF1A2333),
+                elevation: widget.isLightMode ? 2 : 4,
                 child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: _buildActiveSheetContent(isLargeScreen),
+                  padding: const EdgeInsets.all(6.0),
+                  child: KyawThetNaingSheet(
+                    isLargeScreen: isLargeScreen,
+                    activeSubMenu: _activeMenuTitle,
+                    isLightMode: widget.isLightMode,
+                  ),
                 ),
               ),
             ),
@@ -84,27 +124,5 @@ class _MainFleetNavigationScreenState extends State<MainFleetNavigationScreen> {
       ),
     );
   }
-
-  Widget _buildActiveSheetContent(bool isLargeScreen) {
-    if (_activeMenuTitle.contains("ဒက်ရှ်ဘုတ်")) {
-      return DashboardSheet(isLargeScreen: isLargeScreen);
-    }
-    if (_activeMenuTitle.contains("ကားပိုင်ရှင်များ အမည်စာရင်း") || _activeMenuTitle.contains("ပြိုင်ဆိုင်မှု")) {
-      return OwnerSheet(isLargeScreen: isLargeScreen, currentSubMenu: _activeMenuTitle);
-    }
-    if (_activeMenuTitle.contains("နေ့စဉ် ကားအားလုံး") || _activeMenuTitle.contains("ဆီစာရင်း")) {
-      return FleetDailySheet(isLargeScreen: isLargeScreen, currentSubMenu: _activeMenuTitle);
-    }
-    if (_activeMenuTitle.contains("တစ်ဦးချင်း သီးသန့်စာရင်း")) {
-      return SingleOwnerSheet(isLargeScreen: isLargeScreen);
-    }
-    if (_activeMenuTitle.contains("ကိုကျော်သက်နိုင် သီးသန့်")) {
-      return KyawThetNaingSheet(isLargeScreen: isLargeScreen);
-    }
-    if (_activeMenuTitle.contains("ကြိုတင်ငွေ") || _activeMenuTitle.contains("Viber") || _activeMenuTitle.contains("Master Log")) {
-      return FinanceShareSheet(isLargeScreen: isLargeScreen, currentSubMenu: _activeMenuTitle);
-    }
-    
-    return const Center(child: Text("စာရင်းဇယား မရှိသေးပါ။"));
-  }
 }
+
