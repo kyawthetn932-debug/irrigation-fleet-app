@@ -1,98 +1,261 @@
 import 'package:flutter/material.dart';
 
-// UI ၏ အဓိက အစိတ်အပိုင်းဖြစ်သော State Class
-class _IrrigationFleetAppState extends State<IrrigationFleetApp> {
-  // ပုံထဲက data များကို သိမ်းဆည်းရန် ဥပမာ variable များ
-  final String dateText = "6/10/2026";
-  final int totalPrice = 150000;
-  final int carFee = 50000;
-  final int optionRate = 10;
+void main() {
+  runApp(const IrrigationFleetApp());
+}
+
+class IrrigationFleetApp extends StatelessWidget {
+  const IrrigationFleetApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Irrigation Fleet App',
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData.dark().copyWith(
+        scaffoldBackgroundColor: const Color(0xFF121824), // Slate Dark Background သို့ ပြောင်းလဲထားသည်
+      ),
+      home: const KoKyawThetNaingLogScreen(),
+    );
+  }
+}
+
+class KoKyawThetNaingLogScreen extends StatefulWidget {
+  const KoKyawThetNaingLogScreen({super.key});
+
+  @override
+  State<KoKyawThetNaingLogScreen> createState() => _KoKyawThetNaingLogScreenState();
+}
+
+class _KoKyawThetNaingLogScreenState extends State<KoKyawThetNaingLogScreen> {
+  // Input Controllers 
+  final TextEditingController _mornController = TextEditingController(text: "0");
+  final TextEditingController _noonController = TextEditingController(text: "0");
+  final TextEditingController _nightController = TextEditingController(text: "0");
+  final TextEditingController _priceController = TextEditingController(text: "150000");
+  final TextEditingController _carFeeController = TextEditingController(text: "50000");
+  final TextEditingController _repairController = TextEditingController(text: "0");
+  final TextEditingController _driverPercentController = TextEditingController(text: "10");
+
+  // Spreadsheet Style Data List
+  final List<Map<String, String>> _sheetRecords = [
+    {
+      "date": "05/10/2026",
+      "count": "12",
+      "carFee": "600000",
+      "netProfit": "320000",
+    }
+  ];
+
+  @override
+  void dispose() {
+    _mornController.dispose();
+    _noonController.dispose();
+    _nightController.dispose();
+    _priceController.dispose();
+    _carFeeController.dispose();
+    _repairController.dispose();
+    _driverPercentController.dispose();
+    super.dispose();
+  }
+
+  // Cell Editing Dialog Box
+  void _editSheetCell(int rowIndex, String key, String title) {
+    TextEditingController editCellCtrl = TextEditingController(text: _sheetRecords[rowIndex][key]);
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: const Color(0xFF1F293D),
+        title: Text("$title ကို ပြင်ဆင်ရန်", style: const TextStyle(color: Colors.amber)),
+        content: TextField(
+          controller: editCellCtrl,
+          keyboardType: TextInputType.number,
+          style: const TextStyle(color: Colors.white),
+          decoration: const InputDecoration(
+            enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.amber)),
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text("ပယ်ဖျက်", style: TextStyle(color: Colors.white54)),
+          ),
+          TextButton(
+            onPressed: () {
+              setState(() {
+                _sheetRecords[rowIndex][key] = editCellCtrl.text;
+              });
+              Navigator.pop(context);
+            },
+            child: const Text("သိမ်းဆည်းမည်", style: TextStyle(color: Colors.teal)),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _saveRecord() {
+    int totalQty = (int.tryParse(_mornController.text) ?? 0) +
+                   (int.tryParse(_noonController.text) ?? 0) +
+                   (int.tryParse(_nightController.text) ?? 0);
+    int carFeeAmt = int.tryParse(_carFeeController.text) ?? 0;
+    int calculatedTotal = totalQty * carFeeAmt;
+
+    setState(() {
+      _sheetRecords.add({
+        "date": "06/10/2026",
+        "count": totalQty.toString(),
+        "carFee": calculatedTotal.toString(),
+        "netProfit": "350000", 
+      });
+    });
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('နေ့စဉ်မှတ်တမ်းထဲသို့ သိမ်းဆည်းပြီးပါပြီ။')),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black87, // ပုံထဲကအတိုင်း အမည်းရောင် background
+      appBar: AppBar(
+        title: const Text(
+          "ကိုကျော်သက်နိုင် စာရင်း",
+          style: TextStyle(color: Colors.amber, fontWeight: FontWeight.bold, shadows: [
+            Shadow(color: Colors.black45, offset: Offset(2, 2), blurRadius: 4),
+          ]),
+        ),
+        centerTitle: true,
+        backgroundColor: const Color(0xFF1A2333), // AppBar အရောင် ပြောင်းလဲထားသည်
+        elevation: 0,
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              // --- (အပေါ်ပိုင်း Widgets များဖြစ်သည့် ခေါင်းစဉ်နှင့် Input Box များ ဤနေရာတွင်ရှိမည်) ---
-              
+              // 📅 ရက်စွဲ
+              _build3DContainer(
+                child: Row(
+                  children: const [
+                    Icon(Icons.calendar_month, color: Colors.amber, size: 28),
+                    SizedBox(width: 15),
+                    Text(
+                      "ရက်စွဲ: 6/10/2026",
+                      style: TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
+              ),
               const SizedBox(height: 20),
 
-              // ပုံထဲတွင်ပြထားသော 'နေ့စဉ် ကိုယ်ပိုင်မှတ်တမ်းဇယား' (Table Widget အပိုင်း)
-              Table(
-                border: TableBorder.all(color: Colors.white24),
-                columnWidths: const {
-                  0: FlexColumnWidth(2),
-                  1: FlexColumnWidth(1),
-                  2: FlexColumnWidth(2),
-                  3: FlexColumnWidth(2),
-                },
+              // 💰 တန်ဖိုး/စျေးနှုန်းများ
+              Row(
                 children: [
-                  // Table Header Row
-                  const TableRow(
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.all(8.0),
-                        child: Text('ရက်စွဲ', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                  Expanded(
+                    child: _build3DContainer(
+                      child: Column(
+                        children: const [
+                          Text("ကားခခေါင်းစဉ်", style: TextStyle(color: Colors.white54, fontSize: 12)),
+                          SizedBox(height: 5),
+                          Text("0 ကျပ်", style: TextStyle(color: Colors.white, fontSize: 16)),
+                        ],
                       ),
-                      Padding(
-                        padding: EdgeInsets.all(8.0),
-                        child: Text('ဦးရေ', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.all(8.0),
-                        child: Text('ကားခ', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.all(8.0),
-                        child: Text('စုစုပေါင်း', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-                      ),
-                    ],
+                    ),
                   ),
-
-                  // Table Data Row (ပုံထဲတွင်ပါသော 05/10/2026 မှတ်တမ်းဒေတာ)
-                  TableRow(
-                    children: [
-                      const Padding(
-                        padding: EdgeInsets.all(8.0),
-                        child: Text('05/10/2026', style: TextStyle(color: Colors.white70)),
+                  const SizedBox(width: 15),
+                  Expanded(
+                    child: _build3DContainer(
+                      child: Column(
+                        children: const [
+                          Text("စုစုပေါင်း တန်ဖိုး", style: TextStyle(color: Colors.white54, fontSize: 12)),
+                          SizedBox(height: 5),
+                          Text("150000 ကျပ်", style: TextStyle(color: Colors.amber, fontSize: 16, fontWeight: FontWeight.bold)),
+                        ],
                       ),
-                      const Padding(
-                        padding: EdgeInsets.all(8.0),
-                        child: Text('12', style: TextStyle(color: Colors.white70)),
-                      ),
-                      const Padding(
-                        padding: EdgeInsets.all(8.0),
-                        child: Text('600000', style: TextStyle(color: Colors.white70)),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Container(
-                          color: Colors.teal, // စုစုပေါင်းပမာဏကို highlight ပြရန်
-                          padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
-                          child: const Text(
-                            '320000', 
-                            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
-                ], // Table ၏ children list ပိတ်ခြင်း
-              ), // Table Widget ပိတ်ခြင်း
-              
+                ],
+              ),
               const SizedBox(height: 20),
-              
-              // (လိုအပ်ပါက အခြားအောက်ခြေ widget များကို ဤနေရာတွင် ဆက်ရေးနိုင်သည်)
-              
-            ], // Column ၏ children list ပိတ်ခြင်း
-          ), // Column Widget ပိတ်ခြင်း
-        ), // SingleChildScrollView Widget ပိတ်ခြင်း
-      ), // Padding Widget ပိတ်ခြင်း
-    ); // Scaffold Widget ပိတ်ခြင်း
-  } // Widget build ပိတ်ခြင်း
-} // Class ပိတ်ခြင်း
+
+              // 🔢 နံနက် / နေ့လည် / ည Input Fields
+              Row(
+                children: [
+                  Expanded(child: _build3DTextField(controller: _mornController, label: "မနက်")),
+                  const SizedBox(width: 10),
+                  Expanded(child: _build3DTextField(controller: _noonController, label: "နေ့လည်")),
+                  const SizedBox(width: 10),
+                  Expanded(child: _build3DTextField(controller: _nightController, label: "ည")),
+                ],
+              ),
+              const SizedBox(height: 15),
+
+              // 🔧 Inputs
+              _build3DTextField(controller: _carFeeController, label: "တစ်စီးချင်းကားခ"),
+              const SizedBox(height: 15),
+              _build3DTextField(controller: _priceController, label: "ဆီပေးပါ ဈေးနှုန်း"),
+              const SizedBox(height: 15),
+              _build3DTextField(controller: _repairController, label: "ပြုပြင်စရိတ်"),
+              const SizedBox(height: 20),
+
+              // Dropdown
+              _build3DContainer(
+                child: DropdownButtonFormField<String>(
+                  value: 'option1',
+                  dropdownColor: const Color(0xFF1F293D),
+                  decoration: const InputDecoration(
+                    labelText: "မောင်းကြေးစနစ် ရွေးချယ်ရန်",
+                    labelStyle: TextStyle(color: Colors.amber),
+                    border: InputBorder.none,
+                  ),
+                  items: const [
+                    DropdownMenuItem(value: 'option1', child: Text("Option 1: မောင်းကြေး ရာခိုင်နှုန်း (%)")),
+                    DropdownMenuItem(value: 'option2', child: Text("Option 2: [ကားခ - ဆီဖိုး] %")),
+                    DropdownMenuItem(value: 'option3', child: Text("Option 3: ခေါက်ကြေးစနစ်")),
+                  ],
+                  onChanged: (value) {},
+                ),
+              ),
+              const SizedBox(height: 15),
+              _build3DTextField(controller: _driverPercentController, label: "မောင်းကြေး ရာခိုင်နှုန်း (%)"),
+              const SizedBox(height: 25),
+
+              // Save Button
+              GestureDetector(
+                onTap: _saveRecord,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(vertical: 15),
+                  decoration: BoxDecoration(
+                    color: Colors.amber,
+                    borderRadius: BorderRadius.circular(12),
+                    boxShadow: const [
+                      BoxShadow(color: Colors.black38, offset: Offset(3, 3), blurRadius: 5),
+                    ],
+                  ),
+                  alignment: Alignment.center,
+                  child: const Text(
+                    "နေ့စဉ်မှတ်တမ်းထဲသို့ သိမ်းဆည်းမည်",
+                    style: TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 30),
+
+              // 📊 Spreadsheet Table
+              Row(
+                children: const [
+                  Icon(Icons.table_chart, color: Colors.teal),
+                  SizedBox(width: 10),
+                  Text(
+                    "နေ့စဉ် ကိုယ်ပိုင်မှတ်တမ်းဇယား",
+                    style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 10),
+
+              Container(
+                decoration: BoxDecoration(
+                  color: const Color(0xFF1A2333), // Table Background ကို ပိုမှောင်ပြီး လင်းအောင်ညှိသည်
