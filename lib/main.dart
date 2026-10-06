@@ -38,11 +38,11 @@ class _IrrigationFleetAppState extends State<IrrigationFleetApp> {
   final _rateCtrl = TextEditingController(text: "50000");
   final _fuelBarrelPriceCtrl = TextEditingController(text: "150000"); 
   final _repairCtrl = TextEditingController(text: "0"); 
-  final _fixedDriverWageCtrl = TextEditingController(text: "5000"); // Option 3 စရိတ်
-  final _customPercentCtrl = TextEditingController(text: "10"); // Option 2 စရိတ်
+  final _fixedDriverWageCtrl = TextEditingController(text: "5000"); 
+  final _customPercentCtrl = TextEditingController(text: "10"); 
   
   DateTime _selectedDate = DateTime.now(); 
-  int _driverOption = 1; // 1: (ကားခ-ဆီဖိုး)%, 2: စိတ်ကြိုက် %, 3: အပြတ်ပေး
+  int _driverOption = 1; 
 
   // ကိုကျော်သက်နိုင် နေ့စဉ်မှတ်တမ်း စာရင်းသိမ်းဆည်းမည့် Local List
   final List<Map<String, dynamic>> _kyawThetNaingLogs = [
@@ -60,7 +60,6 @@ class _IrrigationFleetAppState extends State<IrrigationFleetApp> {
         backgroundColor: const Color(0xFF1E1E2C),
         elevation: 4,
       ),
-      // 📱 လက်လှုပ်ရှားမှုဖြင့် ဆွဲထုတ်နိုင်သော (Swipe-to-reveal) Sidebar ဘားအကျဉ်းစနစ်
       drawer: Drawer(
         width: 200, 
         child: Container(
@@ -118,7 +117,6 @@ class _IrrigationFleetAppState extends State<IrrigationFleetApp> {
   }
 
   Widget _buildSidebarItem(IconData icon, String title) {
-    // ခေါင်းစဉ်တိုလေးများဖြင့် Menu နှိပ်လျှင် Auto-Collapse ပိတ်မည့်စနစ်
     String viewName = title.substring(4); 
     return ListTile(
       leading: Icon(icon, color: const Color(0xFFFFD700), size: 18),
@@ -145,7 +143,6 @@ class _IrrigationFleetAppState extends State<IrrigationFleetApp> {
       )
     );
   }
-  // 👑 ၅။ ကိုကျော်သက်နိုင် သီးသန့် ကားစာရင်းမျက်နှာပြင်
   Widget _buildKyawThetNaingLedger() {
     int morning = int.tryParse(_morningCtrl.text) ?? 0;
     int afternoon = int.tryParse(_afternoonCtrl.text) ?? 0;
@@ -157,7 +154,6 @@ class _IrrigationFleetAppState extends State<IrrigationFleetApp> {
     int fuelCost = int.tryParse(_fuelBarrelPriceCtrl.text) ?? 0; 
     int repairCost = int.tryParse(_repairCtrl.text) ?? 0; 
     
-    // ဒရိုင်ဘာမောင်းကြေးတွက်ချက်မှု Options အလိုက်ပြောင်းလဲခြင်း
     int calculatedDriverWage = 0;
     if (_driverOption == 1) {
       double percent = (int.tryParse(_customPercentCtrl.text) ?? 10) / 100;
@@ -178,7 +174,6 @@ class _IrrigationFleetAppState extends State<IrrigationFleetApp> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // ရက်စွဲရွေးချယ်စနစ်
           Card(
             color: const Color(0xFF1E1E2C),
             child: ListTile(
@@ -199,8 +194,6 @@ class _IrrigationFleetAppState extends State<IrrigationFleetApp> {
             ),
           ),
           const SizedBox(height: 8),
-
-          // 🧊 အမြတ်/အရှုံးပြသပေးမည့် 3D Visual Cards
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
@@ -232,7 +225,6 @@ class _IrrigationFleetAppState extends State<IrrigationFleetApp> {
             ),
           ),
           const SizedBox(height: 14),
-          
           const Text("🚜 ခေါက်ရေနှင့် ကားခထည့်သွင်းရန် (Numeric)", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12, color: Color(0xFFFFD700))),
           const SizedBox(height: 6),
           Row(
@@ -247,7 +239,6 @@ class _IrrigationFleetAppState extends State<IrrigationFleetApp> {
           _buildNumInput("တစ်စီးချင်းကားခ (Fare)", _rateCtrl),
           _buildNumInput("ဆီပေပါ ဈေးနှုန်း (-)", _fuelBarrelPriceCtrl),
           _buildNumInput("ပြုပြင်စရိတ် (-)", _repairCtrl),
-          
           const SizedBox(height: 10),
           const Text("🧮 ဒရိုင်ဘာ မောင်းကြေး တွက်ချက်မှုစနစ် ရွေးချယ်ရန်", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12, color: Color(0xFFFFD700))),
           const SizedBox(height: 6),
@@ -269,15 +260,11 @@ class _IrrigationFleetAppState extends State<IrrigationFleetApp> {
             ),
           ),
           const SizedBox(height: 8),
-          
-          // 🛠️ Option အလိုက် အတိုးအလျှော့လုပ်မည့် ရိုက်ကွက်များ နေရာမှန်ပေါ်လာစေခြင်း
           if (_driverOption == 1 || _driverOption == 2) 
             _buildNumInput("မောင်းကြေး သတ်မှတ်ရန် ရာခိုင်နှုန်း (%)", _customPercentCtrl),
           if (_driverOption == 3) 
             _buildNumInput("တစ်ခေါက်ချင်း သတ်မှတ်အပြတ်ကြေး (ကျပ်)", _fixedDriverWageCtrl),
-
           const SizedBox(height: 12),
-          // စာရင်းသိမ်းဆည်းရန် ခလုတ်
           ElevatedButton(
             onPressed: () {
               setState(() {
@@ -286,19 +273,15 @@ class _IrrigationFleetAppState extends State<IrrigationFleetApp> {
                   "trips": totalTrips,
                   "fare": totalFare,
                   "profit": netProfitLoss,
-                  "status": "Done"
                 });
               });
             },
             style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFFFFD700), minimumSize: const Size(double.infinity, 38)),
             child: const Text("နေ့စဉ်မှတ်တမ်းထဲသို့ သိမ်းဆည်းမည်", style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 12)),
           ),
-
           const SizedBox(height: 16),
           const Text("📊 နေ့စဉ် ကိုယ်ပိုင်မှတ်တမ်းဇယား (Daily Log Grid)", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12, color: Color(0xFFFFD700))),
           const SizedBox(height: 6),
-          
-          // 📄 ကိုကျော်သက်နိုင် နေ့စဉ်မှတ်တမ်းတင်ရန် ဇယားကွက်
           Table(
             border: TableBorder.all(color: Colors.white12),
             children: [
@@ -332,7 +315,6 @@ class _IrrigationFleetAppState extends State<IrrigationFleetApp> {
     );
   }
 
-  // 👤 ၄။ ကားပိုင်ရှင်အားလုံးတစ်စီးချင်းကားစာရင်း (သီးသန့်ခွဲထုတ်ထားသော စာမျက်နှာ)
   Widget _buildOwnersCarFareScreen() {
     return SingleChildScrollView(
       child: Column(
@@ -347,3 +329,11 @@ class _IrrigationFleetAppState extends State<IrrigationFleetApp> {
               title: const Text("ဦးဖြူ စာရင်းချုပ် ([▼] နှိပ်၍ ဖြန့်ချရန်)", style: TextStyle(color: Colors.greenAccent, fontSize: 13)),
               children: [
                 Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Table(
+                    border: TableBorder.all(color: Colors.white12),
+                    children: const [
+                      TableRow(
+                        decoration: BoxDecoration(color: Color(0xFF121212)),
+                        children: [
+                          Padding(padding: EdgeInsets.all(6), child: Text("ကားနံပါတ်", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 11))),
