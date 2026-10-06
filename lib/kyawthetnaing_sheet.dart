@@ -203,6 +203,15 @@ class _KyawThetNaingSheetState extends State<KyawThetNaingSheet> {
     );
   }
 
+  Widget _buildActionSaveButton() {
+    return ElevatedButton.icon(
+      style: ElevatedButton.styleFrom(backgroundColor: Colors.amber, foregroundColor: Colors.black, minimumSize: const Size.fromHeight(36)),
+      onPressed: _saveCurrentForm,
+      icon: const Icon(Icons.save, size: 16),
+      label: const Text("နေ့စဉ်မှတ်တမ်းထဲသို့ သိမ်းဆည်းမည်", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12.0)),
+    );
+  }
+
   Widget _buildActiveFormSection() {
     if (widget.activeSubMenu.contains("၅.၁")) {
       return Column(
@@ -228,14 +237,3 @@ class _KyawThetNaingSheetState extends State<KyawThetNaingSheet> {
           _buildActionSaveButton(),
         ],
       );
-    } else if (widget.activeSubMenu.contains("၅.၂")) {
-      return Column(
-        children: [
-          Row(
-            children: [
-              Expanded(child: _buildInputField(_shareAdvanceCtrl, "ကြိုတင်ငွေ (ခွဲဝေ)")),
-              const SizedBox(width: 6),
-              Expanded(child: _buildInputField(_privateAdvanceCtrl, "ကြိုတင်ငွေ (သီးသန့်)")),
-            ],
-          ),
-          const SizedBox(height: 6),
