@@ -5,7 +5,12 @@ class KyawThetNaingSheet extends StatefulWidget {
   final String activeSubMenu;
   final bool isLightMode;
 
-  const KyawThetNaingSheet({super.key, required this.isLargeScreen, required this.activeSubMenu, required this.isLightMode});
+  const KyawThetNaingSheet({
+    super.key, 
+    required this.isLargeScreen, 
+    required this.activeSubMenu, 
+    required this.isLightMode
+  });
 
   @override
   State<KyawThetNaingSheet> createState() => _KyawThetNaingSheetState();
@@ -114,7 +119,6 @@ class _KyawThetNaingSheetState extends State<KyawThetNaingSheet> {
         "d2Name": _d2NameCtrl.text, "d2Trips": _d2TripsCtrl.text, "d2Advance": _d2AdvanceCtrl.text,
         "fuel": _fuelCtrl.text, "food": _foodCtrl.text, "repair": _repairCtrl.text
       });
-      // ဈေးနှုန်းမှလွဲ၍ ကျန်အကွက်များအား Form သန့်ရှင်းရေးလုပ်ခြင်း
       _mornCtrl.text = "00"; _noonCtrl.text = "00"; _nightCtrl.text = "00";
     });
     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('လုပ်ငန်းခွင်ဒေတာအား သိမ်းဆည်းပြီးပါပြီ။')));
@@ -142,7 +146,7 @@ class _KyawThetNaingSheetState extends State<KyawThetNaingSheet> {
                 String val = cellEditCtrl.text.trim();
                 if (isTripField && val.length == 1) val = "0$val";
                 _centralDatabase[index][key] = val.isEmpty ? "0" : val;
-                if (key == "rate") _globalDefaultRate = val; // ဇယားထဲပြင်လျှင် Global ပါ Auto ဈေးပြောင်းလဲစနစ်
+                if (key == "rate") _globalDefaultRate = val; 
               });
               Navigator.pop(context);
             },
@@ -161,13 +165,11 @@ class _KyawThetNaingSheetState extends State<KyawThetNaingSheet> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        // 📥 ကဏ္ဍအလိုက် လက်နှင့် ဖြည့်သွင်းရမည့် Form အကွက်များ
         Expanded(
           flex: 4,
           child: SingleChildScrollView(child: _buildActiveFormSection()),
         ),
         const Divider(color: Colors.white24, height: 10),
-        // 📄 High-Contrast Spreadsheet စနစ်သုံး ဒေတာဇယားကွက်များ
         Expanded(
           flex: 5,
           child: _buildActiveGridSection(fontSize, contentTextColor),
@@ -238,3 +240,13 @@ class _KyawThetNaingSheetState extends State<KyawThetNaingSheet> {
             ],
           ),
           const SizedBox(height: 8),
+          _buildActionSaveButton(),
+        ],
+      );
+    } else {
+      return Column(
+        children: [
+          Row(
+            children: [
+              Expanded(child: _buildInputField(_fuelCtrl, "ဆီဖိုး (-)")),
+              const SizedBox(width: 6),
