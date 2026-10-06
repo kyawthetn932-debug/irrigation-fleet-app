@@ -70,16 +70,16 @@ class _MainFleetNavigationScreenState extends State<MainFleetNavigationScreen> {
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
-    bool isLargeScreen = screenWidth > 760; // Tablet & PC ခွဲခြားသည့် သတ်မှတ်ချက်
+    bool isLargeScreen = screenWidth > 760; 
 
     // ==========================================
-    // 📱 ဖုန်းနှင့် 💻 TABLET အလိုက် FONT SIZE များ သတ်မှတ်ခြင်း (RESPONSIVE TYPOGRAPHY)
+    // RESPONSIVE TYPOGRAPHY (FONT SIZES)
     // ==========================================
-    double titleFontSize = isLargeScreen ? 22.0 : 16.0;   // App Bar နှင့် ခေါင်းစဉ်ကြီးများအတွက်
-    double menuHeaderFontSize = isLargeScreen ? 16.0 : 13.0; // Sidebar တွဲဖက် Folder ခေါင်းစဉ်အတွက်
-    double menuItemFontSize = isLargeScreen ? 15.0 : 12.0;   // Menu တစ်ခုချင်းစီအတွက်
-    double tableHeaderFontSize = isLargeScreen ? 14.0 : 11.0; // ဇယားခေါင်းစဉ်များအတွက်
-    double tableCellFontSize = isLargeScreen ? 14.0 : 12.0;   // ဇယားတွင်း စာသား/ဂဏန်းများအတွက်
+    double titleFontSize = isLargeScreen ? 22.0 : 16.0;   
+    double menuHeaderFontSize = isLargeScreen ? 16.0 : 13.0; 
+    double menuItemFontSize = isLargeScreen ? 15.0 : 12.0;   
+    double tableHeaderFontSize = isLargeScreen ? 14.0 : 11.0; 
+    double tableCellFontSize = isLargeScreen ? 14.0 : 12.0;   
 
     return Scaffold(
       backgroundColor: _isLightMode ? const Color(0xFFF4F6F9) : const Color(0xFF121824),
@@ -105,9 +105,10 @@ class _MainFleetNavigationScreenState extends State<MainFleetNavigationScreen> {
       drawer: !isLargeScreen ? Drawer(child: _buildTreeMenu(context, isDrawer: true, folderSize: menuHeaderFontSize, itemSize: menuItemFontSize)) : null,
       body: Row(
         children: [
+          // ဘယ်ဘက် ၂၀% Sidebar Menu (Tablet/PC အတွက်)
           if (isLargeScreen)
             SizedBox(
-              width: screenWidth * 0.20, // ၂၀% Sidebar Menu
+              width: screenWidth * 0.20, 
               child: Container(
                 decoration: BoxDecoration(
                   color: _isLightMode ? Colors.white.withOpacity(0.9) : const Color(0xFF1A2333).withOpacity(0.9),
@@ -117,7 +118,7 @@ class _MainFleetNavigationScreenState extends State<MainFleetNavigationScreen> {
               ),
             ),
           
-          // ၈၀% Spreadsheet View
+          // ညာဘက် ၈၀% Spreadsheet View
           Expanded(
             child: Container(
               width: isLargeScreen ? screenWidth * 0.80 : screenWidth,
@@ -145,7 +146,7 @@ class _MainFleetNavigationScreenState extends State<MainFleetNavigationScreen> {
   }
 
   // ==========================================
-  // TREE SIDEBAR MENU WIDGET
+  // SIDEBAR TREE MENU WIDGET (အဖြူမှိန်မှိန်နောက်ခံစနစ်သုံး)
   // ==========================================
   Widget _buildTreeMenu(BuildContext context, {required bool isDrawer, required double folderSize, required double itemSize}) {
     return Container(
@@ -192,7 +193,7 @@ class _MainFleetNavigationScreenState extends State<MainFleetNavigationScreen> {
       dense: true,
       title: Padding(
         padding: const EdgeInsets.left(12.0),
-        child: Text(title, style: TextStyle(color: isSelected ? Colors.amber : Colors.white, fontSize: fontSize, fontWeight: isSelected ? FontWeight.bold : FontWeight.normal)),
+        child: Text(title, style: TextStyle(color: isSelected ? Colors.amber : (isDrawer ? Colors.black87 : Colors.white), fontSize: fontSize, fontWeight: isSelected ? FontWeight.bold : FontWeight.normal)),
       ),
       selected: isSelected,
       selectedTileColor: Colors.amber.withOpacity(0.15),
@@ -200,13 +201,13 @@ class _MainFleetNavigationScreenState extends State<MainFleetNavigationScreen> {
         setState(() {
           _currentScreenTitle = title;
         });
-        if (isDrawer) Navigator.pop(context);
+        if (isDrawer) Navigator.pop(context); // နှိပ်ပြီးရင် ဘောင်ပြန်ပိတ်ရန်
       },
     );
   }
 
   // ==========================================
-  // RESPONSIVE SPREADSHEET WIDGET
+  // SPREADSHEET TABLE GENERATOR
   // ==========================================
   Widget _buildSheetStructure({
     required List<String> headers,
@@ -222,7 +223,7 @@ class _MainFleetNavigationScreenState extends State<MainFleetNavigationScreen> {
         child: Container(
           decoration: BoxDecoration(border: Border.all(color: Colors.white12)),
           child: Table(
-            defaultColumnWidth: const FixedColumnWidth(110), // ကော်လံတစ်ကွက်ချင်းစီ၏ အကျယ်
+            defaultColumnWidth: const FixedColumnWidth(110), 
             border: TableBorder.all(color: Colors.white12, width: 1),
             children: [
               // Header Row
@@ -236,3 +237,6 @@ class _MainFleetNavigationScreenState extends State<MainFleetNavigationScreen> {
                 }).toList(),
               ),
               // Data Rows
+              ...List.generate(dataList.length, (rowIndex) {
+                return TableRow(
+                  children: keys.map((key) {
