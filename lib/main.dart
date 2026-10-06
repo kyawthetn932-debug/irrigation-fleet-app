@@ -10,7 +10,7 @@ class MaterialColorApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'ရတနာနိုင် - ဆည်မြောင်းကားစာရင်း',
+      title: 'ဆည်မြောင်းဆောက်လုပ်ရေးကား စာရင်း',
       theme: ThemeData.dark().copyWith(
         scaffoldBackgroundColor: const Color(0xFF121212),
         primaryColor: const Color(0xFFFFD700),
@@ -31,13 +31,17 @@ class IrrigationFleetApp extends StatefulWidget {
 class _IrrigationFleetAppState extends State<IrrigationFleetApp> {
   String _currentView = "Dashboard"; 
 
+  // Controller များ ပြင်ဆင်ခြင်း
   final _morningCtrl = TextEditingController(text: "0");
   final _afternoonCtrl = TextEditingController(text: "0");
   final _eveningCtrl = TextEditingController(text: "0");
   final _rateCtrl = TextEditingController(text: "50000");
-  final _fuelCtrl = TextEditingController(text: "150000");
+  final _fuelBarrelPriceCtrl = TextEditingController(text: "150000"); // ဆီပေပါဈေးနှုန်း
+  final _repairCtrl = TextEditingController(text: "0"); // ပြုပြင်စရိတ်
+  final _driverWageCtrl = TextEditingController(text: "30000"); // မောင်းကြေး
   final _customPercentCtrl = TextEditingController(text: "10");
   
+  DateTime _selectedDate = DateTime.now(); // နေ့စွဲမှတ်ရန်
   int _driverOption = 1;
 
   @override
@@ -61,8 +65,8 @@ class _IrrigationFleetAppState extends State<IrrigationFleetApp> {
                 decoration: BoxDecoration(color: Color(0xFF121212)),
                 child: Center(
                   child: Text(
-                    "ရတနာနိုင်\nFLEET SYSTEM", 
-                    style: TextStyle(color: Color(0xFFFFD700), fontWeight: FontWeight.bold, fontSize: 16),
+                    "ဆည်မြောင်း\nဆောက်လုပ်ရေးကား\nစာရင်း", 
+                    style: TextStyle(color: Color(0xFFFFD700), fontWeight: FontWeight.bold, fontSize: 14),
                     textAlign: TextAlign.center
                   ),
                 ),
@@ -149,10 +153,49 @@ class _IrrigationFleetAppState extends State<IrrigationFleetApp> {
     );
   }
   Widget _buildKyawThetNaingLedger() {
+    // 🧮 ပင်မအမြတ်အရှုံး စနစ်တကျ တွက်ချက်မှု အပိုင်း
+    int morning = int.tryParse(_morningCtrl.text) ?? 0;
+    int afternoon = int.tryParse(_afternoonCtrl.text) ?? 0;
+    int evening = int.tryParse(_eveningCtrl.text) ?? 0;
+    int totalTrips = morning + afternoon + evening;
+    int rate = int.tryParse(_rateCtrl.text) ?? 0;
+    
+    int totalFare = totalTrips * rate; // ရရှိသော ကားခပေါင်း
+    int fuelCost = int.tryParse(_fuelBarrelPriceCtrl.text) ?? 0; // ဆီပေပါဈေးနှုန်း
+    int repairCost = int.tryParse(_repairCtrl.text) ?? 0; // ပြုပြင်စရိတ်
+    int driverWage = int.tryParse(_driverWageCtrl.text) ?? 0; // မောင်းကြေး
+    
+    // 💸 အသားတင် အမြတ်/အရှုံး ဖော်မြူလာ = ရရကားခ - ဆီဖိုး - ပြုပြင်စရိတ် - မောင်းကြေး
+    int netProfitLoss = totalFare - fuelCost - repairCost - driverWage;
+    bool isProfit = netProfitLoss >= 0;
+
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // ရက်စွဲရွေးချယ်ရန် ကွက် (Date Selector)
+          Card(
+            color: const Color(0xFF1E1E2C),
+            child: ListTile(
+              leading: const Icon(Icons.calendar_today, color: Color(0xFFFFD700)),
+              title: Text("စာရင်းရက်စွဲ: ${_selectedDate.day}/${_selectedDate.month}/${_selectedDate.year}"),
+              trailing: const Icon(Icons.arrow_drop_down),
+              onTap: () async {
+                DateTime? picked = await showDatePicker(
+                  context: context,
+                  initialDate: _selectedDate,
+                  firstDate: DateTime(2020),
+                  lastDate: DateTime(2030),
+                );
+                if (picked != null) {
+                  setState(() { _selectedDate = picked; });
+                }
+              },
+            ),
+          ),
+          const SizedBox(height: 10),
+
+          // 🧊 3D KPI Card ပုံစံဖြင့် အမြတ်/အရှုံး တိုက်ရိုက်ပြသမည့်စနစ်
           Container(
             padding: const EdgeInsets.all(15),
             decoration: BoxDecoration(
@@ -162,27 +205,35 @@ class _IrrigationFleetAppState extends State<IrrigationFleetApp> {
                 BoxShadow(color: Colors.black54, offset: Offset(4, 4), blurRadius: 6),
               ]
             ),
-            child: const Row(
+            child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 Column(
                   children: [
-                    Text("စုစုပေါင်း ကားခ", style: TextStyle(color: Colors.grey, fontSize: 11)),
-                    SizedBox(height: 4),
-                    Text("၅၀၀,၀၀၀ ကျပ်", style: TextStyle(color: Colors.greenAccent, fontSize: 16, fontWeight: FontWeight.bold))
+                    const Text("ရရှိသော ကားခပေါင်း", style: TextStyle(color: Colors.grey, fontSize: 11)),
+                    const SizedBox(height: 4),
+                    Text("$totalFare ကျပ်", style: const TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.bold))
                   ]
                 ),
                 Column(
                   children: [
-                    Text("အသားတင် အမြတ်", style: TextStyle(color: Colors.grey, fontSize: 11)),
-                    SizedBox(height: 4),
-                    Text("၃၂၀,၀၀၀ ကျပ်", style: TextStyle(color: Color(0xFFFFD700), fontSize: 16, fontWeight: FontWeight.bold))
+                    Text(isProfit ? "အသားတင် အမြတ်" : "အသားတင် အရှုံး", style: const TextStyle(color: Colors.grey, fontSize: 11)),
+                    const SizedBox(height: 4),
+                    Text(
+                      "${netProfitLoss.abs()} ကျပ်", 
+                      style: TextStyle(
+                        color: isProfit ? Colors.greenAccent : Colors.redAccent, // အမြတ်စိမ်း / အရှုံးနီ
+                        fontSize: 16, 
+                        fontWeight: FontWeight.bold
+                      )
+                    )
                   ]
                 ),
               ],
             ),
           ),
           const SizedBox(height: 18),
+          
           const Text("🚜 ခေါက်ရေနှင့် ကားခထည့်သွင်းရန် (Numeric Inputs)", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Color(0xFFFFD700))),
           const SizedBox(height: 8),
           Row(
@@ -195,7 +246,10 @@ class _IrrigationFleetAppState extends State<IrrigationFleetApp> {
             ],
           ),
           _buildNumInput("တစ်စီးချင်းကားခ (Fare)", _rateCtrl),
-          _buildNumInput("ဆီဖိုး နှုတ်ရန် (-)", _fuelCtrl),
+          _buildNumInput("ဆီပေပါ ဈေးနှုန်း (-)", _fuelBarrelPriceCtrl),
+          _buildNumInput("ပြုပြင်စရိတ် (-)", _repairCtrl),
+          _buildNumInput("ဒရိုင်ဘာ မောင်းကြေး (-)", _driverWageCtrl),
+          
           const SizedBox(height: 12),
           const Text("🧮 ဒရိုင်ဘာ မောင်းကြေး တွက်ချက်မှု စနစ် ရွေးချယ်ရန်", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Color(0xFFFFD700))),
           const SizedBox(height: 6),
@@ -221,6 +275,7 @@ class _IrrigationFleetAppState extends State<IrrigationFleetApp> {
           const SizedBox(height: 8),
           if (_driverOption == 2) _buildNumInput("စိတ်ကြိုက် ရာခိုင်နှုန်း ထည့်ရန် (%)", _customPercentCtrl),
           if (_driverOption == 2) const SizedBox(height: 8),
+
           const Text("📊 ကားပိုင်ရှင်အလိုက် တစ်စီးချင်း ကားခစာရင်း (Tree Table)", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
           const SizedBox(height: 5),
           Card(
