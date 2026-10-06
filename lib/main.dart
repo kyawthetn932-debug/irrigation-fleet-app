@@ -143,7 +143,6 @@ class _IrrigationFleetAppState extends State<IrrigationFleetApp> {
       )
     );
   }
-
   Widget _buildKyawThetNaingLedger() {
     int morning = int.tryParse(_morningCtrl.text) ?? 0;
     int afternoon = int.tryParse(_afternoonCtrl.text) ?? 0;
@@ -246,3 +245,95 @@ class _IrrigationFleetAppState extends State<IrrigationFleetApp> {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 10),
             decoration: BoxDecoration(border: Border.all(color: Colors.white24), borderRadius: BorderRadius.circular(6)),
+            child: DropdownButtonHideUnderline(
+              child: DropdownButton<int>(
+                value: _driverOption,
+                isExpanded: true,
+                dropdownColor: const Color(0xFF1E1E2C),
+                items: const [
+                  DropdownMenuItem(value: 1, child: Text("Option 1: (ကားခ - ဆီဖိုး) ၏ % တွက်ခြင်း", style: TextStyle(fontSize: 12))),
+                  DropdownMenuItem(value: 2, child: Text("Option 2: စိတ်ကြိုက် ဝင်ငွေ၏ % တွက်ခြင်း", style: TextStyle(fontSize: 12))),
+                  DropdownMenuItem(value: 3, child: Text("Option 3: တစ်ခေါက်ချင်း အပြတ်ပေးစနစ်", style: TextStyle(fontSize: 12))),
+                ],
+                onChanged: (val) { setState(() { _driverOption = val!; }); },
+              ),
+            ),
+          ),
+          const SizedBox(height: 8),
+          if (_driverOption == 1 || _driverOption == 2) 
+            _buildNumInput("မောင်းကြေး ရာခိုင်နှုန်း (%)", _customPercentCtrl),
+          if (_driverOption == 3) 
+            _buildNumInput("တစ်ခေါက်ချင်း အပြတ်ကြေး (ကျပ်)", _fixedDriverWageCtrl),
+          const SizedBox(height: 12),
+          ElevatedButton(
+            onPressed: () {
+              setState(() {
+                _kyawThetNaingLogs.insert(0, {
+                  "date": "${_selectedDate.day}/${_selectedDate.month}/${_selectedDate.year}",
+                  "trips": totalTrips,
+                  "fare": totalFare,
+                  "profit": netProfitLoss,
+                });
+              });
+            },
+            style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFFFFD700), minimumSize: const Size(double.infinity, 38)),
+            child: const Text("နေ့စဉ်မှတ်တမ်းထဲသို့ သိမ်းဆည်းမည်", style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 12)),
+          ),
+          const SizedBox(height: 16),
+          const Text("📊 နေ့စဉ် ကိုယ်ပိုင်မှတ်တမ်းဇယား (Daily Log Grid)", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12, color: Color(0xFFFFD700))),
+          const SizedBox(height: 6),
+          Table(
+            border: TableBorder.all(color: Colors.white12),
+            children: [
+              const TableRow(
+                decoration: BoxDecoration(color: Color(0xFF1E1E2C)),
+                children: [
+                  Padding(padding: EdgeInsets.all(5), child: Text("နေ့စွဲ", style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold))),
+                  Padding(padding: EdgeInsets.all(5), child: Text("ခေါက်ရေ", style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold))),
+                  Padding(padding: EdgeInsets.all(5), child: Text("ကားခစုစုပေါင်း", style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold))),
+                  Padding(padding: EdgeInsets.all(5), child: Text("အမြတ်/အရှုံး", style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold))),
+                ]
+              ),
+              ..._kyawThetNaingLogs.map((log) {
+                bool logProfit = log["profit"] >= 0;
+                return TableRow(
+                  children: [
+                    Padding(padding: const EdgeInsets.all(5), child: Text(log["date"], style: const TextStyle(fontSize: 10))),
+                    Padding(padding: const EdgeInsets.all(5), child: Text("${log["trips"]}", style: const TextStyle(fontSize: 10))),
+                    Padding(padding: const EdgeInsets.all(5), child: Text("${log["fare"]}", style: const TextStyle(fontSize: 10))),
+                    Padding(
+                      padding: const EdgeInsets.all(5), 
+                      child: Text("${log["profit"]}", style: TextStyle(fontSize: 10, color: logProfit ? Colors.greenAccent : Colors.redAccent, fontWeight: FontWeight.bold))
+                    ),
+                  ]
+                );
+              }),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildOwnersCarFareScreen() {
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text("📊 ကားပိုင်ရှင်အလိုက် တစ်စီးချင်း ကားခစာရင်း (Tree Table)", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
+          const SizedBox(height: 8),
+          Card(
+            color: const Color(0xFF1E1E2C),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+            child: ExpansionTile(
+              title: const Text("ဦးဖြူ စာရင်းချုပ် ([▼] နှိပ်၍ ဖြန့်ချရန်)", style: TextStyle(color: Colors.greenAccent, fontSize: 13)),
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Table(
+                    border: TableBorder.all(color: Colors.white12),
+                    children: const [
+                      TableRow(
+                        decoration: BoxDecoration(color: Color(0xFF121212)),
+                        children: [
+                          Padding(padding: EdgeInsets.all(6), child: Text("ကားနံပါတ်", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 11))),
