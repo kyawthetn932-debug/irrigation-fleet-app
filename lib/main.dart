@@ -86,12 +86,24 @@ class _MainFleetNavigationScreenState extends State<MainFleetNavigationScreen> {
   }
 
   Widget _buildActiveSheetContent(bool isLargeScreen) {
-    if (_activeMenuTitle.contains("ဒက်ရှ်ဘုတ်")) return DashboardSheet(isLargeScreen: isLargeScreen);
-    if (_activeMenuTitle.contains("ကားပိုင်ရှင်များ အမည်စာရင်း") || _activeMenuTitle.contains("ပြိုင်ဆိုင်မှု")) return OwnerSheet(isLargeScreen: isLargeScreen, currentSubMenu: _activeMenuTitle);
-    if (_activeMenuTitle.contains("နေ့စဉ် ကားအားလုံး") || _activeMenuTitle.contains("ဆီစာရင်း")) return FleetDailySheet(isLargeScreen: isLargeScreen, currentSubMenu: _activeMenuTitle);
-    if (_activeMenuTitle.contains("တစ်ဦးချင်း သီးသန့်စာရင်း")) return SingleOwnerSheet(isLargeScreen: isLargeScreen);
-    if (_activeMenuTitle.contains("ကိုကျော်သက်နိုင် သီးသန့်")) return KyawThetNaingSheet(isLargeScreen: isLargeScreen);
-    if (_activeMenuTitle.contains("ကြိုတင်ငွေ") || _activeMenuTitle.contains("Viber") || _activeMenuTitle.contains("Master Log")) return FinanceShareSheet(isLargeScreen: isLargeScreen, currentSubMenu: _activeMenuTitle);
+    if (_activeMenuTitle.contains("ဒက်ရှ်ဘုတ်")) {
+      return DashboardSheet(isLargeScreen: isLargeScreen);
+    }
+    if (_activeMenuTitle.contains("ကားပိုင်ရှင်များ အမည်စာရင်း") || _activeMenuTitle.contains("ပြိုင်ဆိုင်မှု")) {
+      return OwnerSheet(isLargeScreen: isLargeScreen, currentSubMenu: _activeMenuTitle);
+    }
+    if (_activeMenuTitle.contains("နေ့စဉ် ကားအားလုံး") || _activeMenuTitle.contains("ဆီစာရင်း")) {
+      return FleetDailySheet(isLargeScreen: isLargeScreen, currentSubMenu: _activeMenuTitle);
+    }
+    if (_activeMenuTitle.contains("တစ်ဦးချင်း သီးသန့်စာရင်း")) {
+      return SingleOwnerSheet(isLargeScreen: isLargeScreen);
+    }
+    if (_activeMenuTitle.contains("ကိုကျော်သက်နိုင် သီးသန့်")) {
+      return KyawThetNaingSheet(isLargeScreen: isLargeScreen);
+    }
+    if (_activeMenuTitle.contains("ကြိုတင်ငွေ") || _activeMenuTitle.contains("Viber") || _activeMenuTitle.contains("Master Log")) {
+      return FinanceShareSheet(isLargeScreen: isLargeScreen, currentSubMenu: _activeMenuTitle);
+    }
     
     return const Center(child: Text("စာရင်းဇယား မရှိသေးပါ။"));
   }
