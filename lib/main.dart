@@ -148,7 +148,6 @@ class _IrrigationFleetAppState extends State<IrrigationFleetApp> {
       )
     );
   }
-
   Widget _buildKyawThetNaingLedger() {
     return SingleChildScrollView(
       child: Column(
@@ -243,3 +242,47 @@ class _IrrigationFleetAppState extends State<IrrigationFleetApp> {
                           Padding(padding: EdgeInsets.all(6), child: Text("ရရန်ကျန်ငွေ", style: TextStyle(fontSize: 11)))
                         ]
                       ),
+                      TableRow(
+                        children: [
+                          Padding(padding: EdgeInsets.all(6), child: Text("YTN-1111", style: TextStyle(fontSize: 11))),
+                          Padding(padding: EdgeInsets.all(6), child: Text("၅၀၀,၀၀၀", style: TextStyle(fontSize: 11))),
+                          Padding(padding: EdgeInsets.all(6), child: Text("၃၂၀,၀၀၀", style: TextStyle(fontSize: 11, color: Colors.greenAccent)))
+                        ]
+                      ),
+                      TableRow(
+                        children: [
+                          Padding(padding: EdgeInsets.all(6), child: Text("YTN-2222", style: TextStyle(fontSize: 11))),
+                          Padding(padding: EdgeInsets.all(6), child: Text("၄၅၀,၀၀၀", style: TextStyle(fontSize: 11))),
+                          Padding(padding: EdgeInsets.all(6), child: Text("၂၈၀,၀၀၀", style: TextStyle(fontSize: 11, color: Colors.greenAccent)))
+                        ]
+                      ),
+                    ],
+                  ),
+                )
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildNumInput(String label, TextEditingController controller) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8.0),
+      child: TextField(
+        controller: controller,
+        keyboardType: TextInputType.number,
+        style: const TextStyle(fontSize: 13),
+        decoration: InputDecoration(
+          labelText: label,
+          labelStyle: const TextStyle(fontSize: 11, color: Colors.white60),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+          border: const OutlineInputBorder(),
+          focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: Color(0xFFFFD700))),
+        ),
+        onChanged: (val) => setState(() {}),
+      ),
+    );
+  }
+}
