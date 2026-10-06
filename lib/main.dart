@@ -10,252 +10,229 @@ class IrrigationFleetApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Irrigation Fleet App',
+      title: 'Irrigation Fleet & POS System',
       debugShowCheckedModeBanner: false,
       theme: ThemeData.dark().copyWith(
-        scaffoldBackgroundColor: const Color(0xFF121824), // Slate Dark Background သို့ ပြောင်းလဲထားသည်
+        scaffoldBackgroundColor: const Color(0xFF121824), // Slate Dark Background
       ),
-      home: const KoKyawThetNaingLogScreen(),
+      home: const MainFleetNavigationScreen(),
     );
   }
 }
 
-class KoKyawThetNaingLogScreen extends StatefulWidget {
-  const KoKyawThetNaingLogScreen({super.key});
+class MainFleetNavigationScreen extends StatefulWidget {
+  const MainFleetNavigationScreen({super.key});
 
   @override
-  State<KoKyawThetNaingLogScreen> createState() => _KoKyawThetNaingLogScreenState();
+  State<MainFleetNavigationScreen> createState() => _MainFleetNavigationScreenState();
 }
 
-class _KoKyawThetNaingLogScreenState extends State<KoKyawThetNaingLogScreen> {
-  // Input Controllers 
-  final TextEditingController _mornController = TextEditingController(text: "0");
-  final TextEditingController _noonController = TextEditingController(text: "0");
-  final TextEditingController _nightController = TextEditingController(text: "0");
-  final TextEditingController _priceController = TextEditingController(text: "150000");
-  final TextEditingController _carFeeController = TextEditingController(text: "50000");
-  final TextEditingController _repairController = TextEditingController(text: "0");
-  final TextEditingController _driverPercentController = TextEditingController(text: "10");
+class _MainFleetNavigationScreenState extends State<MainFleetNavigationScreen> {
+  String _currentScreenTitle = "👑 ကိုကျော်သက်နိုင် သီးသန့် ကားစာရင်း (၅)";
+  bool _isLightMode = false;
 
-  // Spreadsheet Style Data List
-  final List<Map<String, String>> _sheetRecords = [
-    {
-      "date": "05/10/2026",
-      "count": "12",
-      "carFee": "600000",
-      "netProfit": "320000",
-    }
+  // ==========================================
+  // SPREADSHEET SAMPLE DATA LISTS
+  // ==========================================
+  final List<Map<String, String>> _kyawThetNaingRecords = [
+    {"date": "05/10/2026", "morn": "4", "noon": "4", "night": "4", "rate": "50000", "total": "600000", "repair": "0", "net": "320000"},
+    {"date": "06/10/2026", "morn": "5", "noon": "5", "night": "2", "rate": "50000", "total": "600000", "repair": "50000", "net": "350000"}
   ];
 
-  @override
-  void dispose() {
-    _mornController.dispose();
-    _noonController.dispose();
-    _nightController.dispose();
-    _priceController.dispose();
-    _carFeeController.dispose();
-    _repairController.dispose();
-    _driverPercentController.dispose();
-    super.dispose();
-  }
-
-  // Cell Editing Dialog Box
-  void _editSheetCell(int rowIndex, String key, String title) {
-    TextEditingController editCellCtrl = TextEditingController(text: _sheetRecords[rowIndex][key]);
+  void _editCell(List<Map<String, String>> currentList, int rowIndex, String key, String columnName, double dialogFontSize) {
+    TextEditingController editCtrl = TextEditingController(text: currentList[rowIndex][key]);
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
         backgroundColor: const Color(0xFF1F293D),
-        title: Text("$title ကို ပြင်ဆင်ရန်", style: const TextStyle(color: Colors.amber)),
+        title: Text("$columnName ကွက်ကို ပြင်ဆင်ရန်", style: TextStyle(color: Colors.amber, fontSize: dialogFontSize + 2)),
         content: TextField(
-          controller: editCellCtrl,
-          keyboardType: TextInputType.number,
-          style: const TextStyle(color: Colors.white),
-          decoration: const InputDecoration(
-            enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.amber)),
-          ),
+          controller: editCtrl,
+          style: TextStyle(color: Colors.white, fontSize: dialogFontSize),
+          decoration: const InputDecoration(enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.amber))),
         ),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text("ပယ်ဖျက်", style: TextStyle(color: Colors.white54)),
-          ),
+          TextButton(onPressed: () => Navigator.pop(context), child: Text("ပယ်ဖျက်", style: TextStyle(color: Colors.white54, fontSize: dialogFontSize - 2))),
           TextButton(
             onPressed: () {
               setState(() {
-                _sheetRecords[rowIndex][key] = editCellCtrl.text;
+                currentList[rowIndex][key] = editCtrl.text;
               });
               Navigator.pop(context);
             },
-            child: const Text("သိမ်းဆည်းမည်", style: TextStyle(color: Colors.teal)),
+            child: Text("ပြင်ဆင်မည်", style: TextStyle(color: Colors.teal, fontWeight: FontWeight.bold, fontSize: dialogFontSize - 2)),
           ),
         ],
       ),
     );
   }
 
-  void _saveRecord() {
-    int totalQty = (int.tryParse(_mornController.text) ?? 0) +
-                   (int.tryParse(_noonController.text) ?? 0) +
-                   (int.tryParse(_nightController.text) ?? 0);
-    int carFeeAmt = int.tryParse(_carFeeController.text) ?? 0;
-    int calculatedTotal = totalQty * carFeeAmt;
+  @override
+  Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+    bool isLargeScreen = screenWidth > 760; // Tablet & PC ခွဲခြားသည့် သတ်မှတ်ချက်
 
-    setState(() {
-      _sheetRecords.add({
-        "date": "06/10/2026",
-        "count": totalQty.toString(),
-        "carFee": calculatedTotal.toString(),
-        "netProfit": "350000", 
-      });
-    });
+    // ==========================================
+    // 📱 ဖုန်းနှင့် 💻 TABLET အလိုက် FONT SIZE များ သတ်မှတ်ခြင်း (RESPONSIVE TYPOGRAPHY)
+    // ==========================================
+    double titleFontSize = isLargeScreen ? 22.0 : 16.0;   // App Bar နှင့် ခေါင်းစဉ်ကြီးများအတွက်
+    double menuHeaderFontSize = isLargeScreen ? 16.0 : 13.0; // Sidebar တွဲဖက် Folder ခေါင်းစဉ်အတွက်
+    double menuItemFontSize = isLargeScreen ? 15.0 : 12.0;   // Menu တစ်ခုချင်းစီအတွက်
+    double tableHeaderFontSize = isLargeScreen ? 14.0 : 11.0; // ဇယားခေါင်းစဉ်များအတွက်
+    double tableCellFontSize = isLargeScreen ? 14.0 : 12.0;   // ဇယားတွင်း စာသား/ဂဏန်းများအတွက်
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('နေ့စဉ်မှတ်တမ်းထဲသို့ သိမ်းဆည်းပြီးပါပြီ။')),
+    return Scaffold(
+      backgroundColor: _isLightMode ? const Color(0xFFF4F6F9) : const Color(0xFF121824),
+      appBar: AppBar(
+        title: Text(_currentScreenTitle, style: TextStyle(color: Colors.amber, fontWeight: FontWeight.bold, fontSize: titleFontSize)),
+        backgroundColor: _isLightMode ? Colors.white : const Color(0xFF1A2333),
+        elevation: 0,
+        actions: [
+          IconButton(
+            icon: Icon(_isLightMode ? Icons.dark_mode : Icons.light_mode, color: Colors.amber),
+            onPressed: () => setState(() => _isLightMode = !_isLightMode),
+          ),
+        ],
+        leading: !isLargeScreen
+            ? Builder(
+                builder: (context) => IconButton(
+                  icon: const Icon(Icons.menu, color: Colors.amber),
+                  onPressed: () => Scaffold.of(context).openDrawer(),
+                ),
+              )
+            : const Icon(Icons.local_shipping, color: Colors.amber),
+      ),
+      drawer: !isLargeScreen ? Drawer(child: _buildTreeMenu(context, isDrawer: true, folderSize: menuHeaderFontSize, itemSize: menuItemFontSize)) : null,
+      body: Row(
+        children: [
+          if (isLargeScreen)
+            SizedBox(
+              width: screenWidth * 0.20, // ၂၀% Sidebar Menu
+              child: Container(
+                decoration: BoxDecoration(
+                  color: _isLightMode ? Colors.white.withOpacity(0.9) : const Color(0xFF1A2333).withOpacity(0.9),
+                  border: const Border(right: BorderSide(color: Colors.white12)),
+                ),
+                child: _buildTreeMenu(context, isDrawer: false, folderSize: menuHeaderFontSize, itemSize: menuItemFontSize),
+              ),
+            ),
+          
+          // ၈၀% Spreadsheet View
+          Expanded(
+            child: Container(
+              width: isLargeScreen ? screenWidth * 0.80 : screenWidth,
+              padding: const EdgeInsets.all(12.0),
+              child: Card(
+                color: _isLightMode ? Colors.white : const Color(0xFF1A2333),
+                elevation: 4,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: _buildSheetStructure(
+                    headers: ["ရက်စွဲ", "မနက်", "နေ့လည်", "ည", "ကားခနှုန်း", "စုစုပေါင်း", "ပြင်ဆင်စရိတ်", "အသားတင်မြတ်"],
+                    keys: ["date", "morn", "noon", "night", "rate", "total", "repair", "net"],
+                    dataList: _kyawThetNaingRecords,
+                    headerSize: tableHeaderFontSize,
+                    cellSize: tableCellFontSize,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          "ကိုကျော်သက်နိုင် စာရင်း",
-          style: TextStyle(color: Colors.amber, fontWeight: FontWeight.bold, shadows: [
-            Shadow(color: Colors.black45, offset: Offset(2, 2), blurRadius: 4),
-          ]),
-        ),
-        centerTitle: true,
-        backgroundColor: const Color(0xFF1A2333), // AppBar အရောင် ပြောင်းလဲထားသည်
-        elevation: 0,
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+  // ==========================================
+  // TREE SIDEBAR MENU WIDGET
+  // ==========================================
+  Widget _buildTreeMenu(BuildContext context, {required bool isDrawer, required double folderSize, required double itemSize}) {
+    return Container(
+      color: isDrawer ? Colors.white.withOpacity(0.85) : Colors.transparent,
+      child: ListView(
+        padding: EdgeInsets.zero,
+        children: [
+          const DrawerHeader(
+            decoration: BoxDecoration(color: Color(0xFF243147)),
+            child: Center(
+              child: Text(
+                "ဆည်မြောင်း\nကားစာရင်း Ledger", 
+                style: TextStyle(color: Colors.amber, fontWeight: FontWeight.bold, fontSize: 16),
+                textAlign: TextAlign.center,
+              ),
+            ),
+          ),
+          _buildFolder(
+            title: "၄။ ကားပိုင်ရှင် သီးသန့်စာရင်း",
+            icon: Icons.person,
+            fontSize: folderSize,
             children: [
-              // 📅 ရက်စွဲ
-              _build3DContainer(
-                child: Row(
-                  children: const [
-                    Icon(Icons.calendar_month, color: Colors.amber, size: 28),
-                    SizedBox(width: 15),
-                    Text(
-                      "ရက်စွဲ: 6/10/2026",
-                      style: TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),
-                    ),
-                  ],
-                ),
+              _buildItem("👤 ကားပိုင်ရှင်တစ်ဦးချင်း သီးသန့်စာရင်း (4)", isDrawer, itemSize),
+              _buildItem("👑 ကိုကျော်သက်နိုင် သီးသန့် ကားစာရင်း (၅)", isDrawer, itemSize),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildFolder({required String title, required IconData icon, required double fontSize, required List<Widget> children}) {
+    return ExpansionTile(
+      leading: Icon(icon, color: Colors.amber, size: 20),
+      title: Text(title, style: TextStyle(fontSize: fontSize, fontWeight: FontWeight.bold)),
+      initiallyExpanded: true,
+      children: children,
+    );
+  }
+
+  Widget _buildItem(String title, bool isDrawer, double fontSize) {
+    bool isSelected = _currentScreenTitle == title;
+    return ListTile(
+      dense: true,
+      title: Padding(
+        padding: const EdgeInsets.left(12.0),
+        child: Text(title, style: TextStyle(color: isSelected ? Colors.amber : Colors.white, fontSize: fontSize, fontWeight: isSelected ? FontWeight.bold : FontWeight.normal)),
+      ),
+      selected: isSelected,
+      selectedTileColor: Colors.amber.withOpacity(0.15),
+      onTap: () {
+        setState(() {
+          _currentScreenTitle = title;
+        });
+        if (isDrawer) Navigator.pop(context);
+      },
+    );
+  }
+
+  // ==========================================
+  // RESPONSIVE SPREADSHEET WIDGET
+  // ==========================================
+  Widget _buildSheetStructure({
+    required List<String> headers,
+    required List<String> keys,
+    required List<Map<String, String>> dataList,
+    required double headerSize,
+    required double cellSize,
+  }) {
+    return SingleChildScrollView(
+      scrollDirection: Axis.vertical,
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Container(
+          decoration: BoxDecoration(border: Border.all(color: Colors.white12)),
+          child: Table(
+            defaultColumnWidth: const FixedColumnWidth(110), // ကော်လံတစ်ကွက်ချင်းစီ၏ အကျယ်
+            border: TableBorder.all(color: Colors.white12, width: 1),
+            children: [
+              // Header Row
+              TableRow(
+                decoration: const BoxDecoration(color: Color(0xFF243147)),
+                children: headers.map((header) {
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(header, style: TextStyle(color: Colors.amber, fontWeight: FontWeight.bold, fontSize: headerSize)),
+                  );
+                }).toList(),
               ),
-              const SizedBox(height: 20),
-
-              // 💰 တန်ဖိုး/စျေးနှုန်းများ
-              Row(
-                children: [
-                  Expanded(
-                    child: _build3DContainer(
-                      child: Column(
-                        children: const [
-                          Text("ကားခခေါင်းစဉ်", style: TextStyle(color: Colors.white54, fontSize: 12)),
-                          SizedBox(height: 5),
-                          Text("0 ကျပ်", style: TextStyle(color: Colors.white, fontSize: 16)),
-                        ],
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 15),
-                  Expanded(
-                    child: _build3DContainer(
-                      child: Column(
-                        children: const [
-                          Text("စုစုပေါင်း တန်ဖိုး", style: TextStyle(color: Colors.white54, fontSize: 12)),
-                          SizedBox(height: 5),
-                          Text("150000 ကျပ်", style: TextStyle(color: Colors.amber, fontSize: 16, fontWeight: FontWeight.bold)),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 20),
-
-              // 🔢 နံနက် / နေ့လည် / ည Input Fields
-              Row(
-                children: [
-                  Expanded(child: _build3DTextField(controller: _mornController, label: "မနက်")),
-                  const SizedBox(width: 10),
-                  Expanded(child: _build3DTextField(controller: _noonController, label: "နေ့လည်")),
-                  const SizedBox(width: 10),
-                  Expanded(child: _build3DTextField(controller: _nightController, label: "ည")),
-                ],
-              ),
-              const SizedBox(height: 15),
-
-              // 🔧 Inputs
-              _build3DTextField(controller: _carFeeController, label: "တစ်စီးချင်းကားခ"),
-              const SizedBox(height: 15),
-              _build3DTextField(controller: _priceController, label: "ဆီပေးပါ ဈေးနှုန်း"),
-              const SizedBox(height: 15),
-              _build3DTextField(controller: _repairController, label: "ပြုပြင်စရိတ်"),
-              const SizedBox(height: 20),
-
-              // Dropdown
-              _build3DContainer(
-                child: DropdownButtonFormField<String>(
-                  value: 'option1',
-                  dropdownColor: const Color(0xFF1F293D),
-                  decoration: const InputDecoration(
-                    labelText: "မောင်းကြေးစနစ် ရွေးချယ်ရန်",
-                    labelStyle: TextStyle(color: Colors.amber),
-                    border: InputBorder.none,
-                  ),
-                  items: const [
-                    DropdownMenuItem(value: 'option1', child: Text("Option 1: မောင်းကြေး ရာခိုင်နှုန်း (%)")),
-                    DropdownMenuItem(value: 'option2', child: Text("Option 2: [ကားခ - ဆီဖိုး] %")),
-                    DropdownMenuItem(value: 'option3', child: Text("Option 3: ခေါက်ကြေးစနစ်")),
-                  ],
-                  onChanged: (value) {},
-                ),
-              ),
-              const SizedBox(height: 15),
-              _build3DTextField(controller: _driverPercentController, label: "မောင်းကြေး ရာခိုင်နှုန်း (%)"),
-              const SizedBox(height: 25),
-
-              // Save Button
-              GestureDetector(
-                onTap: _saveRecord,
-                child: Container(
-                  padding: const EdgeInsets.symmetric(vertical: 15),
-                  decoration: BoxDecoration(
-                    color: Colors.amber,
-                    borderRadius: BorderRadius.circular(12),
-                    boxShadow: const [
-                      BoxShadow(color: Colors.black38, offset: Offset(3, 3), blurRadius: 5),
-                    ],
-                  ),
-                  alignment: Alignment.center,
-                  child: const Text(
-                    "နေ့စဉ်မှတ်တမ်းထဲသို့ သိမ်းဆည်းမည်",
-                    style: TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 30),
-
-              // 📊 Spreadsheet Table
-              Row(
-                children: const [
-                  Icon(Icons.table_chart, color: Colors.teal),
-                  SizedBox(width: 10),
-                  Text(
-                    "နေ့စဉ် ကိုယ်ပိုင်မှတ်တမ်းဇယား",
-                    style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 10),
-
-              Container(
-                decoration: BoxDecoration(
-                  color: const Color(0xFF1A2333), // Table Background ကို ပိုမှောင်ပြီး လင်းအောင်ညှိသည်
+              // Data Rows
