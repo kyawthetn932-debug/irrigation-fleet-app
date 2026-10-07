@@ -14,7 +14,6 @@ class IrrigationFleetApp extends StatefulWidget {
 }
 
 class _IrrigationFleetAppState extends State<IrrigationFleetApp> {
-  // 🌗 နေ့စွဲ/ညစွဲ Theme ပြောင်းလဲရန် ဗဟိုချက် State စနစ်
   bool _isLightMode = false;
 
   void _toggleTheme() {
@@ -30,7 +29,7 @@ class _IrrigationFleetAppState extends State<IrrigationFleetApp> {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         brightness: _isLightMode ? Brightness.light : Brightness.dark,
-        scaffoldBackgroundColor: _isLightMode ? const Color(0xFFF4F6F9) : const Color(0xFF121824), // ☀️ နေ့ဘက်သုံး အဖြူမှိုင်း / 🌙 ညဘက်သုံး Slate Dark
+        scaffoldBackgroundColor: _isLightMode ? const Color(0xFFF4F6F9) : const Color(0xFF121824),
       ),
       home: MainFleetNavigationScreen(isLightMode: _isLightMode, onThemeToggle: _toggleTheme),
     );
@@ -47,7 +46,8 @@ class MainFleetNavigationScreen extends StatefulWidget {
 }
 
 class _MainFleetNavigationScreenState extends State<MainFleetNavigationScreen> {
-  String _activeMenuTitle = "📄 (၅.၁) နေ့စဉ် ခေါက်ရေနှင့် ဝင်ငွေဇယား";
+  // 🔑 ချိတ်ဆက်မှု ခေါင်းစဉ်အမှန်အား ဂဏန်းမပါသော ရိုးရိုးစာသားဖြင့် ကွက်တိပြောင်းလဲထားခြင်း
+  String _activeMenuTitle = "📄 နေ့စဉ် ခေါက်ရေနှင့် ဝင်ငွေဇယား";
 
   void _onMenuSelected(String selectedTitle) {
     setState(() {
@@ -61,7 +61,6 @@ class _MainFleetNavigationScreenState extends State<MainFleetNavigationScreen> {
     bool isLargeScreen = screenWidth > 800;
     double titleFontSize = isLargeScreen ? 18.0 : 14.0;
 
-    // နေ့/ည အလိုက် AppBar အရောင် ပြောင်းလဲခြင်း
     Color appBarBg = widget.isLightMode ? Colors.white : const Color(0xFF1A2333);
     Color textColor = widget.isLightMode ? const Color(0xFF121824) : Colors.amber;
 
@@ -71,7 +70,6 @@ class _MainFleetNavigationScreenState extends State<MainFleetNavigationScreen> {
         backgroundColor: appBarBg,
         elevation: 1,
         actions: [
-          // 🌗 နေ့ဘက်/ညဘက် လျှပ်တပြက် အမြန်ပြောင်း Toggle ခလုတ်
           IconButton(
             icon: Icon(widget.isLightMode ? Icons.dark_mode : Icons.light_mode, color: Colors.amber),
             onPressed: widget.onThemeToggle,
@@ -125,4 +123,3 @@ class _MainFleetNavigationScreenState extends State<MainFleetNavigationScreen> {
     );
   }
 }
-
