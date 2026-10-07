@@ -90,13 +90,11 @@ class _KyawThetNaingSheetState extends State<KyawThetNaingSheet> {
       driverFeeTotal = (totalTrips * driverFactor).round();
     }
 
-    int netProfit = totalRevenue - (fuel + food + repair + driverFeeTotal);
-
     return {
       "totalTrips": totalTrips,
       "totalRevenue": totalRevenue,
       "driverFeeTotal": driverFeeTotal,
-      "netProfit": netProfit
+      "netProfit": totalRevenue - (fuel + food + repair + driverFeeTotal)
     };
   }
 
@@ -237,3 +235,4 @@ class _KyawThetNaingSheetState extends State<KyawThetNaingSheet> {
           _buildActionSaveButton(),
         ],
       );
+    } else if (widget.activeSubMenu.contains("၅.၂")) {
