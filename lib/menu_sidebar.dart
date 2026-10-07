@@ -10,16 +10,7 @@ class MenuSidebar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
-    bool isLargeScreen = screenWidth > 800;
-    double folderSize = isLargeScreen ? 14.0 : 13.0;
-    double itemSize = isLargeScreen ? 13.0 : 11.5;
-
-    // နေ့ဘက်သုံး မုဒ်ဖြစ်ပါက အဖြူမှိန်မှိန် Soft Opacity သုံး၍ ညဘက်ဖြစ်က ၎င်းအတိုင်းထားမည်
-    Color sidebarBg = isLightMode 
-        ? Colors.white.withOpacity(0.95) 
-        : (isDrawer ? Colors.black87.withOpacity(0.85) : Colors.transparent);
-
+    Color sidebarBg = isLightMode ? Colors.white : (isDrawer ? Colors.black87 : Colors.transparent);
     Color folderTextColor = isLightMode ? const Color(0xFF121824) : Colors.white;
 
     return Container(
@@ -32,49 +23,39 @@ class MenuSidebar extends StatelessWidget {
             child: Center(
               child: Text(
                 "🏗️ FLEET & POS\nSYSTEM", 
-                style: TextStyle(color: isLightMode ? const Color(0xFF121824) : Colors.amber, fontWeight: FontWeight.bold, fontSize: isLargeScreen ? 16 : 14),
+                style: TextStyle(color: isLightMode ? const Color(0xFF121824) : Colors.amber, fontWeight: FontWeight.bold, fontSize: 15),
                 textAlign: TextAlign.center,
               ),
             ),
           ),
-          _buildFolder("၄။ ကားပိုင်ရှင် သီးသန့်စာရင်း", Icons.person, folderSize, folderTextColor, [
-            _buildItem("📄 (၅.၁) နေ့စဉ် ခေါက်ရေနှင့် ဝင်ငွေဇယား", itemSize, context),
-            _buildItem("💰 (၅.၂) ဆည်မြောင်း ကြိုတင်ယူငွေစာရင်း", itemSize, context),
-            _buildItem("👥 (၅.၃) Driver ၂ ဦး ခေါက်ရေနှင့် စရိတ်ရှင်းတမ်း", itemSize, context),
-            _buildItem("🧮 (၅.၄) အသားတင် အမြတ်/အရှုံးချုပ် (Net P&L)", itemSize, context),
+          _buildFolder("👑 ကိုကျော်သက်နိုင် သီးသန့် ကားစာရင်း", Icons.person, folderTextColor, [
+            _buildItem("📄 နေ့စဉ် ခေါက်ရေနှင့် ဝင်ငွေဇယား", context),
+            _buildItem("💰 ဆည်မြောင်း ကြိုတင်ယူငွေစာရင်း", context),
+            _buildItem("👥 Driver ၂ ဦး ခေါက်ရေနှင့် စရိတ်ရှင်းတမ်း", context),
+            _buildItem("🧮 အသားတင် အမြတ်/အရှုံးချုပ် (Net P&L)", context),
           ]),
         ],
       ),
     );
   }
 
-  Widget _buildFolder(String title, IconData icon, double fontSize, Color textColor, List<Widget> children) {
+  Widget _buildFolder(String title, IconData icon, Color textColor, List<Widget> children) {
     return ExpansionTile(
       leading: Icon(icon, color: Colors.amber, size: 20),
-      title: Text(title, style: TextStyle(fontSize: fontSize, fontWeight: FontWeight.bold, color: textColor)),
+      title: Text(title, style: TextStyle(fontSize: 13.5, fontWeight: FontWeight.w900, color: textColor)),
       initiallyExpanded: true,
       iconColor: Colors.amber,
-      collapsedIconColor: isLightMode ? Colors.black54 : Colors.white60,
       children: children,
     );
   }
 
-  Widget _buildItem(String title, double fontSize, BuildContext context) {
+  Widget _buildItem(String title, BuildContext context) {
     bool isSelected = activeMenu == title;
-    Color normalItemColor = isLightMode ? const Color(0xFF475569) : Colors.white70;
-
     return ListTile(
       dense: true,
       title: Padding(
         padding: const EdgeInsets.only(left: 8.0),
-        child: Text(
-          title, 
-          style: TextStyle(
-            color: isSelected ? Colors.amber : normalItemColor, 
-            fontSize: fontSize, 
-            fontWeight: isSelected ? FontWeight.bold : FontWeight.normal
-          ),
-        ),
+        child: Text(title, style: TextStyle(color: isSelected ? Colors.amber : (isLightMode ? Colors.black87 : Colors.white70), fontSize: 12.0, fontWeight: isSelected ? FontWeight.w900 : FontWeight.bold)),
       ),
       selected: isSelected,
       selectedTileColor: Colors.amber.withOpacity(0.15),
