@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'dart:convert';
 
 class KyawThetNaingSheet extends StatefulWidget {
   final bool isLargeScreen;
@@ -22,7 +21,7 @@ class _KyawThetNaingSheetState extends State<KyawThetNaingSheet> {
   String _selectedDriverOption = "option1";
   String _driverOptionValue = "10"; 
 
-  // Input Controllers
+  // Controllers
   final TextEditingController _dateCtrl = TextEditingController(text: "06/10/2026");
   final TextEditingController _mornCtrl = TextEditingController(text: "00");
   final TextEditingController _noonCtrl = TextEditingController(text: "00");
@@ -43,8 +42,8 @@ class _KyawThetNaingSheetState extends State<KyawThetNaingSheet> {
   final TextEditingController _foodCtrl = TextEditingController(text: "0");
   final TextEditingController _repairCtrl = TextEditingController(text: "0");
 
-  // 📊 ဗဟိုချက် ဒေတာသိုလှောင်မှု ဇယားကြီး (ကနဦး ဖွင့်လျှင် နမူနာ စာရင်းတစ်ခု ပြထားမည်)
-  List<Map<String, String>> _centralDatabase = [
+  // Central Database
+  final List<Map<String, String>> _centralDatabase = [
     {
       "date": "05/10/2026", "morn": "04", "noon": "04", "night": "04", "rate": "50000",
       "shareAdvance": "200000", "privateAdvance": "100000",
@@ -70,7 +69,6 @@ class _KyawThetNaingSheetState extends State<KyawThetNaingSheet> {
     super.dispose();
   }
 
-  // 🧮 ဝင်ငွေစရိတ် Auto တွက်ချက်ပေးသည့် ပုံသေနည်း Engine
   Map<String, int> _calculateMetrics(Map<String, String> row) {
     int morn = int.tryParse(row["morn"] ?? "0") ?? 0;
     int noon = int.tryParse(row["noon"] ?? "0") ?? 0;
@@ -102,45 +100,33 @@ class _KyawThetNaingSheetState extends State<KyawThetNaingSheet> {
     };
   }
 
-  // 💾 နေ့စဉ်မှတ်တမ်းထဲသို့ စာရင်းသွင်း၍ Memory ထဲသို့ သိမ်းဆည်းသည့်စနစ်
   void _saveCurrentForm() {
     setState(() {
       _centralDatabase.add({
-        "date": _dateCtrl.text,
-        "morn": _mornCtrl.text.padLeft(2, '0'),
-        "noon": _noonCtrl.text.padLeft(2, '0'),
-        "night": _nightCtrl.text.padLeft(2, '0'),
-        "rate": _rateCtrl.text,
-        "shareAdvance": _shareAdvanceCtrl.text,
-        "privateAdvance": _privateAdvanceCtrl.text,
+        "date": _dateCtrl.text, "morn": _mornCtrl.text.padLeft(2, '0'), "noon": _noonCtrl.text.padLeft(2, '0'), "night": _nightCtrl.text.padLeft(2, '0'),
+        "rate": _rateCtrl.text, "shareAdvance": _shareAdvanceCtrl.text, "privateAdvance": _privateAdvanceCtrl.text,
         "d1Name": _d1NameCtrl.text, "d1Trips": _d1TripsCtrl.text, "d1Advance": _d1AdvanceCtrl.text,
         "d2Name": _d2NameCtrl.text, "d2Trips": _d2TripsCtrl.text, "d2Advance": _d2AdvanceCtrl.text,
         "fuel": _fuelCtrl.text, "food": _foodCtrl.text, "repair": _repairCtrl.text
       });
       _mornCtrl.text = "00"; _noonCtrl.text = "00"; _nightCtrl.text = "00";
     });
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('လုပ်ငန်းခွင်ဒေတာအား မှတ်ဉာဏ်ထဲသို့ စနစ်တကျ သိမ်းဆည်းပြီးပါပြီ။'))
-    );
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('လုပ်ငန်းခွင်ဒေတာအား မှတ်ဉာဏ်ထဲသို့ သိမ်းဆည်းပြီးပါပြီ။')));
   }
 
-  // 📝 ဇယားထဲရောက်ပြီးသားစာရင်းကို အကွက်လိုက်နှိပ်ပြီး ပြန်ပြင်နိုင်သည့် စိတ်ချရသောစနစ်
   void _editCell(int index, String key, String title, bool isTripField) {
     TextEditingController cellEditCtrl = TextEditingController(text: _centralDatabase[index][key]);
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
         backgroundColor: const Color(0xFF1F293D),
-        title: Text("$title ကို ပြင်ရန်", style: const TextStyle(color: Colors.amber, fontSize: 14, fontWeight: FontWeight.w900)),
+        title: Text("$title ကို ပြင်ရန်", style: const TextStyle(color: Colors.amber, fontSize: 13, fontWeight: FontWeight.w900)),
         content: TextField(
-          controller: cellEditCtrl,
-          keyboardType: TextInputType.number,
-          maxLength: isTripField ? 2 : null,
+          controller: cellEditCtrl, keyboardType: TextInputType.number, maxLength: isTripField ? 2 : null,
           style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-          decoration: const InputDecoration(enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.amber))),
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text("ပယ်ဖျက်", style: TextStyle(fontWeight: FontWeight.bold))),
+          TextButton(onPressed: () => Navigator.pop(context), child: const Text("ပယ်ဖျက်")),
           TextButton(
             onPressed: () {
               setState(() {
@@ -160,17 +146,11 @@ class _KyawThetNaingSheetState extends State<KyawThetNaingSheet> {
 
   Widget _buildInputField(TextEditingController ctrl, String label, {bool isTrip = false}) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
-      decoration: BoxDecoration(
-        color: widget.isLightMode ? Colors.white : const Color(0xFF121824),
-        border: Border.all(color: Colors.amber, width: 1.4),
-        borderRadius: BorderRadius.circular(8)
-      ),
+      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
+      decoration: BoxDecoration(color: widget.isLightMode ? Colors.white : const Color(0xFF121824), border: Border.all(color: Colors.amber, width: 1.4), borderRadius: BorderRadius.circular(8)),
       child: TextField(
-        controller: ctrl,
-        keyboardType: TextInputType.number,
-        maxLength: isTrip ? 2 : null,
-        style: TextStyle(color: widget.isLightMode ? const Color(0xFF121824) : Colors.white, fontSize: 13.5, fontWeight: FontWeight.w900),
+        controller: ctrl, keyboardType: TextInputType.number, maxLength: isTrip ? 2 : null,
+        style: TextStyle(color: widget.isLightMode ? const Color(0xFF121824) : Colors.white, fontSize: 13.0, fontWeight: FontWeight.w900),
         decoration: InputDecoration(labelText: label, labelStyle: const TextStyle(color: Colors.white60, fontSize: 10, fontWeight: FontWeight.bold), border: InputBorder.none, counterText: ""),
       ),
     );
@@ -211,19 +191,35 @@ class _KyawThetNaingSheetState extends State<KyawThetNaingSheet> {
 
   Widget _buildActionSaveButton() {
     return ElevatedButton.icon(
-      style: ElevatedButton.styleFrom(backgroundColor: Colors.amber, foregroundColor: Colors.black, minimumSize: const Size.fromHeight(38)),
+      style: ElevatedButton.styleFrom(backgroundColor: Colors.amber, foregroundColor: Colors.black, minimumSize: const Size.fromHeight(36)),
       onPressed: _saveCurrentForm,
       icon: const Icon(Icons.save, size: 16),
-      label: const Text("နေ့စဉ်မှတ်တမ်းထဲသို့ သိမ်းဆည်းမည်", style: TextStyle(fontWeight: FontWeight.w900, fontSize: 13.0)),
+      label: const Text("နေ့စဉ်မှတ်တမ်းထဲသို့ သိမ်းဆည်းမည်", style: TextStyle(fontWeight: FontWeight.w900, fontSize: 12.5)),
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    double fontSize = widget.isLargeScreen ? 13.0 : 11.5;
-    Color contentTextColor = widget.isLightMode ? const Color(0xFF121824) : Colors.white70;
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Expanded(
+  Widget _buildActiveFormSection() {
+    if (widget.activeSubMenu.contains("ခေါက်ရေနှင့် ဝင်ငွေဇယား")) {
+      return Column(
+        children: [
+          Row(
+            children: [
+              Expanded(child: _buildInputField(_dateCtrl, "ရက်စွဲ")),
+              const SizedBox(width: 4),
+              Expanded(child: _buildInputField(_rateCtrl, "ကားခနှုန်း (Auto)")),
+            ],
+          ),
+          const SizedBox(height: 4),
+          Row(
+            children: [
+              Expanded(child: _buildInputField(_mornCtrl, "မနက်", isTrip: true)),
+              const SizedBox(width: 4),
+              Expanded(child: _buildInputField(_noonCtrl, "နေ့လည်", isTrip: true)),
+              const SizedBox(width: 4),
+              Expanded(child: _buildInputField(_nightCtrl, "ည", isTrip: true)),
+            ],
+          ),
+          const SizedBox(height: 4),
+          _buildActionSaveButton(),
+        ],
+      );
