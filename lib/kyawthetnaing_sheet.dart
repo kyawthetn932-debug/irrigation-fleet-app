@@ -16,11 +16,12 @@ class KyawThetNaingSheet extends StatefulWidget {
   State<KyawThetNaingSheet> createState() => _KyawThetNaingSheetState();
 }
 
+class _KeepState {} // Widget Configuration Tag
+
 class _KyawThetNaingSheetState extends State<KyawThetNaingSheet> {
   @override
   Widget build(BuildContext context) {
     bool isDark = !widget.isLightMode;
-    Color textColor = isDark ? Colors.white : Colors.black87;
     Color cardColor = isDark ? const Color(0xFF1E293D) : Colors.white;
 
     return SingleChildScrollView(
@@ -97,7 +98,7 @@ class _KyawThetNaingSheetState extends State<KyawThetNaingSheet> {
                     const SizedBox(height: 15),
                     Container(
                       padding: const EdgeInsets.all(12),
-                      color: Colors.emerald,
+                      color: Colors.teal, // <- ကျနော် ဒီနေရာကို Colors.teal လို့ စနစ်တကျ မှန်ကန်အောင် ပြင်ပေးထားပါတယ်
                       child: const Text("အသားတင်အမြတ်စုစုပေါင်း: +350,000 ကျပ်", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold), textAlign: TextAlign.center),
                     )
                   ],
@@ -118,4 +119,3 @@ class _KyawThetNaingSheetState extends State<KyawThetNaingSheet> {
     );
   }
 }
-
