@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class KyawThetNaingSheet extends StatefulWidget {
   final bool isLargeScreen;
   final String activeSubMenu;
-  final bool isLightMode; 
+  final bool isLightMode;
 
   const KyawThetNaingSheet({
     super.key, 
