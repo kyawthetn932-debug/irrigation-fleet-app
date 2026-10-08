@@ -41,7 +41,7 @@ class _MainFleetNavigationScreenState extends State<MainFleetNavigationScreen> {
         ),
       ),
       body: _currentView == "ကိုကျော်သက်နိုင် စာရင်း"
-          ? const kyawthetnaingsheet(islargescreen: false) // 💾 Class နာမည်အသစ်အား စာလုံးအသေးဖြင့် တိကျစွာ ချိတ်ဆက်ထားပါသည်
+          ? const kyawthetnaingsheet(islargescreen: false) // 💾 Class နာမည်အသစ်အား စာလုံးအသေးဖြင့် တိကျစွာ ချက်ဆက်ထားပါသည်
           : const Center(child: Text("Welcome to Dashboard\n[Google Sheets Active]", textAlign: TextAlign.center, style: TextStyle(color: Colors.white70))),
     );
   }
