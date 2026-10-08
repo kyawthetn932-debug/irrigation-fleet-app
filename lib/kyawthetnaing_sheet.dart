@@ -29,13 +29,11 @@ class _kyawthetnaingsheetstate extends State<kyawthetnaingsheet> {
 
   @override
   void initState() { super.initState(); _load(); }
-  
   Future<void> _load() async {
     final p = await SharedPreferences.getInstance();
     final String? cached = p.getString('k_logs');
     if (cached != null) setState(() { _logs = List<Map<String, dynamic>>.from(json.decode(cached)); });
   }
-  
   Future<void> _save() async {
     final p = await SharedPreferences.getInstance();
     await p.setString('k_logs', json.encode(_logs));
@@ -79,6 +77,7 @@ class _kyawthetnaingsheetstate extends State<kyawthetnaingsheet> {
 
     return Scaffold(
       backgroundColor: const Color(0xFF121212),
+      appBar: AppBar(title: Text(_v, style: const TextStyle(color: Colors.amber, fontWeight: FontWeight.bold, fontSize: 13)), backgroundColor: const Color(0xFF1E1E2C)),
       body: Padding(
         padding: const EdgeInsets.all(10.0),
         child: SingleChildScrollView(
@@ -124,10 +123,10 @@ class _kyawthetnaingsheetstate extends State<kyawthetnaingsheet> {
                 ])
               ],
               if (_v == "(၅.၄) အသားတင် အမြတ်/အရှုံးချုပ်") ...[
-                Container(padding: const EdgeInsets.all(14), decoration: BoxDecoration(color: const Color(0xFF1E1E2C), borderRadius: BorderRadius.circular(8), border: Border.all(color: Colors.white24)), child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [const Text("ယနေ့ အသားတင် အခြေအနေ:", style: TextStyle(fontSize: 12)), Text("$profit ကျပ်", style: TextStyle(color: profit >= 0 ? Colors.greenAccent : Colors.redAccent, fontWeight: FontWeight.bold, fontSize: 14))]))
+                Container(padding: const EdgeInsets.all(14), decoration: BoxDecoration(color: const Color(0xFF1E1E2C), borderRadius: BorderRadius.circular(8), border: Border.all(color: Colors.white24)), child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [const Text("ယနေ့ အသားတင် အခြေအနေ:"), Text("$profit ကျပ်", style: TextStyle(color: profit >= 0 ? Colors.greenAccent : Colors.redAccent, fontWeight: FontWeight.bold, fontSize: 14))]))
               ],
               if (_v == "(၅.၅) နေ့စဉ် စာရင်းချုပ်") ...[
-                const Text("📊 (၅.၅) နေ့စဉ် စာရင်းချုပ် (Sheet စတိုင်လ် အပြည့်အစုံ)", style: TextStyle(fontSize: 12, color: Colors.amber, fontWeight: FontWeight.bold)),
+                const Text("📊 (၅.၅) နေ့စဉ် စာရင်းချုပ် (Sheet စတိုင်လ်)", style: TextStyle(fontSize: 12, color: Colors.amber, fontWeight: FontWeight.bold)),
                 const SizedBox(height: 6),
                 Table(
                   border: TableBorder.all(color: Colors.white30), 
@@ -150,5 +149,3 @@ class _kyawthetnaingsheetstate extends State<kyawthetnaingsheet> {
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: const Color(0xFF1E1E2C), selectedItemColor: Colors.amber, unselectedItemColor: Colors.white60,
         currentIndex: _v == "(၅.၂) ဆည်မြောင်း ကြိုတင်ယူငွေစာရင်း" ? 1 : _v == "(၅.၃) Driver ၂ ဦး စရိတ်ရှင်းတမ်း" ? 2 : _v == "(၅.၄) အသားတင် အမြတ်/အရှုံးချုပ်" ? 3 : _v == "(၅.၅) နေ့စဉ် စာရင်းချုပ်" ? 4 : 0,
-        type: BottomNavigationBarType.fixed, selectedFontSize: 9, unselectedFontSize: 9,
-
