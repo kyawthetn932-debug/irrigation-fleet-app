@@ -28,7 +28,7 @@ class _KyawThetNaingSheetState extends State<KyawThetNaingSheet> {
   final TextEditingController _privateAdvanceCtrl = TextEditingController(text: "0");
   final TextEditingController _fuelCtrl = TextEditingController(text: "0");
   final TextEditingController _foodCtrl = TextEditingController(text: "0");
-  final TextEditingController = TextEditingController(text: "0");
+  final TextEditingController _repairCtrl = TextEditingController(text: "0"); // <- ကျနော် ဒီနေရာမှာ နာမည်မှန်အောင် ပြင်ပေးထားပါတယ်
 
   void _safeSaveDataTrigger() async {
     if (_isSavingProcess) return;
@@ -155,7 +155,7 @@ class _KyawThetNaingSheetState extends State<KyawThetNaingSheet> {
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(backgroundColor: Colors.amber, foregroundColor: Colors.black, minimumSize: const Size.fromHeight(36)),
                         onPressed: _safeSaveDataTrigger,
-                        child: const Text("နေ့စဉ်မှတ်တမ်းထဲသို့  သိမ်းဆည်းမည်", style: TextStyle(fontWeight: FontWeight.w900, fontSize: 12)),
+                        child: const Text("နေ့စဉ်မှတ်တမ်းထဲသို့ သိမ်းဆည်းမည်", style: TextStyle(fontWeight: FontWeight.w900, fontSize: 12)),
                       ),
                       _buildPlainSheetTable(["ရက်စွဲ", "D1 အမည်", "ခေါက်", "D2 အမည်", "ခေါက်"], ["08/10", "မောင်မောင်", "6", "အောင်အောင်", "4"]),
                     ],
@@ -172,13 +172,14 @@ class _KyawThetNaingSheetState extends State<KyawThetNaingSheet> {
                     children: [
                       _buildInputField(_fuelCtrl, "ဆီဖိုး (-)"),
                       _buildInputField(_foodCtrl, "ထမင်းဖိုး (-)"),
+                      _buildInputField(_repairCtrl, "ပြင်စရိတ် (-)"),
                       const SizedBox(height: 8),
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(backgroundColor: Colors.amber, foregroundColor: Colors.black, minimumSize: const Size.fromHeight(36)),
                         onPressed: _safeSaveDataTrigger,
                         child: const Text("နေ့စဉ်မှတ်တမ်းထဲသို့ သိမ်းဆည်းမည်", style: TextStyle(fontWeight: FontWeight.w900, fontSize: 12)),
                       ),
-                      _buildPlainSheetTable(["ရက်စွဲ", "ရငွေ", "ဆီဖိုး", "ထမင်း", "အမြတ်ချုပ်"], ["08/10", "500k", "150k", "20k", "+330k"]),
+                      _buildPlainSheetTable(["ရက်စွဲ", "ရငွေ", "ဆီဖိုး", "ထမင်း", "ပြင်စရိတ်", "အမြတ်ချုပ်"], ["08/10", "500k", "150k", "20k", "0", "+330k"]),
                     ],
                   ),
                 ),
