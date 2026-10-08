@@ -1,13 +1,4 @@
-name: irrigation_fleet
-description: Dam Construction Fleet Management App.
-version: 1.0.0+1
-
-environment:
-  sdk: '>=3.2.0 <4.0.0'
-
 dependencies:
   flutter:
     sdk: flutter
-
-flutter:
-  uses-material-design: true
+  shared_preferences: ^2.2.3  # 💾 ဤစာကြောင်းလေးကို ထည့်သွင်းပေးပါ
