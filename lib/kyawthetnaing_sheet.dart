@@ -2,16 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 
-class KyawThetNaingSheet extends StatefulWidget {
-  final bool? isLargeScreen;
-  const KyawThetNaingSheet({super.key, this.isLargeScreen});
+// ၁။ Class အမည်အား လုံးဝစာလုံးအသေး သီးသန့် 'kyawthetnaingsheet' သို့ ပြောင်းလဲပြင်ဆင်ခြင်း
+class kyawthetnaingsheet extends StatefulWidget {
+  final bool? islargescreen; 
+  const kyawthetnaingsheet({super.key, this.islargescreen});
 
   @override
-  State<KyawThetNaingSheet> createState() => _KyawThetNaingSheetState();
+  State<kyawthetnaingsheet> createState() => _kyawthetnaingsheetstate();
 }
 
-class _KyawThetNaingSheetState extends State<KyawThetNaingSheet> {
-  String _subView = "(၅.၁) နေ့စဉ် ခေါက်ရေနှင့် ဝင်ငွေဇယား";
+class _kyawthetnaingsheetstate extends State<kyawthetnaingsheet> {
+  String _subview = "(၅.၁) နေ့စဉ် ခေါက်ရေနှင့် ဝင်ငွေဇယား";
   int _option = 1;
   DateTime _date = DateTime.now();
 
@@ -24,38 +25,35 @@ class _KyawThetNaingSheetState extends State<KyawThetNaingSheet> {
   final _w = TextEditingController(text: "5000");
   final _p = TextEditingController(text: "10");
 
-  // နေ့စဉ်မှတ်တမ်း စာရင်း List
   List<Map<String, dynamic>> _logs = [
     {"date": "08/10/2026", "trips": "12", "fare": "600000", "profit": "320000"},
   ];
 
-  final List<Map<String, dynamic>> _advanceLogs = [
+  final List<Map<String, dynamic>> _advancelogs = [
     {"date": "08/10/2026", "amount": "200000", "note": "ဆည်မြောင်းစိုက်ငွေ"},
   ];
 
-  final List<Map<String, dynamic>> _driverLogs = [
+  final List<Map<String, dynamic>> _driverlogs = [
     {"date": "08/10/2026", "d1": "ဦးအောင် (၆ ခေါက်)", "d2": "ဦးဘ (၆ ခေါက်)", "wage": "၆၀၀၀၀"},
   ];
 
   @override
   void initState() {
     super.initState();
-    _loadData(); // 💾 အက်ပ်ဖွင့်လျှင် ဖုန်းထဲက ဒေတာဟောင်းများကို အလိုအလျောက် ပြန်ဖတ်မည့်စနစ်
+    _loaddata();
   }
 
-  // ဖုန်းထဲမှ ဒေတာများ ပြန်လည်ဆွဲယူဖတ်ရှုခြင်း
-  Future<void> _loadData() async {
+  Future<void> _loaddata() async {
     final prefs = await SharedPreferences.getInstance();
-    final String? cachedLogs = prefs.getString('kyawthetnaing_logs');
-    if (cachedLogs != null) {
+    final String? cachedlogs = prefs.getString('kyawthetnaing_logs');
+    if (cachedlogs != null) {
       setState(() {
-        _logs = List<Map<String, dynamic>>.from(json.decode(cachedLogs));
+        _logs = List<Map<String, dynamic>>.from(json.decode(cachedlogs));
       });
     }
   }
 
-  // ဖုန်းပိတ်လည်း မပျက်အောင် သိမ်းဆည်းခြင်း
-  Future<void> _saveData() async {
+  Future<void> _savedata() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('kyawthetnaing_logs', json.encode(_logs));
   }
@@ -98,7 +96,7 @@ class _KyawThetNaingSheetState extends State<KyawThetNaingSheet> {
     return Scaffold(
       backgroundColor: const Color(0xFF121212),
       appBar: AppBar(
-        title: Text(_subView, style: const TextStyle(color: Colors.amber, fontWeight: FontWeight.bold, fontSize: 13)),
+        title: Text(_subview, style: const TextStyle(color: Colors.amber, fontWeight: FontWeight.bold, fontSize: 13)),
         backgroundColor: const Color(0xFF1E1E2C),
       ),
       body: Padding(
@@ -107,7 +105,7 @@ class _KyawThetNaingSheetState extends State<KyawThetNaingSheet> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              if (_subView == "(၅.၁) နေ့စဉ် ခေါက်ရေနှင့် ဝင်ငွေဇယား") ...[
+              if (_subview == "(၅.၁) နေ့စဉ် ခေါက်ရေနှင့် ဝင်ငွေဇယား") ...[
                 Card(
                   color: const Color(0xFF1E1E2C),
                   child: ListTile(
@@ -159,7 +157,7 @@ class _KyawThetNaingSheetState extends State<KyawThetNaingSheet> {
                   onPressed: () {
                     setState(() {
                       _logs.insert(0, {"date": "${_date.day}/${_date.month}/${_date.year}", "trips": "$trips", "fare": "$fare", "profit": "$profit"});
-                      _saveData(); // 💾 သိမ်းဆည်းရန်ခလုတ်နှိပ်လျှင် ဖုန်းထဲသို့ပါ တစ်ခါတည်း အသေသိမ်းဆည်းသွားမည်
+                      _savedata();
                     });
                   },
                   style: ElevatedButton.styleFrom(backgroundColor: Colors.amber, minimumSize: const Size(double.infinity, 40)),
@@ -191,10 +189,12 @@ class _KyawThetNaingSheetState extends State<KyawThetNaingSheet> {
                   ],
                 )
               ],
-              if (_subView == "(၅.၂) ဆည်မြောင်း ကြိုတင်ယူငွေစာရင်း") ...[
+              if (_subview == "(၅.၂) ဆည်မြောင်း ကြိုတင်ယူငွေစာရင်း") ...[
                 const Text("💰 ဆည်မြောင်း ကြိုတင်ယူငွေစာရင်း (Sheet စတိုင်လ်)", style: TextStyle(fontSize: 12, color: Colors.amber, fontWeight: FontWeight.bold)),
                 const SizedBox(height: 8),
                 Table(
                   border: TableBorder.all(color: Colors.white24, width: 1),
                   children: [
                     const TableRow(
+                      decoration: BoxDecoration(color: Color(0xFF1E1E2C)),
+                      children: [
