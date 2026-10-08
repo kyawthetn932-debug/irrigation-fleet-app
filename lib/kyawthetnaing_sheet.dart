@@ -25,14 +25,14 @@ class _kyawthetnaingsheetstate extends State<kyawthetnaingsheet> {
 
   List<Map<String, dynamic>> _logs = [{"date": "08/10/2026", "trips": "12", "fare": "600000", "profit": "320000"}];
   final List<Map<String, dynamic>> _adv = [{"date": "08/10/2026", "amount": "200000", "note": "ဆည်မြောင်းစိုက်ငွေ"}];
-  final List<Map<String, dynamic>> _drv = [{"date": "08/10/2026", "d1": "ဦးအောင် (၆ ข.)", "d2": "ဦးဘ (၆ ข.)", "wage": "၆၀၀၀၀"}];
+  final List<Map<String, dynamic>> _drv = [{"date": "08/10/2026", "d1": "ဦးအောင် (၆ ခေါက်)", "d2": "ဦးဘ (၆ ခေါက်)", "wage": "၆၀၀၀၀"}];
 
   @override
   void initState() { super.initState(); _load(); }
   Future<void> _load() async {
     final p = await SharedPreferences.getInstance();
-    final String? c = p.getString('k_logs');
-    if (c != null) setState(() { _logs = List<Map<String, dynamic>>.from(json.decode(c)); });
+    final String? cached = p.getString('k_logs');
+    if (cached != null) setState(() { _logs = List<Map<String, dynamic>>.from(json.decode(cached)); });
   }
   Future<void> _save() async {
     final p = await SharedPreferences.getInstance();
@@ -52,18 +52,13 @@ class _kyawthetnaingsheetstate extends State<kyawthetnaingsheet> {
     );
   }
 
-  // 📝 ဇယားကွက်စာသားများ ထင်းခနဲ မြင်ရစေရန် ဖန်တီးထားသော စံပြ Widget
   Widget _cell(String txt, {Color? col, bool isHeader = false}) {
     return Padding(
       padding: const EdgeInsets.all(6.0),
       child: Text(
         txt,
         textAlign: TextAlign.center,
-        style: TextStyle(
-          fontSize: 11,
-          fontWeight: isHeader ? FontWeight.bold : FontWeight.normal,
-          color: col ?? (isHeader ? Colors.amber : Colors.white), // ခေါင်းစဉ်ကို ဝါဝါ၊ အတွင်းစာကို ဖြူဖြူ ပြပေးမည်
-        ),
+        style: TextStyle(fontSize: 11, fontWeight: isHeader ? FontWeight.bold : FontWeight.normal, color: col ?? (isHeader ? Colors.amber : Colors.white)),
       ),
     );
   }
@@ -118,8 +113,15 @@ class _kyawthetnaingsheetstate extends State<kyawthetnaingsheet> {
                 const Text("📊 နေ့စဉ်ခေါက်ရေ စာရင်းချုပ် (Sheet စတိုင်လ်)", style: TextStyle(fontSize: 12, color: Colors.amber, fontWeight: FontWeight.bold)),
                 const SizedBox(height: 4),
                 Table(border: TableBorder.all(color: Colors.white30), children: [
-                  TableRow(decoration: const BoxDecoration(color: Color(0xFF1E1E2C)), children: [_cell("နေ့စွဲ", isHeader: true), _cell("ခေါက်ရေ", isHeader: true), _cell("ကားခ", isHeader: true), _cell("အမြတ်/အရှုံး", isHeader: true)]),
-                  ..._logs.map((l) => TableRow(children: [_cell(l["date"].toString()), _cell(l["trips"].toString()), _cell(l["fare"].toString(), col: Colors.greenAccent), _cell(l["profit"].toString(), col: int.parse(l["profit"].toString()) >= 0 ? Colors.greenAccent : Colors.redAccent)]))
+                  TableRow(decoration: const BoxDecoration(color: Color(0xFF1E1E2C)), children: [_cell("နေ့စွဲ", isHeader: true), _cell("ခေါက်ရေ", isHeader: true), _cell("ကားခ", isHeader: true), _cell("အမြတ်/အရှုံး", isHeader: true), _cell("ပြင်ဆင်", isHeader: true)]),
+                  ..._logs.asMap().entries.map((entry) {
+                    int idx = entry.key;
+                    var l = entry.value;
+                    return TableRow(children: [
+                      _cell(l["date"].toString()), _cell(l["trips"].toString()), _cell(l["fare"].toString(), col: Colors.greenAccent), _cell(l["profit"].toString(), col: int.parse(l["profit"].toString()) >= 0 ? Colors.greenAccent : Colors.redAccent),
+                      IconButton(icon: const Icon(Icons.delete, color: Colors.redAccent, size: 16), onPressed: () { setState(() { _logs.removeAt(idx); _save(); }); })
+                    ]);
+                  })
                 ])
               ],
               if (_v == "(၅.၂) ဆည်မြောင်း ကြိုတင်ယူငွေစာရင်း") ...[
@@ -148,5 +150,3 @@ class _kyawthetnaingsheetstate extends State<kyawthetnaingsheet> {
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: const Color(0xFF1E1E2C), selectedItemColor: Colors.amber, unselectedItemColor: Colors.white60,
-        currentIndex: _v == "(၅.၂) ဆည်မြောင်း ကြိုတင်ယူငွေစာရင်း" ? 1 : _v == "(၅.၃) Driver ၂ ဦး စရိတ်ရှင်းတမ်း" ? 2 : _v == "(၅.၄) အသားတင် အမြတ်/အရှုံးချုပ်" ? 3 : 0,
