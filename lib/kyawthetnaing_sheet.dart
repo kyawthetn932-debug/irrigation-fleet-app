@@ -54,20 +54,11 @@ class _kyawthetnaingsheetstate extends State<kyawthetnaingsheet> {
     );
   }
 
-  // 📝 စာသားများ ဖြူဖြူဝင်းဝင်း ထင်းခနဲ ပေါ်စေမည့် စံပြ Cell Widget 
   Widget _cell(String txt, {Color? col, bool isHeader = false}) {
     return Container(
       padding: const EdgeInsets.all(8.0),
       alignment: Alignment.center,
-      child: Text(
-        txt,
-        textAlign: TextAlign.center,
-        style: TextStyle(
-          fontSize: 11, 
-          fontWeight: isHeader ? FontWeight.bold : FontWeight.w600, 
-          color: col ?? (isHeader ? Colors.amber : Colors.white)
-        ),
-      ),
+      child: Text(txt, textAlign: TextAlign.center, style: TextStyle(fontSize: 11, fontWeight: isHeader ? FontWeight.bold : FontWeight.w600, color: col ?? (isHeader ? Colors.amber : Colors.white))),
     );
   }
 
@@ -88,7 +79,6 @@ class _kyawthetnaingsheetstate extends State<kyawthetnaingsheet> {
 
     return Scaffold(
       backgroundColor: const Color(0xFF121212),
-      appBar: AppBar(title: Text(_v, style: const TextStyle(color: Colors.amber, fontWeight: FontWeight.bold, fontSize: 13)), backgroundColor: const Color(0xFF1E1E2C)),
       body: Padding(
         padding: const EdgeInsets.all(10.0),
         child: SingleChildScrollView(
@@ -104,7 +94,6 @@ class _kyawthetnaingsheetstate extends State<kyawthetnaingsheet> {
                 Row(children: [Expanded(child: _in("မနက်", _m)), const SizedBox(width: 6), Expanded(child: _in("နေ့လည်", _a)), const SizedBox(width: 6), Expanded(child: _in("ည", _e))]),
                 _in("တစ်စီးချင်းကားခ", _r), _in("ဆီပေပါ ဈေးနှုန်း", _f), _in("ပြုပြင်စရိတ်", _rp),
                 const Text("🧮 မောင်းကြေးစနစ် ရွေးချယ်ရန်", style: TextStyle(fontSize: 12, color: Colors.amber, fontWeight: FontWeight.bold)),
-                const SizedBox(height: 4),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 10),
                   decoration: BoxDecoration(border: Border.all(color: Colors.white30), borderRadius: BorderRadius.circular(6)),
@@ -123,27 +112,20 @@ class _kyawthetnaingsheetstate extends State<kyawthetnaingsheet> {
                 ElevatedButton(onPressed: () { setState(() { _logs.insert(0, {"date": "${_dt.day}/${_dt.month}/${_dt.year}", "trips": "$trips", "fare": "$fare", "profit": "$profit"}); _save(); }); }, style: ElevatedButton.styleFrom(backgroundColor: Colors.amber, minimumSize: const Size(double.infinity, 38)), child: const Text("နေ့စဉ်မှတ်တမ်းထဲသို့ သိမ်းဆည်းမည်", style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold))),
               ],
               if (_v == "(၅.၂) ဆည်မြောင်း ကြိုတင်ယူငွေစာရင်း") ...[
-                const Text("💰 ဆည်မြောင်း ကြိုတင်ယူငွေစာရင်း (Sheet စတိုင်လ်)", style: TextStyle(fontSize: 12, color: Colors.amber, fontWeight: FontWeight.bold)),
-                const SizedBox(height: 6),
                 Table(border: TableBorder.all(color: Colors.white30), children: [
                   TableRow(decoration: const BoxDecoration(color: Color(0xFF1E1E2C)), children: [_cell("နေ့စွဲ", isHeader: true), _cell("ကြိုတင်ငွေ", isHeader: true), _cell("မှတ်ချက်", isHeader: true)]),
                   ..._adv.map((l) => TableRow(children: [_cell(l["date"].toString()), _cell(l["amount"].toString(), col: Colors.greenAccent), _cell(l["note"].toString())]))
                 ])
               ],
               if (_v == "(၅.၃) Driver ၂ ဦး စရိတ်ရှင်းတမ်း") ...[
-                const Text("👥 Driver ၂ ဦး ခေါက်ရေနှင့် မောင်းကြေးရှင်းတမ်း", style: TextStyle(fontSize: 12, color: Colors.amber, fontWeight: FontWeight.bold)),
-                const SizedBox(height: 6),
                 Table(border: TableBorder.all(color: Colors.white30), children: [
                   TableRow(decoration: const BoxDecoration(color: Color(0xFF1E1E2C)), children: [_cell("နေ့စွဲ", isHeader: true), _cell("ဒရိုင်ဘာ ၁", isHeader: true), _cell("ဒရိုင်ဘာ ၂", isHeader: true), _cell("မောင်းကြေး", isHeader: true)]),
                   ..._drv.map((l) => TableRow(children: [_cell(l["date"].toString()), _cell(l["d1"].toString()), _cell(l["d2"].toString()), _cell(l["wage"].toString(), col: Colors.greenAccent)]))
                 ])
               ],
               if (_v == "(၅.၄) အသားတင် အမြတ်/အရှုံးချုပ်") ...[
-                const Text("📊 (Net P&L) ယနေ့ လက်ရှိအခြေအနေချုပ်", style: TextStyle(fontSize: 12, color: Colors.amber, fontWeight: FontWeight.bold)),
-                const SizedBox(height: 8),
                 Container(padding: const EdgeInsets.all(14), decoration: BoxDecoration(color: const Color(0xFF1E1E2C), borderRadius: BorderRadius.circular(8), border: Border.all(color: Colors.white24)), child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [const Text("ယနေ့ အသားတင် အခြေအနေ:", style: TextStyle(fontSize: 12)), Text("$profit ကျပ်", style: TextStyle(color: profit >= 0 ? Colors.greenAccent : Colors.redAccent, fontWeight: FontWeight.bold, fontSize: 14))]))
               ],
-              // 📊 (၅.၅) တောင်းဆိုထားသည့် နေ့စဉ်စာရင်းချုပ် မော်ဂျူးသစ် (Google Sheet Design အစစ်)
               if (_v == "(၅.၅) နေ့စဉ် စာရင်းချုပ်") ...[
                 const Text("📊 (၅.၅) နေ့စဉ် စာရင်းချုပ် (Sheet စတိုင်လ် အပြည့်အစုံ)", style: TextStyle(fontSize: 12, color: Colors.amber, fontWeight: FontWeight.bold)),
                 const SizedBox(height: 6),
@@ -151,24 +133,13 @@ class _kyawthetnaingsheetstate extends State<kyawthetnaingsheet> {
                   border: TableBorder.all(color: Colors.white30), 
                   children: [
                     TableRow(decoration: const BoxDecoration(color: Color(0xFF1E1E2C)), children: [_cell("နေ့စွဲ", isHeader: true), _cell("ခေါက်ရေ", isHeader: true), _cell("ကားခ", isHeader: true), _cell("အမြတ်/အရှုံး", isHeader: true), _cell("ပြင်ဆင်", isHeader: true)]),
-                    ..._logs.asMap().entries.map((entry) {
-                      int idx = entry.key;
-                      var l = entry.value;
-                      int profVal = int.tryParse(l["profit"].toString()) ?? 0;
-                      return TableRow(
-                        decoration: const BoxDecoration(color: Color(0xFF1A1A24)),
-                        children: [
-                          _cell(l["date"].toString()), 
-                          _cell(l["trips"].toString()), 
-                          _cell(l["fare"].toString(), col: Colors.greenAccent), 
-                          _cell(l["profit"].toString(), col: profVal >= 0 ? Colors.greenAccent : Colors.redAccent),
-                          IconButton(
-                            icon: const Icon(Icons.delete, color: Colors.redAccent, size: 16), 
-                            onPressed: () { setState(() { _logs.removeAt(idx); _save(); }); }
-                          )
-                        ],
-                      );
-                    }).toList()
+                    ..._logs.asMap().entries.map((entry) => TableRow(
+                      decoration: const BoxDecoration(color: Color(0xFF1A1A24)),
+                      children: [
+                        _cell(entry.value["date"].toString()), _cell(entry.value["trips"].toString()), _cell(entry.value["fare"].toString(), col: Colors.greenAccent), _cell(entry.value["profit"].toString(), col: int.parse(entry.value["profit"].toString()) >= 0 ? Colors.greenAccent : Colors.redAccent),
+                        IconButton(icon: const Icon(Icons.delete, color: Colors.redAccent, size: 16), onPressed: () { setState(() { _logs.removeAt(entry.key); _save(); }); })
+                      ],
+                    )).toList()
                   ],
                 )
               ]
@@ -180,84 +151,4 @@ class _kyawthetnaingsheetstate extends State<kyawthetnaingsheet> {
         backgroundColor: const Color(0xFF1E1E2C), selectedItemColor: Colors.amber, unselectedItemColor: Colors.white60,
         currentIndex: _v == "(၅.၂) ဆည်မြောင်း ကြိုတင်ယူငွေစာရင်း" ? 1 : _v == "(၅.၃) Driver ၂ ဦး စရိတ်ရှင်းတမ်း" ? 2 : _v == "(၅.၄) အသားတင် အမြတ်/အရှုံးချုပ်" ? 3 : _v == "(၅.၅) နေ့စဉ် စာရင်းချုပ်" ? 4 : 0,
         type: BottomNavigationBarType.fixed, selectedFontSize: 9, unselectedFontSize: 9,
-        onTap: (i) { setState(() { if (i == 0) _v = "(၅.၁) နေ့စဉ် ခေါက်ရေနှင့် ဝင်ငွေဇယား"; if (i == 1) _v = "(၅.၂) ဆည်မြောင်း ကြိုတင်ယူငွေစာရင်း"; if (i == 2) _v = "(၅.၃) Driver ၂ ဦး စရိတ်ရှင်းတမ်း"; if (i == 3) _v = "(၅.၄) အသားတင် အမြတ်/အရှုံးချုပ်"; if (i == 4) _v = "(၅.၅) နေ့စဉ် စာရင်းချုပ်"; }); },
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.table_chart, size: 16), label: "ဝင်ငွေ"), 
-          BottomNavigationBarItem(icon: Icon(Icons.monetization_on, size: 16), label: "ကြိုတင်ယူ"), 
-          BottomNavigationBarItem(icon: Icon(Icons.people, size: 16), label: "Driver"), 
-          BottomNavigationBarItem(icon: Icon(Icons.calculate, size: 16), label: "အချုပ်"),
-          BottomNavigationBarItem(icon: Icon(Icons.analytics, size: 16), label: "၅.၅ စာရင်းချုပ်") // ၅.၅ မီနူးသစ်
-        ],
-      ),
-    )ors.black, fontWeight: FontWeight.bold))),
-              ],
-              if (_v == "(၅.၂) ဆည်မြောင်း ကြိုတင်ယူငွေစာရင်း") ...[
-                const Text("💰 ဆည်မြောင်း ကြိုတင်ယူငွေစာရင်း (Sheet စတိုင်လ်)", style: TextStyle(fontSize: 12, color: Colors.amber, fontWeight: FontWeight.bold)),
-                const SizedBox(height: 6),
-                Table(border: TableBorder.all(color: Colors.white30), children: [
-                  TableRow(decoration: const BoxDecoration(color: Color(0xFF1E1E2C)), children: [_cell("နေ့စွဲ", isHeader: true), _cell("ကြိုတင်ငွေ", isHeader: true), _cell("မှတ်ချက်", isHeader: true)]),
-                  ..._adv.map((l) => TableRow(children: [_cell(l["date"].toString()), _cell(l["amount"].toString(), col: Colors.greenAccent), _cell(l["note"].toString())]))
-                ])
-              ],
-              if (_v == "(၅.၃) Driver ၂ ဦး စရိတ်ရှင်းတမ်း") ...[
-                const Text("👥 Driver ၂ ဦး ခေါက်ရေနှင့် မောင်းကြေးရှင်းတမ်း", style: TextStyle(fontSize: 12, color: Colors.amber, fontWeight: FontWeight.bold)),
-                const SizedBox(height: 6),
-                Table(border: TableBorder.all(color: Colors.white30), children: [
-                  TableRow(decoration: const BoxDecoration(color: Color(0xFF1E1E2C)), children: [_cell("နေ့စွဲ", isHeader: true), _cell("ဒရိုင်ဘာ ၁", isHeader: true), _cell("ဒရိုင်ဘာ ၂", isHeader: true), _cell("မောင်းကြေး", isHeader: true)]),
-                  ..._drv.map((l) => TableRow(children: [_cell(l["date"].toString()), _cell(l["d1"].toString()), _cell(l["d2"].toString()), _cell(l["wage"].toString(), col: Colors.greenAccent)]))
-                ])
-              ],
-              if (_v == "(၅.၄) အသားတင် အမြတ်/အရှုံးချုပ်") ...[
-                const Text("📊 (Net P&L) ယနေ့ လက်ရှိအခြေအနေချုပ်", style: TextStyle(fontSize: 12, color: Colors.amber, fontWeight: FontWeight.bold)),
-                const SizedBox(height: 8),
-                Container(padding: const EdgeInsets.all(14), decoration: BoxDecoration(color: const Color(0xFF1E1E2C), borderRadius: BorderRadius.circular(8), border: Border.all(color: Colors.white24)), child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [const Text("ယနေ့ အသားတင် အခြေအနေ:", style: TextStyle(fontSize: 12)), Text("$profit ကျပ်", style: TextStyle(color: profit >= 0 ? Colors.greenAccent : Colors.redAccent, fontWeight: FontWeight.bold, fontSize: 14))]))
-              ],
-              // 📊 (၅.၅) တောင်းဆိုထားသည့် နေ့စဉ်စာရင်းချုပ် မော်ဂျူးသစ် (Google Sheet Design အစစ်)
-              if (_v == "(၅.၅) နေ့စဉ် စာရင်းချုပ်") ...[
-                const Text("📊 (၅.၅) နေ့စဉ် စာရင်းချုပ် (Sheet စတိုင်လ် အပြည့်အစုံ)", style: TextStyle(fontSize: 12, color: Colors.amber, fontWeight: FontWeight.bold)),
-                const SizedBox(height: 6),
-                Table(
-                  border: TableBorder.all(color: Colors.white30), 
-                  children: [
-                    TableRow(decoration: const BoxDecoration(color: Color(0xFF1E1E2C)), children: [_cell("နေ့စွဲ", isHeader: true), _cell("ခေါက်ရေ", isHeader: true), _cell("ကားခ", isHeader: true), _cell("အမြတ်/အရှုံး", isHeader: true), _cell("ပြင်ဆင်", isHeader: true)]),
-                    ..._logs.asMap().entries.map((entry) {
-                      int idx = entry.key;
-                      var l = entry.value;
-                      int profVal = int.tryParse(l["profit"].toString()) ?? 0;
-                      return TableRow(
-                        decoration: const BoxDecoration(color: Color(0xFF1A1A24)),
-                        children: [
-                          _cell(l["date"].toString()), 
-                          _cell(l["trips"].toString()), 
-                          _cell(l["fare"].toString(), col: Colors.greenAccent), 
-                          _cell(l["profit"].toString(), col: profVal >= 0 ? Colors.greenAccent : Colors.redAccent),
-                          IconButton(
-                            icon: const Icon(Icons.delete, color: Colors.redAccent, size: 16), 
-                            onPressed: () { setState(() { _logs.removeAt(idx); _save(); }); }
-                          )
-                        ],
-                      );
-                    }).toList()
-                  ],
-                )
-              ]
-            ],
-          ),
-        ),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: const Color(0xFF1E1E2C), selectedItemColor: Colors.amber, unselectedItemColor: Colors.white60,
-        currentIndex: _v == "(၅.၂) ဆည်မြောင်း ကြိုတင်ယူငွေစာရင်း" ? 1 : _v == "(၅.၃) Driver ၂ ဦး စရိတ်ရှင်းတမ်း" ? 2 : _v == "(၅.၄) အသားတင် အမြတ်/အရှုံးချုပ်" ? 3 : _v == "(၅.၅) နေ့စဉ် စာရင်းချုပ်" ? 4 : 0,
-        type: BottomNavigationBarType.fixed, selectedFontSize: 9, unselectedFontSize: 9,
-        onTap: (i) { setState(() { if (i == 0) _v = "(၅.၁) နေ့စဉ် ခေါက်ရေနှင့် ဝင်ငွေဇယား"; if (i == 1) _v = "(၅.၂) ဆည်မြောင်း ကြိုတင်ယူငွေစာရင်း"; if (i == 2) _v = "(၅.၃) Driver ၂ ဦး စရိတ်ရှင်းတမ်း"; if (i == 3) _v = "(၅.၄) အသားတင် အမြတ်/အရှုံးချုပ်"; if (i == 4) _v = "(၅.၅) နေ့စဉ် စာရင်းချုပ်"; }); },
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.table_chart, size: 16), label: "ဝင်ငွေ"), 
-          BottomNavigationBarItem(icon: Icon(Icons.monetization_on, size: 16), label: "ကြိုတင်ယူ"), 
-          BottomNavigationBarItem(icon: Icon(Icons.people, size: 16), label: "Driver"), 
-          BottomNavigationBarItem(icon: Icon(Icons.calculate, size: 16), label: "အချုပ်"),
-          BottomNavigationBarItem(icon: Icon(Icons.analytics, size: 16), label: "၅.၅ စာရင်းချုပ်") // ၅.၅ မီနူးသစ်
-        ],
-      ),
-    );
-  }
-}
+
