@@ -32,7 +32,7 @@ class MenuSidebar extends StatelessWidget {
             _buildItem("📄 နေ့စဉ် ခေါက်ရေနှင့် ဝင်ငွေဇယား", context),
             _buildItem("💰 ဆည်မြောင်း ကြိုတင်ယူငွေစာရင်း", context),
             _buildItem("👥 Driver ၂ ဦး ခေါက်ရေနှင့် စရိတ်ရှင်းတမ်း", context),
-            _buildItem("🧮 အသားတင် အမြတ်/အရှုံးချုပ် (Net P&L)", context),
+            _buildItem("🧮 အသားတင် အမြတ်/အရှုံးစာရင်းချုပ်", context),
           ]),
         ],
       ),
