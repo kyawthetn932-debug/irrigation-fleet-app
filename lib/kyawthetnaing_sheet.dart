@@ -28,7 +28,20 @@ class _KyawThetNaingSheetState extends State<KyawThetNaingSheet> {
   final TextEditingController _privateAdvanceCtrl = TextEditingController(text: "0");
   final TextEditingController _fuelCtrl = TextEditingController(text: "0");
   final TextEditingController _foodCtrl = TextEditingController(text: "0");
-  final TextEditingController _repairCtrl = TextEditingController(text: "0"); // <- ကျနော် ဒီနေရာမှာ နာမည်မှန်အောင် ပြင်ပေးထားပါတယ်
+  final TextEditingController _repairCtrl = TextEditingController(text: "0");
+
+  final TextEditingController _d1NameCtrl = TextEditingController(text: "မောင်မောင်");
+  final TextEditingController _d1TripsCtrl = TextEditingController(text: "0");
+  final TextEditingController _d2NameCtrl = TextEditingController(text: "အောင်အောင်");
+  final TextEditingController _d2TripsCtrl = TextEditingController(text: "0");
+
+  @override
+  void dispose() {
+    _dateCtrl.dispose(); _rateCtrl.dispose(); _mornCtrl.dispose(); _noonCtrl.dispose(); _nightCtrl.dispose();
+    _shareAdvanceCtrl.dispose(); _privateAdvanceCtrl.dispose(); _fuelCtrl.dispose(); _foodCtrl.dispose(); _repairCtrl.dispose();
+    _d1NameCtrl.dispose(); _d1TripsCtrl.dispose(); _d2NameCtrl.dispose(); _d2TripsCtrl.dispose();
+    super.dispose();
+  }
 
   void _safeSaveDataTrigger() async {
     if (_isSavingProcess) return;
@@ -66,7 +79,7 @@ class _KyawThetNaingSheetState extends State<KyawThetNaingSheet> {
       child: Column(
         children: [
           Container(
-            color: const Color(0xFF1E3A8A),
+            color: const Color(0xFF1E3A8A), // တောက်ပသော အပြာရောင် ခေါင်းစဉ်နောက်ခံ
             padding: const EdgeInsets.all(8),
             child: Row(children: headers.map((h) => Expanded(child: Text(h, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w900, fontSize: 11), textAlign: TextAlign.center))).toList()),
           ),
@@ -111,7 +124,7 @@ class _KyawThetNaingSheetState extends State<KyawThetNaingSheet> {
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(backgroundColor: _isSavingProcess ? Colors.grey : Colors.amber, foregroundColor: Colors.black, minimumSize: const Size.fromHeight(36)),
                         onPressed: _isSavingProcess ? null : _safeSaveDataTrigger,
-                        child: Text(_isSavingProcess ? "သိမ်းနေပါသည်..." : "နေ့စဉ်မှတ်တမ်းထဲသို့ သိမ်းဆည်းမည်", style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 12)),
+                        child: Text(_isSavingProcess ? "သိမ်းနေပါသည်..." : "နေ့စဉ်မှတ်တမ်းထဲသို့ သိည်းဆည်းမည်", style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 12)),
                       ),
                       _buildPlainSheetTable(["ရက်စွဲ", "မနက်", "နေ့လည်", "ည", "ကားခ", "ရငွေ"], ["08/10", "04", "04", "02", "50k", "500k"]),
                     ],
