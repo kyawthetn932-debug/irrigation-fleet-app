@@ -124,3 +124,74 @@ class _kyawthetnaingsheetstate extends State<kyawthetnaingsheet> {
                   })
                 ])
               ],
+
+              if (_v == "(၅.၂) ဆည်မြောင်း ကြိုတင်ယူငွေစာရင်း") ...[
+                const Text("💰 ဆည်မြောင်း ကြိုတင်ယူငွေစာရင်း", style: TextStyle(fontSize: 12, color: Colors.amber, fontWeight: FontWeight.bold)),
+                const SizedBox(height: 6),
+                Table(border: TableBorder.all(color: Colors.white30), children: [
+                  TableRow(decoration: const BoxDecoration(color: Color(0xFF1E1E2C)), children: [_cell("နေ့စွဲ", isHeader: true), _cell("ကြိုတင်ငွေ", isHeader: true), _cell("မှတ်ချက်", isHeader: true)]),
+                  ..._adv.map((l) => TableRow(children: [_cell(l["date"].toString()), _cell(l["amount"].toString(), col: Colors.greenAccent), _cell(l["note"].toString())]))
+                ])
+              ],
+              if (_v == "(၅.၃) Driver ၂ ဦး စရိတ်ရှင်းတမ်း") ...[
+                const Text("👥 Driver ၂ ဦး ခေါက်ရေနှင့် မောင်းကြေးရှင်းတမ်း", style: TextStyle(fontSize: 12, color: Colors.amber, fontWeight: FontWeight.bold)),
+                const SizedBox(height: 6),
+                Table(border: TableBorder.all(color: Colors.white30), children: [
+                  TableRow(decoration: const BoxDecoration(color: Color(0xFF1E1E2C)), children: [_cell("နေ့စွဲ", isHeader: true), _cell("ဒရိုင်ဘာ ၁", isHeader: true), _cell("ဒရိုင်ဘာ ၂", isHeader: true), _cell("မောင်းကြေး", isHeader: true)]),
+                  ..._drv.map((l) => TableRow(children: [_cell(l["date"].toString()), _cell(l["d1"].toString()), _cell(l["d2"].toString()), _cell(l["wage"].toString(), col: Colors.greenAccent)]))
+                ])
+              ],
+              if (_v == "(၅.၄) အသားတင် အမြတ်/အရှုံးချုပ်") ...[
+                const Text("📊 (Net P&L) အသားတင် အမြတ်/အရှုံးချုပ်", style: TextStyle(fontSize: 12, color: Colors.amber, fontWeight: FontWeight.bold)),
+                const SizedBox(height: 8),
+                Container(padding: const EdgeInsets.all(14), decoration: BoxDecoration(color: const Color(0xFF1E1E2C), borderRadius: BorderRadius.circular(8), border: Border.all(color: Colors.white24)), child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [const Text("ယနေ့ အသားတင် အခြေအနေ:", style: TextStyle(fontSize: 12)), Text("$profit ကျပ်", style: TextStyle(color: profit >= 0 ? Colors.greenAccent : Colors.redAccent, fontWeight: FontWeight.bold, fontSize: 14))]))
+              ]
+            ],
+          ),
+        ),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: const Color(0xFF1E1E2C), selectedItemColor: Colors.amber, unselectedItemColor: Colors.white60,
+        currentIndex: _v == "(၅.၂) ဆည်မြောင်း ကြိုတင်ယူငွေစာရင်း" ? 1 : _v == "(၅.၃) Driver ၂ ဦး စရိတ်ရှင်းတမ်း" ? 2 : _v == "(၅.၄) အသားတင် အမြတ်/အရှုံးချုပ်" ? 3 : 0,
+        type: BottomNavigationBarType.fixed, selectedFontSize: 10, unselectedFontSize: 10,
+        onTap: (i) { setState(() { if (i == 0) _v = "(၅.၁) နေ့စဉ် ခေါက်ရေနှင့် ဝင်ငွေဇယား"; if (i == 1) _v = "(၅.၂) ဆည်မြောင်း ကြိုတင်ယူငွေစာရင်း"; if (i == 2) _v = "(၅.၃) Driver ၂ ဦး စရိတ်ရှင်းတမ်း"; if (i == 3) _v = "(၅.၄) အသားတင် အမြတ်/အရှုံးချုပ်"; }); },
+        items: const [BottomNavigationBarItem(icon: Icon(Icons.table_chart, size: 18), label: "ဝင်ငွေ"), BottomNavigationBarItem(icon: Icon(Icons.monetization_on, size: 18), label: "ကြိုတင်ယူ"), BottomNavigationBarItem(icon: Icon(Icons.people, size: 18), label: "Driver"), BottomNavigationBarItem(icon: Icon(Icons.calculate, size: 18), label: "အချုပ်")],
+      ),
+    );
+  }
+}
+              if (_v == "(၅.၂) ဆည်မြောင်း ကြိုတင်ယူငွေစာရင်း") ...[
+                const Text("💰 ဆည်မြောင်း ကြိုတင်ယူငွေစာရင်း", style: TextStyle(fontSize: 12, color: Colors.amber, fontWeight: FontWeight.bold)),
+                const SizedBox(height: 6),
+                Table(border: TableBorder.all(color: Colors.white30), children: [
+                  TableRow(decoration: const BoxDecoration(color: Color(0xFF1E1E2C)), children: [_cell("နေ့စွဲ", isHeader: true), _cell("ကြိုတင်ငွေ", isHeader: true), _cell("မှတ်ချက်", isHeader: true)]),
+                  ..._adv.map((l) => TableRow(children: [_cell(l["date"].toString()), _cell(l["amount"].toString(), col: Colors.greenAccent), _cell(l["note"].toString())]))
+                ])
+              ],
+              if (_v == "(၅.၃) Driver ၂ ဦး စရိတ်ရှင်းတမ်း") ...[
+                const Text("👥 Driver ၂ ဦး ခေါက်ရေနှင့် မောင်းကြေးရှင်းတမ်း", style: TextStyle(fontSize: 12, color: Colors.amber, fontWeight: FontWeight.bold)),
+                const SizedBox(height: 6),
+                Table(border: TableBorder.all(color: Colors.white30), children: [
+                  TableRow(decoration: const BoxDecoration(color: Color(0xFF1E1E2C)), children: [_cell("နေ့စွဲ", isHeader: true), _cell("ဒရိုင်ဘာ ၁", isHeader: true), _cell("ဒရိုင်ဘာ ၂", isHeader: true), _cell("မောင်းကြေး", isHeader: true)]),
+                  ..._drv.map((l) => TableRow(children: [_cell(l["date"].toString()), _cell(l["d1"].toString()), _cell(l["d2"].toString()), _cell(l["wage"].toString(), col: Colors.greenAccent)]))
+                ])
+              ],
+              if (_v == "(၅.၄) အသားတင် အမြတ်/အရှုံးချုပ်") ...[
+                const Text("📊 (Net P&L) အသားတင် အမြတ်/အရှုံးချုပ်", style: TextStyle(fontSize: 12, color: Colors.amber, fontWeight: FontWeight.bold)),
+                const SizedBox(height: 8),
+                Container(padding: const EdgeInsets.all(14), decoration: BoxDecoration(color: const Color(0xFF1E1E2C), borderRadius: BorderRadius.circular(8), border: Border.all(color: Colors.white24)), child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [const Text("ယနေ့ အသားတင် အခြေအနေ:", style: TextStyle(fontSize: 12)), Text("$profit ကျပ်", style: TextStyle(color: profit >= 0 ? Colors.greenAccent : Colors.redAccent, fontWeight: FontWeight.bold, fontSize: 14))]))
+              ]
+            ],
+          ),
+        ),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: const Color(0xFF1E1E2C), selectedItemColor: Colors.amber, unselectedItemColor: Colors.white60,
+        currentIndex: _v == "(၅.၂) ဆည်မြောင်း ကြိုတင်ယူငွေစာရင်း" ? 1 : _v == "(၅.၃) Driver ၂ ဦး စရိတ်ရှင်းတမ်း" ? 2 : _v == "(၅.၄) အသားတင် အမြတ်/အရှုံးချုပ်" ? 3 : 0,
+        type: BottomNavigationBarType.fixed, selectedFontSize: 10, unselectedFontSize: 10,
+        onTap: (i) { setState(() { if (i == 0) _v = "(၅.၁) နေ့စဉ် ခေါက်ရေနှင့် ဝင်ငွေဇယား"; if (i == 1) _v = "(၅.၂) ဆည်မြောင်း ကြိုတင်ယူငွေစာရင်း"; if (i == 2) _v = "(၅.၃) Driver ၂ ဦး စရိတ်ရှင်းတမ်း"; if (i == 3) _v = "(၅.၄) အသားတင် အမြတ်/အရှုံးချုပ်"; }); },
+        items: const [BottomNavigationBarItem(icon: Icon(Icons.table_chart, size: 18), label: "ဝင်ငွေ"), BottomNavigationBarItem(icon: Icon(Icons.monetization_on, size: 18), label: "ကြိုတင်ယူ"), BottomNavigationBarItem(icon: Icon(Icons.people, size: 18), label: "Driver"), BottomNavigationBarItem(icon: Icon(Icons.calculate, size: 18), label: "အချုပ်")],
+      ),
+    );
+  }
+}
