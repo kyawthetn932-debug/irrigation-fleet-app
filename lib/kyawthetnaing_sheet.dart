@@ -27,17 +27,14 @@ class _KyawThetNaingSheetState extends State<KyawThetNaingSheet> {
   final TextEditingController _mornCtrl = TextEditingController(text: "04");
   final TextEditingController _noonCtrl = TextEditingController(text: "04");
   final TextEditingController _nightCtrl = TextEditingController(text: "02");
-
   final TextEditingController _shareAdvanceCtrl = TextEditingController(text: "200000");
   final TextEditingController _privateAdvanceCtrl = TextEditingController(text: "100000");
-
   final TextEditingController _d1NameCtrl = TextEditingController(text: "မောင်မောင်");
   final TextEditingController _d1TripsCtrl = TextEditingController(text: "6");
-  final TextEditingController _d1AdvanceCtrl = TextEditingController(text: "20000"); // ဒရိုင်ဘာ ကြိုတင်ငွေ
+  final TextEditingController _d1AdvanceCtrl = TextEditingController(text: "20000");
   final TextEditingController _d2NameCtrl = TextEditingController(text: "အောင်အောင်");
   final TextEditingController _d2TripsCtrl = TextEditingController(text: "4");
-  final TextEditingController _d2AdvanceCtrl = TextEditingController(text: "15000"); // ဒရိုင်ဘာ ကြိုတင်ငွေ
-
+  final TextEditingController _d2AdvanceCtrl = TextEditingController(text: "15000");
   final TextEditingController _fuelCtrl = TextEditingController(text: "150000");
   final TextEditingController _foodCtrl = TextEditingController(text: "20000");
   final TextEditingController _repairCtrl = TextEditingController(text: "0");
@@ -46,12 +43,10 @@ class _KyawThetNaingSheetState extends State<KyawThetNaingSheet> {
   void dispose() {
     _dateCtrl.dispose(); _rateCtrl.dispose(); _mornCtrl.dispose(); _noonCtrl.dispose(); _nightCtrl.dispose();
     _shareAdvanceCtrl.dispose(); _privateAdvanceCtrl.dispose(); _fuelCtrl.dispose(); _foodCtrl.dispose(); _repairCtrl.dispose();
-    _d1NameCtrl.dispose(); _d1TripsCtrl.dispose(); _d1AdvanceCtrl.dispose();
-    _d2NameCtrl.dispose(); _d2TripsCtrl.dispose(); _d2AdvanceCtrl.dispose();
+    _d1NameCtrl.dispose(); _d1TripsCtrl.dispose(); _d1AdvanceCtrl.dispose(); _d2NameCtrl.dispose(); _d2TripsCtrl.dispose(); _d2AdvanceCtrl.dispose();
     super.dispose();
   }
 
-  // 🧮 စာရင်းတစ်ခုနှင့်တစ်ခု ချိတ်ဆက်တွက်ချက်ပေးမည့် Dynamic Formula Engine
   Map<String, int> _calculateMetrics() {
     int morn = int.tryParse(_mornCtrl.text) ?? 0;
     int noon = int.tryParse(_noonCtrl.text) ?? 0;
@@ -63,10 +58,9 @@ class _KyawThetNaingSheetState extends State<KyawThetNaingSheet> {
     
     int totalTrips = morn + noon + night;
     int totalRevenue = totalTrips * rate;
-
-    // Driver တွက်ချက်မှု Option ၃ မျိုး Logic အစစ်
     double driverFactor = double.tryParse(_driverOptionValue) ?? 0;
     int driverFeeTotal = 0;
+
     if (_selectedDriverOption == "option1") {
       driverFeeTotal = (totalRevenue * (driverFactor / 100)).round();
     } else if (_selectedDriverOption == "option2") {
@@ -77,7 +71,6 @@ class _KyawThetNaingSheetState extends State<KyawThetNaingSheet> {
     }
 
     return {
-      "totalTrips": totalTrips,
       "totalRevenue": totalRevenue,
       "driverFeeTotal": driverFeeTotal,
       "netProfit": totalRevenue - (fuel + food + repair + driverFeeTotal)
@@ -87,9 +80,7 @@ class _KyawThetNaingSheetState extends State<KyawThetNaingSheet> {
   void _safeSaveDataTrigger() async {
     if (_isSavingProcess) return;
     setState(() => _isSavingProcess = true);
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('လုပ်ငန်းခွင်ဒေတာအား တစ်ကြိမ်တည်း ကွက်တိသိမ်းဆည်းပြီးပါပြီ။'))
-    );
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('လုပ်ငန်းခွင်ဒေတာအား တစ်ကြိမ်တည်း ကွက်တိသိမ်းဆည်းပြီးပါပြီ။')));
     await Future.delayed(const Duration(seconds: 1));
     if (mounted) setState(() => _isSavingProcess = false);
   }
@@ -118,7 +109,7 @@ class _KyawThetNaingSheetState extends State<KyawThetNaingSheet> {
       child: Column(
         children: [
           Container(
-            color: const Color(0xFF1E3A8A), // တောက်ပသော အပြာရောင် ခေါင်းစဉ်နောက်ခံ
+            color: const Color(0xFF1E3A8A),
             padding: const EdgeInsets.all(8),
             child: Row(children: headers.map((h) => Expanded(child: Text(h, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w900, fontSize: 11), textAlign: TextAlign.center))).toList()),
           ),
@@ -135,14 +126,13 @@ class _KyawThetNaingSheetState extends State<KyawThetNaingSheet> {
   @override
   Widget build(BuildContext context) {
     Color cardColor = !widget.isLightMode ? const Color(0xFF1E293D) : Colors.white;
-    var metrics = _calculateMetrics(); // Auto တွက်ချက်မှုရလဒ်များကို ဗဟိုမှယူခြင်း
+    var metrics = _calculateMetrics();
 
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.all(4.0),
         child: Column(
           children: [
-            // 📄 နေ့စဉ် ခေါက်ရေနှင့် ဝင်ငွေဇယား ကဏ္ဍ
             if (widget.activeSubMenu.contains("ခေါက်ရေနှင့် ဝင်ငွေဇယား"))
               Card(
                 color: cardColor,
@@ -167,13 +157,12 @@ class _KyawThetNaingSheetState extends State<KyawThetNaingSheet> {
                         onPressed: _isSavingProcess ? null : _safeSaveDataTrigger,
                         child: Text(_isSavingProcess ? "သိမ်းနေပါသည်..." : "နေ့စဉ်မှတ်တမ်းထဲသို့ သိမ်းဆည်းမည်", style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 12)),
                       ),
-                      _buildPlainSheetTable(["ရက်စွဲ", "မနက်", "နေ့လည်", "ည", "ကားခ", "ရငွေ"], [_dateCtrl.text, _mornCtrl.text, _noonCtrl.text, _nightCtrl.text, "${_rateCtrl.text}", "${metrics['totalRevenue']}"]),
+                      _buildPlainSheetTable(["ရက်စွဲ", "မနက်", "နေ့လည်", "ည", "ကားခ", "ရငွေ"], [_dateCtrl.text, _mornCtrl.text, _noonCtrl.text, _nightCtrl.text, _rateCtrl.text, "${metrics['totalRevenue']}"]),
                     ],
                   ),
                 ),
               ),
 
-            // 💰 ဆည်မြောင်း ကြိုတင်ယူငွေစာရင်း ကဏ္ဍ
             if (widget.activeSubMenu.contains("ကြိုတင်ယူငွေစာရင်း"))
               Card(
                 color: cardColor,
@@ -195,7 +184,6 @@ class _KyawThetNaingSheetState extends State<KyawThetNaingSheet> {
                 ),
               ),
 
-            // 👥 Driver ၂ ဦး ခေါက်ရေနှင့် စရိတ်ရှင်းတမ်း ကဏ္ဍ
             if (widget.activeSubMenu.contains("Driver ၂ ဦး"))
               Card(
                 color: cardColor,
@@ -209,3 +197,11 @@ class _KyawThetNaingSheetState extends State<KyawThetNaingSheet> {
                           const SizedBox(width: 4),
                           Expanded(child: _buildInputField(_d1TripsCtrl, "ခေါက်ရေ")),
                           const SizedBox(width: 4),
+                          Expanded(child: _buildInputField(_d1AdvanceCtrl, "ကြိုတင်ယူငွေ")),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Expanded(child: _buildInputField(_d2NameCtrl, "Driver၂ အမည်")),
+                          const SizedBox(width: 4),
+                          Expanded(child: _buildInputField(_d2TripsCtrl, "ခေါက်ရေ")),
