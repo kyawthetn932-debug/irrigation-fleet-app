@@ -9,8 +9,6 @@ class kyawthetnaingsheet extends StatefulWidget {
   State<kyawthetnaingsheet> createState() => _sheetstate();
 }
 
-class _kyawthetnaingsheetstate extends State<kyawthetnaingsheet> {} // main.dart အဟောင်းတွက် အထိုင်
-
 class _sheetstate extends State<kyawthetnaingsheet> {
   String _v = "(၅.၁) ဝင်ငွေ"; int _opt = 1; DateTime _dt = DateTime.now();
   final _m = TextEditingController(text: "0"); final _a = TextEditingController(text: "0"); final _e = TextEditingController(text: "0");
@@ -58,7 +56,7 @@ class _sheetstate extends State<kyawthetnaingsheet> {
               const SizedBox(height: 6),
               Row(children: [Expanded(child: _in("မနက်", _m)), const SizedBox(width: 4), Expanded(child: _in("နေ့လည်", _a)), const SizedBox(width: 4), Expanded(child: _in("ည", _e))]),
               _in("တစ်စီးချင်းကားခ", _r), _in("ဆီပေပါ ဈေးနှုန်း", _f), _in("ပြုပြင်စရိတ်", _rp),
-              DropdownButton<int>(value: _opt, isExpanded: true, dropdownColor: const Color(0xFF1E1E2C), style: const TextStyle(color: Colors.white), items: const [DropdownMenuItem(value: 1, child: Text("Option 1: (ကားခ - ဆီဖိုး) ၏ %")), DropdownMenuItem(value: 2, child: Text("Option 2: စိတ်ကြိုက် %")), DropdownMenuItem(value: 3, child: Text("Option 3: တစ်ခေါက်ချင်း အပြတ်ပေး"))], onChanged: (v) => setState(() { _opt = v!; })),
+              DropdownButton<int>(value: _opt, isExpanded: true, dropdownColor: const Color(0xFF1E1E2C), style: const TextStyle(color: Colors.white), items: const [DropdownMenuItem(value: 1, child: Text("Option 1: (ကားခ - ဆီဖိုး) ၏ %")), DropdownMenuItem(value: 2, child: Text("Option 2: สိတ်ကြိုက် %")), DropdownMenuItem(value: 3, child: Text("Option 3: တစ်ခေါက်ချင်း အပြတ်ပေး"))], onChanged: (v) => setState(() { _opt = v!; })),
               const SizedBox(height: 4),
               if (_opt == 1 || _opt == 2) _in("မောင်းကြေး ရာခိုင်နှုန်း (%)", _p),
               if (_opt == 3) _in("တစ်ခေါက်ချင်း အပြတ်ကြေး", _w),
@@ -68,7 +66,7 @@ class _sheetstate extends State<kyawthetnaingsheet> {
               Table(border: TableBorder.all(color: Colors.white30), children: [TableRow(decoration: const BoxDecoration(color: Color(0xFF1E1E2C)), children: [_cell("နေ့စွဲ", isH: true), _cell("ကြိုတင်ငွေ", isH: true), _cell("မှတ်ချက်", isH: true)]), ..._adv.map((l) => TableRow(children: [_cell(l["date"].toString()), _cell(l["amount"].toString(), c: Colors.greenAccent), _cell(l["note"].toString())]))])
             ],
             if (_v == "(၅.၃) Driver") ...[
-              Table(border: TableBorder.all(color: Colors.white30), children: [TableRow(decoration: const BoxDecoration(color: Color(0xFF1E1E2C)), children: [_cell("နေ့စွဲ", isH: true), _cell("ဒရိုင်ဘာ ၁", isH: true), _cell("ဒရိုင်ဘာ ၂", isH: true), _cell("မောင်းကြေး", isH: true)]), ..._drv.map((l) => TableRow(children: [_cell(l["date"].toString()), _cell(l["d1"].toString()), _cell(l["d2"].toString()), _cell(l["wage"].toString(), c: Colors.greenAccent)]))])
+              Table(border: TableBorder.all(color: Colors.white30), children: [TableRow(decoration: const BoxDecoration(color: Color(0xFF1E1E2C)), children: [_cell("နေ့စွဲ", isH: true), _cell("ဒရိုင်ဘာ ၁", isH: true), _cell("ဒရိုင်ဘာ 2", isH: true), _cell("မောင်းကြေး", isH: true)]), ..._drv.map((l) => TableRow(children: [_cell(l["date"].toString()), _cell(l["d1"].toString()), _cell(l["d2"].toString()), _cell(l["wage"].toString(), c: Colors.greenAccent)]))])
             ],
             if (_v == "(၅.၄) အချုပ်") ...[
               Container(padding: const EdgeInsets.all(12), decoration: BoxDecoration(color: const Color(0xFF1E1E2C), borderRadius: BorderRadius.circular(8)), child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [const Text("ယနေ့ အသားတင် အခြေအနေ:"), Text("$profit ကျပ်", style: TextStyle(color: profit >= 0 ? Colors.greenAccent : Colors.redAccent, fontWeight: FontWeight.bold))]))
