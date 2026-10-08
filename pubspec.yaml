@@ -1,4 +1,21 @@
+name: irrigation_fleet_app
+description: "A new Flutter project."
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.0 <4.0.0' # 💾 စနစ်က တောင်းဆိုနေသည့် SDK အောက်ခြေသတ်မှတ်ချက်ကို အပြည့်ထည့်ထားပါသည်
+
 dependencies:
   flutter:
     sdk: flutter
-  shared_preferences: ^2.2.3  # 💾 ဤစာကြောင်းလေးကို ထည့်သွင်းပေးပါ
+  cupertino_icons: ^1.0.6
+  shared_preferences: ^2.2.3 # 💾 ဖုန်းပိတ်လည်း ဒေတာမပျက်စေမည့် Plugin
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0
+
+flutter:
+  uses-material-design: true
