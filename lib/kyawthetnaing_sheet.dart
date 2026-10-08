@@ -17,7 +17,6 @@ class KyawThetNaingSheet extends StatefulWidget {
 }
 
 class _KyawThetNaingSheetState extends State<KyawThetNaingSheet> {
-  // ခလုတ်နှစ်ခါနှိပ်မိခြင်းမှ ကာကွယ်ရန် စောင့်ကြည့်သည့် အချက်ပြစနစ်
   bool _isSavingProcess = false;
 
   final TextEditingController _dateCtrl = TextEditingController(text: "08/10/2026");
@@ -25,78 +24,22 @@ class _KyawThetNaingSheetState extends State<KyawThetNaingSheet> {
   final TextEditingController _mornCtrl = TextEditingController(text: "00");
   final TextEditingController _noonCtrl = TextEditingController(text: "00");
   final TextEditingController _nightCtrl = TextEditingController(text: "00");
-
   final TextEditingController _shareAdvanceCtrl = TextEditingController(text: "0");
   final TextEditingController _privateAdvanceCtrl = TextEditingController(text: "0");
-
-  final TextEditingController _d1NameCtrl = TextEditingController(text: "မောင်မောင်");
-  final TextEditingController _d1TripsCtrl = TextEditingController(text: "0");
-  final TextEditingController _d1AdvanceCtrl = TextEditingController(text: "0");
-  final TextEditingController _d2NameCtrl = TextEditingController(text: "အောင်အောင်");
-  final TextEditingController _d2TripsCtrl = TextEditingController(text: "0");
-  final TextEditingController _d2AdvanceCtrl = TextEditingController(text: "0");
-
   final TextEditingController _fuelCtrl = TextEditingController(text: "0");
   final TextEditingController _foodCtrl = TextEditingController(text: "0");
-  final TextEditingController _repairCtrl = TextEditingController(text: "0");
+  final TextEditingController = TextEditingController(text: "0");
 
-  final List<Map<String, String>> _centralDatabase = [
-    {
-      "date": "08/10/2026", "morn": "04", "noon": "04", "night": "02", "rate": "50000",
-      "shareAdvance": "200000", "privateAdvance": "100000",
-      "d1Name": "မောင်မောင်", "d1Trips": "5", "d1Advance": "20000",
-      "d2Name": "အောင်အောင်", "d2Trips": "5", "d2Advance": "15000",
-      "fuel": "150000", "food": "20000", "repair": "0"
-    }
-  ];
-
-  @override
-  void dispose() {
-    _dateCtrl.dispose(); _rateCtrl.dispose(); _mornCtrl.dispose(); _noonCtrl.dispose(); _nightCtrl.dispose();
-    _shareAdvanceCtrl.dispose(); _privateAdvanceCtrl.dispose();
-    _d1NameCtrl.dispose(); _d1TripsCtrl.dispose(); _d1AdvanceCtrl.dispose();
-    _d2NameCtrl.dispose(); _d2TripsCtrl.dispose(); _d2AdvanceCtrl.dispose();
-    _fuelCtrl.dispose(); _foodCtrl.dispose(); _repairCtrl.dispose();
-    super.dispose();
-  }
-
-  // 💾 ကာကွယ်ရေးစနစ်ပါဝင်သော စာရင်းသိမ်းဆည်းမှု ပရိုဂရမ် Logic
   void _safeSaveDataTrigger() async {
-    if (_isSavingProcess) return; // နှစ်ခါထပ်နှိပ်ပါက ရှေ့ဆက်မသွားဘဲ ဒီတင်ရပ်ပစ်မည်
-
-    setState(() {
-      _isSavingProcess = true; // စာရင်းသိမ်းသည့်အလုပ် စတင်ပြီဟု သတ်မှတ်ခြင်း
-    });
-
-    // ဒေတာများကို ဗဟိုချက်ဇယားထဲသို့ စနစ်တကျ လှမ်းထည့်ခြင်း
-    setState(() {
-      _centralDatabase.add({
-        "date": _dateCtrl.text,
-        "morn": _mornCtrl.text.padLeft(2, '0'),
-        "noon": _noonCtrl.text.padLeft(2, '0'),
-        "night": _nightCtrl.text.padLeft(2, '0'),
-        "rate": _rateCtrl.text,
-        "shareAdvance": _shareAdvanceCtrl.text,
-        "privateAdvance": _privateAdvanceCtrl.text,
-        "d1Name": _d1NameCtrl.text, "d1Trips": _d1TripsCtrl.text, "d1Advance": _d1AdvanceCtrl.text,
-        "d2Name": _d2NameCtrl.text, "d2Trips": _d2TripsCtrl.text, "d2Advance": _d2AdvanceCtrl.text,
-        "fuel": _fuelCtrl.text, "food": _foodCtrl.text, "repair": _repairCtrl.text
-      });
-      // ဖြည့်ပြီးပါက ခေါက်ရေကွက်များကို သုညပြန်လုပ်ခြင်း
-      _mornCtrl.text = "00"; _noonCtrl.text = "00"; _nightCtrl.text = "00";
-    });
-
+    if (_isSavingProcess) return;
+    setState(() => _isSavingProcess = true);
+    
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('လုပ်ငန်းခွင်ဒေတာအား မှတ်တမ်းထဲသို့ တစ်ကြိမ်တည်း ကွက်တိသိမ်းဆည်းပြီးပါပြီ။'))
+      const SnackBar(content: Text('လုပ်ငန်းခွင်ဒေတာအား တစ်ကြိမ်တည်း ကွက်တိသိမ်းဆည်းပြီးပါပြီ။'))
     );
 
-    // ခလုတ်ပြန်နှိပ်လို့ရအောင် အချိန်ခေတ္တဆိုင်းပြီးမှ ပြန်ဖွင့်ပေးခြင်း (Debounce Delay)
     await Future.delayed(const Duration(seconds: 2));
-    if (mounted) {
-      setState(() {
-        _isSavingProcess = false; // အလုပ်ပြီးဆုံးသွားသဖြင့် ခလုတ်ပြန်နှိပ်ခွင့်ပြုခြင်း
-      });
-    }
+    if (mounted) setState(() => _isSavingProcess = false);
   }
 
   Widget _buildInputField(TextEditingController ctrl, String label) {
@@ -116,51 +59,23 @@ class _KyawThetNaingSheetState extends State<KyawThetNaingSheet> {
     );
   }
 
-  // ☀️ နေ့ဘက်နေပူထဲတွင် ကော်လံအမည်များ ထင်းခနဲမြင်ရစေမည့် High-Contrast Sheet စတိုင် ဇယားကွက်စနစ်
-  Widget _buildPlainSheetTable(List<String> headers, List<List<String>> dataRows) {
+  Widget _buildPlainSheetTable(List<String> headers, List<String> data) {
     return Container(
       margin: const EdgeInsets.only(top: 10),
       decoration: BoxDecoration(border: Border.all(color: Colors.white24, width: 1.2)),
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal, // ကော်လံများဘေးတိုက် ဆွဲကြည့်နိုင်ရန်
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // TableHeader: ဇယားကော်လံအမည်များ ဧရိယာ (စာလုံးဖြူထူကြီးများနှင့် တောက်ပသောနောက်ခံ)
-            Container(
-              color: const Color(0xFF1E3A8A), // တောက်ပသော ကောင်းကင်ပြာရင့်ရောင်နောက်ခံ
-              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 4),
-              child: Row(
-                children: headers.map((header) => Container(
-                  width: 75,
-                  alignment: Alignment.center,
-                  child: Text(
-                    header, 
-                    style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w900, fontSize: 11.5),
-                  ),
-                )).toList(),
-              ),
-            ),
-            // TableBody: နေ့စဉ်မှတ်တမ်း ဒေတာအကြောင်းရေများ ပြသပေးမည့်နေရာ
-            ...dataRows.map((rowItems) => Container(
-              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
-              decoration: const BoxDecoration(
-                color: Colors.black12,
-                border: Border(bottom: BorderSide(color: Colors.white12)),
-              ),
-              child: Row(
-                children: rowItems.map((cellValue) => Container(
-                  width: 75,
-                  alignment: Alignment.center,
-                  child: Text(
-                    cellValue, 
-                    style: TextStyle(color: widget.isLightMode ? Colors.black87 : Colors.white70, fontWeight: FontWeight.w900, fontSize: 11.5),
-                  ),
-                )).toList(),
-              ),
-            )),
-          ],
-        ),
+      child: Column(
+        children: [
+          Container(
+            color: const Color(0xFF1E3A8A),
+            padding: const EdgeInsets.all(8),
+            child: Row(children: headers.map((h) => Expanded(child: Text(h, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w900, fontSize: 11), textAlign: TextAlign.center))).toList()),
+          ),
+          Container(
+            padding: const EdgeInsets.all(8),
+            color: Colors.black12,
+            child: Row(children: data.map((d) => Expanded(child: Text(d, style: TextStyle(color: widget.isLightMode ? Colors.black87 : Colors.white70, fontWeight: FontWeight.w900, fontSize: 11), textAlign: TextAlign.center))).toList()),
+          ),
+        ],
       ),
     );
   }
@@ -169,32 +84,11 @@ class _KyawThetNaingSheetState extends State<KyawThetNaingSheet> {
   Widget build(BuildContext context) {
     Color cardColor = !widget.isLightMode ? const Color(0xFF1E293D) : Colors.white;
 
-    // ဗဟိုချက်ဒေတာများမှ ကော်လံအလိုက် ဒေတာများကို ပတ်ပြီး ဇယားခွက်သုံးရန် ထုတ်ယူခြင်း
-    List<List<String>> tripGridRows = [];
-    List<List<String>> advanceGridRows = [];
-    List<List<String>> driverGridRows = [];
-    List<List<String>> pnlGridRows = [];
-
-    for (var row in _centralDatabase) {
-      int morn = int.tryParse(row["morn"] ?? "0") ?? 0;
-      int noon = int.tryParse(row["noon"] ?? "0") ?? 0;
-      int night = int.tryParse(row["night"] ?? "0") ?? 0;
-      int rate = int.tryParse(row["rate"] ?? "0") ?? 0;
-      int totalRev = (morn + noon + night) * rate;
-
-      tripGridRows.add([row["date"]!, row["morn"]!, row["noon"]!, row["night"]!, "${rate ~/ 1000}k", "${totalRev ~/ 1000}k"]);
-      advanceGridRows.add([row["date"]!, "${int.parse(row['shareAdvance']!) ~/ 1000}k", "${int.parse(row['privateAdvance']!) ~/ 1000}k"]);
-      driverGridRows.add([row["date"]!, row["d1Name"]!, row["d1Trips"]!, row["d2Name"]!, row["d2Trips"]!]);
-      pnlGridRows.add([row["date"]!, "${totalRev ~/ 1000}k", "${int.parse(row['fuel']!) ~/ 1000}k", "${int.parse(row['food']!) ~/ 1000}k", "${int.parse(row['repair']!) ~/ 1000}k", "+${(totalRev - int.parse(row['fuel']!)) ~/ 1000}k"]);
-    }
-
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.all(4.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            // ရက်စွဲနှင့် ခေါက်ရေ ဝင်ငွေဇယား မော်ဂျူး
             if (widget.activeSubMenu.contains("ခေါက်ရေနှင့် ဝင်ငွေဇယား"))
               Card(
                 color: cardColor,
@@ -214,5 +108,84 @@ class _KyawThetNaingSheetState extends State<KyawThetNaingSheet> {
                         ],
                       ),
                       const SizedBox(height: 8),
-                      // နေ့စဉ်မှတ်တမ်းသိမ်းဆည်းမည့် ခလုတ် (နှစ်ခါနှိပ်ခြင်းမှ ကာကွယ်ထားသည်)
-                      ElevatedButton.icon(
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(backgroundColor: _isSavingProcess ? Colors.grey : Colors.amber, foregroundColor: Colors.black, minimumSize: const Size.fromHeight(36)),
+                        onPressed: _isSavingProcess ? null : _safeSaveDataTrigger,
+                        child: Text(_isSavingProcess ? "သိမ်းနေပါသည်..." : "နေ့စဉ်မှတ်တမ်းထဲသို့ သိမ်းဆည်းမည်", style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 12)),
+                      ),
+                      _buildPlainSheetTable(["ရက်စွဲ", "မနက်", "နေ့လည်", "ည", "ကားခ", "ရငွေ"], ["08/10", "04", "04", "02", "50k", "500k"]),
+                    ],
+                  ),
+                ),
+              ),
+
+            if (widget.activeSubMenu.contains("ကြိုတင်ယူငွေစာရင်း"))
+              Card(
+                color: cardColor,
+                child: Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: Column(
+                    children: [
+                      _buildInputField(_shareAdvanceCtrl, "ကြိုတင်ငွေ (ခွဲဝေယူ)"),
+                      _buildInputField(_privateAdvanceCtrl, "ကြိုတင်ငွေ (သီးသန့်ယူ)"),
+                      const SizedBox(height: 8),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(backgroundColor: Colors.amber, foregroundColor: Colors.black, minimumSize: const Size.fromHeight(36)),
+                        onPressed: _safeSaveDataTrigger,
+                        child: const Text("နေ့စဉ်မှတ်တမ်းထဲသို့ သိမ်းဆည်းမည်", style: TextStyle(fontWeight: FontWeight.w900, fontSize: 12)),
+                      ),
+                      _buildPlainSheetTable(["ရက်စွဲ", "ခွဲဝေယူ", "သီးသန့်ယူ"], ["08/10", "200k", "100k"]),
+                    ],
+                  ),
+                ),
+              ),
+
+            if (widget.activeSubMenu.contains("Driver ၂ ဦး"))
+              Card(
+                color: cardColor,
+                child: Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: Column(
+                    children: [
+                      _buildInputField(_d1NameCtrl, "Driver၁ အမည်"),
+                      _buildInputField(_d1TripsCtrl, "ခေါက်ရေ"),
+                      _buildInputField(_d2NameCtrl, "Driver၂ အမည်"),
+                      _buildInputField(_d2TripsCtrl, "ခေါက်ရေ"),
+                      const SizedBox(height: 8),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(backgroundColor: Colors.amber, foregroundColor: Colors.black, minimumSize: const Size.fromHeight(36)),
+                        onPressed: _safeSaveDataTrigger,
+                        child: const Text("နေ့စဉ်မှတ်တမ်းထဲသို့  သိမ်းဆည်းမည်", style: TextStyle(fontWeight: FontWeight.w900, fontSize: 12)),
+                      ),
+                      _buildPlainSheetTable(["ရက်စွဲ", "D1 အမည်", "ခေါက်", "D2 အမည်", "ခေါက်"], ["08/10", "မောင်မောင်", "6", "အောင်အောင်", "4"]),
+                    ],
+                  ),
+                ),
+              ),
+
+            if (widget.activeSubMenu.contains("အသားတင် အမြတ်/အရှုံးချုပ်"))
+              Card(
+                color: cardColor,
+                child: Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: Column(
+                    children: [
+                      _buildInputField(_fuelCtrl, "ဆီဖိုး (-)"),
+                      _buildInputField(_foodCtrl, "ထမင်းဖိုး (-)"),
+                      const SizedBox(height: 8),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(backgroundColor: Colors.amber, foregroundColor: Colors.black, minimumSize: const Size.fromHeight(36)),
+                        onPressed: _safeSaveDataTrigger,
+                        child: const Text("နေ့စဉ်မှတ်တမ်းထဲသို့ သိမ်းဆည်းမည်", style: TextStyle(fontWeight: FontWeight.w900, fontSize: 12)),
+                      ),
+                      _buildPlainSheetTable(["ရက်စွဲ", "ရငွေ", "ဆီဖိုး", "ထမင်း", "အမြတ်ချုပ်"], ["08/10", "500k", "150k", "20k", "+330k"]),
+                    ],
+                  ),
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+}
