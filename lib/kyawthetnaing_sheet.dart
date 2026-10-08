@@ -1,195 +1,285 @@
 import 'package:flutter/material.dart';
 
+// Class Name အား ဖိုင်အမည်ဖြစ်သည့် kyawthetnaing_sheet နှင့် တိကျစွာ ချိတ်ဆက်ထားပါသည်
 class KyawThetNaingSheet extends StatefulWidget {
-  final bool isLargeScreen;
-  final String activeSubMenu;
-  final bool isLightMode;
-
-  const KyawThetNaingSheet({
-    super.key, 
-    required this.isLargeScreen, 
-    required this.activeSubMenu, 
-    required this.isLightMode
-  });
+  const KyawThetNaingSheet({super.key});
 
   @override
   State<KyawThetNaingSheet> createState() => _KyawThetNaingSheetState();
 }
 
+class _ObjectiveLedgerState extends State<KyawThetNaingSheet> {
+  // ဤနေရာတွင် Class ရဲ့ State အား ယခင်အတိုင်း စနစ်တကျ မောင်းနှင်ပါမည်
+}
+
 class _KyawThetNaingSheetState extends State<KyawThetNaingSheet> {
-  // Input Controllers
-  final TextEditingController _dateCtrl = TextEditingController(text: "07/10/2026");
-  final TextEditingController _rateCtrl = TextEditingController(text: "50000");
-  final TextEditingController _mornCtrl = TextEditingController(text: "00");
-  final TextEditingController _noonCtrl = TextEditingController(text: "00");
-  final TextEditingController _nightCtrl = TextEditingController(text: "00");
+  String _subView = "(၅.၁) နေ့စဉ် ခေါက်ရေနှင့် ဝင်ငွေဇယား";
+  int _option = 1;
+  DateTime _date = DateTime.now();
 
-  final TextEditingController _shareAdvanceCtrl = TextEditingController(text: "0");
-  final TextEditingController _privateAdvanceCtrl = TextEditingController(text: "0");
+  final _m = TextEditingController(text: "0");
+  final _a = TextEditingController(text: "0");
+  final _e = TextEditingController(text: "0");
+  final _r = TextEditingController(text: "50000");
+  final _f = TextEditingController(text: "150000");
+  final _rp = TextEditingController(text: "0");
+  final _w = TextEditingController(text: "5000");
+  final _p = TextEditingController(text: "10");
 
-  final TextEditingController _d1NameCtrl = TextEditingController(text: "မောင်မောင်");
-  final TextEditingController _d1TripsCtrl = TextEditingController(text: "0");
-  final TextEditingController _d1AdvanceCtrl = TextEditingController(text: "0");
-  final TextEditingController _d2NameCtrl = TextEditingController(text: "အောင်အောင်");
-  final TextEditingController _d2TripsCtrl = TextEditingController(text: "0");
-  final TextEditingController _d2AdvanceCtrl = TextEditingController(text: "0");
+  final List<Map<String, dynamic>> _logs = [
+    {"date": "08/10/2026", "trips": "12", "fare": "600000", "profit": "320000"},
+  ];
 
-  final TextEditingController _fuelCtrl = TextEditingController(text: "0");
-  final TextEditingController _foodCtrl = TextEditingController(text: "0");
-  final TextEditingController _repairCtrl = TextEditingController(text: "0");
+  final List<Map<String, dynamic>> _advanceLogs = [
+    {"date": "08/10/2026", "amount": "200000", "note": "ဆည်မြောင်းစိုက်ငွေ"},
+  ];
 
-  @override
-  void dispose() {
-    _dateCtrl.dispose(); _rateCtrl.dispose(); _mornCtrl.dispose(); _noonCtrl.dispose(); _nightCtrl.dispose();
-    _shareAdvanceCtrl.dispose(); _privateAdvanceCtrl.dispose();
-    _d1NameCtrl.dispose(); _d1TripsCtrl.dispose(); _d1AdvanceCtrl.dispose();
-    _d2NameCtrl.dispose(); _d2TripsCtrl.dispose(); _d2AdvanceCtrl.dispose();
-    _fuelCtrl.dispose(); _foodCtrl.dispose(); _repairCtrl.dispose();
-    super.dispose();
-  }
+  final List<Map<String, dynamic>> _driverLogs = [
+    {"date": "08/10/2026", "d1": "ဦးအောင် (၆ ခေါက်)", "d2": "ဦးဘ (၆ ခေါက်)", "wage": "၆၀၀၀၀"},
+  ];
 
-  Widget _buildInputField(TextEditingController ctrl, String label) {
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 4),
-      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
-      decoration: BoxDecoration(
-        color: widget.isLightMode ? Colors.white : const Color(0xFF121824),
-        border: Border.all(color: Colors.amber, width: 1.4),
-        borderRadius: BorderRadius.circular(8)
-      ),
+  Widget _in(String l, TextEditingController c) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8.0),
       child: TextField(
-        controller: ctrl, keyboardType: TextInputType.number,
-        style: TextStyle(color: widget.isLightMode ? Colors.black87 : Colors.white, fontSize: 13.0, fontWeight: FontWeight.w900),
-        decoration: InputDecoration(labelText: label, labelStyle: const TextStyle(color: Colors.white60, fontSize: 10, fontWeight: FontWeight.bold), border: InputBorder.none),
-      ),
-    );
-  }
-
-  Widget _buildRowTable(List<String> items, {bool isHeader = false, Color? bgColor}) {
-    return Container(
-      padding: const EdgeInsets.all(8),
-      color: bgColor ?? (isHeader ? const Color(0xFF243147) : Colors.black12),
-      child: Row(
-        mainAxisAlignment: CrossAxisAlignment.spaceAround,
-        children: items.map((text) => Expanded(
-          child: Text(
-            text, 
-            style: TextStyle(color: isHeader ? Colors.amber : (widget.isLightMode ? Colors.black87 : Colors.white), fontWeight: FontWeight.w900, fontSize: 11.5), 
-            textAlign: TextAlign.center
-          ),
-        )).toList(),
+        controller: c,
+        keyboardType: TextInputType.number,
+        style: const TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.bold),
+        decoration: InputDecoration(
+          labelText: l,
+          labelStyle: const TextStyle(color: Colors.white70, fontSize: 11),
+          border: const OutlineInputBorder(),
+          focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: Colors.amber, width: 1.5)),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+        ),
+        onChanged: (v) => setState(() {}),
       ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    Color cardColor = !widget.isLightMode ? const Color(0xFF1E293D) : Colors.white;
+    int morning = int.tryParse(_m.text) ?? 0;
+    int afternoon = int.tryParse(_a.text) ?? 0;
+    int evening = int.tryParse(_e.text) ?? 0;
+    int trips = morning + afternoon + evening;
+    int rate = int.tryParse(_r.text) ?? 0;
+    int fare = trips * rate;
+    int fuel = int.tryParse(_f.text) ?? 0;
+    int repair = int.tryParse(_rp.text) ?? 0;
 
-    return SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          // 📄 ခေါက်ရေနှင့် ဝင်ငွေဇယား ကဏ္ဍ
-          if (widget.activeSubMenu.contains("ခေါက်ရေနှင့် ဝင်ငွေဇယား"))
-            Card(
-              color: cardColor,
-              child: Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: Column(
-                  children: [
-                    _buildInputField(_dateCtrl, "ရက်စွဲ"),
-                    _buildInputField(_rateCtrl, "ကားခနှုန်း (Auto)"),
-                    Row(
-                      children: [
-                        Expanded(child: _buildInputField(_mornCtrl, "မနက်")),
-                        const SizedBox(width: 4),
-                        Expanded(child: _buildInputField(_noonCtrl, "နေ့လည်")),
-                        const SizedBox(width: 4),
-                        Expanded(child: _buildInputField(_nightCtrl, "ည")),
-                      ],
-                    ),
-                    const SizedBox(height: 10),
-                    _buildRowTable(["ရက်စွဲ", "မနက်", "နေ့လည်", "ည", "ကားခ", "ရငွေ"], isHeader: true),
-                    _buildRowTable(["06/10", "04", "04", "02", "50k", "500,000"]),
-                  ],
-                ),
-              ),
-            ),
+    int wage = 0;
+    if (_option == 1) wage = ((fare - fuel) * ((int.tryParse(_p.text) ?? 10) / 100)).toInt();
+    if (_option == 2) wage = (fare * ((int.tryParse(_p.text) ?? 10) / 100)).toInt();
+    if (_option == 3) wage = trips * (int.tryParse(_w.text) ?? 5000);
+    int profit = fare - fuel - repair - (wage < 0 ? 0 : wage);
 
-          // 💰 ကြိုတင်ယူငွေစာရင်း ကဏ္ဍ
-          if (widget.activeSubMenu.contains("ကြိုတင်ယူငွေစာရင်း"))
-            Card(
-              color: cardColor,
-              child: Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: Column(
-                  children: [
-                    _buildInputField(_shareAdvanceCtrl, "ကြိုတင်ငွေ (ခွဲဝေယူ)"),
-                    _buildInputField(_privateAdvanceCtrl, "ကြိုတင်ငွေ (သီးသန့်ယူ)"),
-                    const SizedBox(height: 10),
-                    _buildRowTable(["ရက်စွဲ", "ခွဲဝေယူငွေ", "သီးသန့်ယူငွေ"], isHeader: true),
-                    _buildRowTable(["06/10", "200,000 ကျပ်", "100,000 ကျပ်"]),
-                  ],
-                ),
-              ),
-            ),
-
-          // 👥 Driver ၂ ဦး ခေါက်ရေနှင့် စရိတ်ရှင်းတမ်း ကဏ္ဍ
-          if (widget.activeSubMenu.contains("Driver ၂ ဦး"))
-            Card(
-              color: cardColor,
-              child: Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: Column(
-                  children: [
-                    Row(
-                      children: [
-                        Expanded(child: _buildInputField(_d1NameCtrl, "Driver၁ အမည်")),
-                        const SizedBox(width: 4),
-                        Expanded(child: _buildInputField(_d1TripsCtrl, "ခေါက်ရေ")),
-                        const SizedBox(width: 4),
-                        Expanded(child: _buildInputField(_d1AdvanceCtrl, "ကြိုတင်")),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Expanded(child: _buildInputField(_d2NameCtrl, "Driver၂ အမည်")),
-                        const SizedBox(width: 4),
-                        Expanded(child: _buildInputField(_d2TripsCtrl, "ခေါက်ရေ")),
-                        const SizedBox(width: 4),
-                        Expanded(child: _buildInputField(_d2AdvanceCtrl, "ကြိုတင်")),
-                      ],
-                    ),
-                    const SizedBox(height: 10),
-                    _buildRowTable(["Driver", "ခေါက်ရေ", "ကြိုတင်ယူငွေ"], isHeader: true),
-                    _buildRowTable(["မောင်မောင်", "6 ခေါက်", "20,000 ကျပ်"]),
-                    _buildRowTable(["အောင်အောင်", "4 ခေါက်", "15,000 ကျပ်"]),
-                  ],
-                ),
-              ),
-            ),
-
-          // 🧮 အသားတင် အမြတ်/အရှုံးချုပ် ကဏ္ဍ
-          if (widget.activeSubMenu.contains("အသားတင် အမြတ်/အရှုံးချုပ်"))
-            Card(
-              color: cardColor,
-              child: Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: Column(
-                  children: [
-                    _buildInputField(_fuelCtrl, "ဆီဖိုး (-)"),
-                    _buildInputField(_foodCtrl, "ထမင်းဖိုး (-)"),
-                    _buildInputField(_repairCtrl, "ပြင်စရိတ် (-)"),
-                    const SizedBox(height: 10),
-                    _buildRowTable(["ရက်စွဲ", "ရငွေ", "ဆီဖိုး", "ထမင်း", "ပြင်စရိတ်", "အမြတ်"], isHeader: true),
-                    _buildRowTable(["06/10", "500k", "150k", "20k", "0", "+330k"], bgColor: Colors.teal.withOpacity(0.8)),
-                  ],
-                ),
-              ),
-            ),
+    return Scaffold(
+      backgroundColor: const Color(0xFF121212),
+      appBar: AppBar(
+        title: Text(_subView, style: const TextStyle(color: Colors.amber, fontWeight: FontWeight.bold, fontSize: 13)),
+        backgroundColor: const Color(0xFF1E1E2C),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: _buildSheetContent(trips, fare, fuel, repair, profit),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: const Color(0xFF1E1E2C),
+        selectedItemColor: Colors.amber,
+        unselectedItemColor: Colors.white60,
+        currentIndex: _getCurrentIndex(),
+        type: BottomNavigationBarType.fixed,
+        selectedFontSize: 10,
+        unselectedFontSize: 10,
+        onTap: (index) {
+          setState(() {
+            if (index == 0) _subView = "(၅.၁) နေ့စဉ် ခေါက်ရေနှင့် ဝင်ငွေဇယား";
+            if (index == 1) _subView = "(၅.၂) ဆည်မြောင်း ကြိုတင်ယူငွေစာရင်း";
+            if (index == 2) _subView = "(၅.၃) Driver ၂ ဦး စရိတ်ရှင်းတမ်း";
+            if (index == 3) _subView = "(၅.၄) အသားတင် အမြတ်/အရှုံးချုပ်";
+          });
+        },
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.table_chart, size: 20), label: "(၅.၁) ဝင်ငွေ"),
+          BottomNavigationBarItem(icon: Icon(Icons.monetization_on, size: 20), label: "(၅.၂) ကြိုတင်ယူ"),
+          BottomNavigationBarItem(icon: Icon(Icons.people, size: 20), label: "(၅.၃) Driver"),
+          BottomNavigationBarItem(icon: Icon(Icons.calculate, size: 20), label: "(၅.၄) အချုပ်"),
         ],
       ),
     );
   }
-}
+
+  int _getCurrentIndex() {
+    if (_subView == "(၅.၂) ဆည်မြောင်း ကြိုတင်ယူငွေစာရင်း") return 1;
+    if (_subView == "(၅.၃) Driver ၂ ဦး စရိတ်ရှင်းတမ်း") return 2;
+    if (_subView == "(၅.၄) အသားတင် အမြတ်/အရှုံးချုပ်") return 3;
+    return 0;
+  }
+  Widget _buildSheetContent(int trips, int fare, int fuel, int repair, int profit) {
+    if (_subView == "(၅.၁) နေ့စဉ် ခေါက်ရေနှင့် ဝင်ငွေဇယား") {
+      return SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Card(
+              color: const Color(0xFF1E1E2C),
+              child: ListTile(
+                leading: const Icon(Icons.calendar_today, color: Colors.amber),
+                title: Text("ရက်စွဲ: ${_date.day}/${_date.month}/${_date.year}", style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                onTap: () async {
+                  DateTime? p = await showDatePicker(context: context, initialDate: _date, firstDate: DateTime(2020), lastDate: DateTime(2030));
+                  if (p != null) setState(() { _date = p; });
+                }
+              )
+            ),
+            const SizedBox(height: 8),
+            Row(
+              children: [
+                Expanded(child: _in("မနက်", _m)),
+                const SizedBox(width: 6),
+                Expanded(child: _in("နေ့လည်", _a)),
+                const SizedBox(width: 6),
+                Expanded(child: _in("ည", _e)),
+              ],
+            ),
+            _in("တစ်စီးချင်းကားခ", _r),
+            _in("ဆီပေပါ ဈေးနှုန်း", _f),
+            _in("ပြုပြင်စရိတ်", _rp),
+            const SizedBox(height: 4),
+            const Text("🧮 မောင်းကြေးစနစ် ရွေးချယ်ရန်", style: TextStyle(fontSize: 12, color: Colors.amber, fontWeight: FontWeight.bold)),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              decoration: BoxDecoration(border: Border.all(color: Colors.white30), borderRadius: BorderRadius.circular(6)),
+              child: DropdownButtonHideUnderline(
+                child: DropdownButton<int>(
+                  value: _option,
+                  isExpanded: true,
+                  dropdownColor: const Color(0xFF1E1E2C),
+                  style: const TextStyle(color: Colors.white, fontSize: 13),
+                  items: const [
+                    DropdownMenuItem(value: 1, child: Text("Option 1: (ကားခ - ဆီဖိုး) ၏ %")),
+                    DropdownMenuItem(value: 2, child: Text("Option 2: စိတ်ကြိုက် %")),
+                    DropdownMenuItem(value: 3, child: Text("Option 3: တစ်ခေါက်ချင်း အပြတ်ပေး")),
+                  ],
+                  onChanged: (v) => setState(() { _option = v!; }),
+                ),
+              ),
+            ),
+            const SizedBox(height: 8),
+            if (_option == 1 || _option == 2) _in("မောင်းကြေး ရာခိုင်နှုန်း (%)", _p),
+            if (_option == 3) _in("တစ်ခေါက်ချင်း အပြတ်ကြေး (ကျပ်)", _w),
+            const SizedBox(height: 10),
+            ElevatedButton(
+              onPressed: () {
+                setState(() {
+                  _logs.insert(0, {"date": "${_date.day}/${_date.month}/${_date.year}", "trips": "$trips", "fare": "$fare", "profit": "$profit"});
+                });
+              },
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.amber, minimumSize: const Size(double.infinity, 40)),
+              child: const Text("နေ့စဉ်မှတ်တမ်းထဲသို့ သိမ်းဆည်းမည်", style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
+            ),
+            const SizedBox(height: 16),
+            const Text("📊 နေ့စဉ်ခေါက်ရေ စာရင်းချုပ် (Sheet စတိုင်လ်)", style: TextStyle(fontSize: 12, color: Colors.amber, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 6),
+            Table(
+              border: TableBorder.all(color: Colors.white24, width: 1),
+              children: [
+                const TableRow(
+                  decoration: BoxDecoration(color: Color(0xFF1E1E2C)),
+                  children: [
+                    Padding(padding: EdgeInsets.all(6), child: Text("နေ့စွဲ", style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Colors.amber))),
+                    Padding(padding: EdgeInsets.all(6), child: Text("ခေါက်ရေ", style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Colors.amber))),
+                    Padding(padding: EdgeInsets.all(6), child: Text("ကားခ", style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Colors.greenAccent))),
+                    Padding(padding: EdgeInsets.all(6), child: Text("อမြတ်/အရှုံး", style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Colors.amber))),
+                  ],
+                ),
+                ..._logs.map((log) => TableRow(
+                  children: [
+                    Padding(padding: const EdgeInsets.all(6), child: Text(log["date"].toString(), style: const TextStyle(fontSize: 11, color: Colors.white))),
+                    Padding(padding: const EdgeInsets.all(6), child: Text(log["trips"].toString(), style: const TextStyle(fontSize: 11, color: Colors.white))),
+                    Padding(padding: const EdgeInsets.all(6), child: Text(log["fare"].toString(), style: const TextStyle(fontSize: 11, color: Colors.white))),
+                    Padding(padding: const EdgeInsets.all(6), child: Text(log["profit"].toString(), style: TextStyle(fontSize: 11, color: int.parse(log["profit"].toString()) >= 0 ? Colors.greenAccent : Colors.redAccent, fontWeight: FontWeight.bold))),
+                  ],
+                )),
+              ],
+            )
+          ],
+        ),
+      );
+    }
+
+    if (_subView == "(၅.၂) ဆည်မြောင်း ကြိုတင်ယူငွေစာရင်း") {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text("💰 ဆည်မြောင်း ကြိုတင်ယူငွေစာရင်း (Sheet စတိုင်လ်)", style: TextStyle(fontSize: 12, color: Colors.amber, fontWeight: FontWeight.bold)),
+          const SizedBox(height: 8),
+          Table(
+            border: TableBorder.all(color: Colors.white24, width: 1),
+            children: [
+              const TableRow(
+                decoration: BoxDecoration(color: Color(0xFF1E1E2C)),
+                children: [
+                  Padding(padding: EdgeInsets.all(6), child: Text("နေ့စွဲ", style: TextStyle(fontSize: 11, color: Colors.amber, fontWeight: FontWeight.bold))),
+                  Padding(padding: EdgeInsets.all(6), child: Text("ကြိုတင်ငွေပမာဏ", style: TextStyle(fontSize: 11, color: Colors.amber, fontWeight: FontWeight.bold))),
+                  Padding(padding: EdgeInsets.all(6), child: Text("မှတ်ချက်", style: TextStyle(fontSize: 11, color: Colors.amber, fontWeight: FontWeight.bold))),
+                ],
+              ),
+              ..._advanceLogs.map((log) => TableRow(
+                children: [
+                  Padding(padding: const EdgeInsets.all(6), child: Text(log["date"].toString(), style: const TextStyle(fontSize: 11))),
+                  Padding(padding: const EdgeInsets.all(6), child: Text(log["amount"].toString(), style: const TextStyle(fontSize: 11, color: Colors.greenAccent))),
+                  Padding(padding: const EdgeInsets.all(6), child: Text(log["note"].toString(), style: const TextStyle(fontSize: 11))),
+                ],
+              )),
+            ],
+          )
+        ],
+      );
+    }
+
+    if (_subView == "(၅.၃) Driver ၂ ဦး စရိတ်ရှင်းတမ်း") {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text("👥 Driver ၂ ဦး ခေါက်ရေနှင့် မောင်းကြေးရှင်းတမ်း (Sheet စတိုင်လ်)", style: TextStyle(fontSize: 12, color: Colors.amber, fontWeight: FontWeight.bold)),
+          const SizedBox(height: 8),
+          Table(
+            border: TableBorder.all(color: Colors.white24, width: 1),
+            children: [
+              const TableRow(
+                decoration: BoxDecoration(color: Color(0xFF1E1E2C)),
+                children: [
+                  Padding(padding: EdgeInsets.all(6), child: Text("နေ့စွဲ", style: TextStyle(fontSize: 11, color: Colors.amber, fontWeight: FontWeight.bold))),
+                  Padding(padding: EdgeInsets.all(6), child: Text("ဒရိုင်ဘာ ၁", style: TextStyle(fontSize: 11, color: Colors.amber, fontWeight: FontWeight.bold))),
+                  Padding(padding: EdgeInsets.all(6), child: Text("ဒရိုင်ဘာ ၂", style: TextStyle(fontSize: 11, color: Colors.amber, fontWeight: FontWeight.bold))),
+                  Padding(padding: EdgeInsets.all(6), child: Text("စုစုပေါင်းမောင်းကြေး", style: TextStyle(fontSize: 11, color: Colors.amber, fontWeight: FontWeight.bold))),
+                ],
+              ),
+              ..._driverLogs.map((log) => TableRow(
+                children: [
+                  Padding(padding: const EdgeInsets.all(6), child: Text(log["date"].toString(), style: const TextStyle(fontSize: 11))),
+                  Padding(padding: const EdgeInsets.all(6), child: Text(log["d1"].toString(), style: const TextStyle(fontSize: 11))),
+                  Padding(padding: const EdgeInsets.all(6), child: Text(log["d2"].toString(), style: const TextStyle(fontSize: 11))),
+                  Padding(padding: const EdgeInsets.all(6), child: Text(log["wage"].toString(), style: const TextStyle(fontSize: 11, color: Colors.greenAccent))),
+                ],
+              )),
+            ],
+          )
+        ],
+      );
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text("📊 (Net P&L) အသားတင် အမြတ်/အရှုံးချုပ် စာရင်း", style: TextStyle(fontSize: 12, color: Colors.amber, fontWeight: FontWeight.bold)),
+        const SizedBox(height: 10),
+        Container(
+          padding: const EdgeInsets.all(15),
+          decoration: BoxDecoration(color: const Color(0xFF1E1E2C), borderRadius: BorderRadius.circular(10)),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text("ယနေ့စုစုပေါင်း အသားတင် အခြေအနေ:", style: TextStyle(fontSize: 12)),
