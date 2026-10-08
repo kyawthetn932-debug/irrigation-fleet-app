@@ -1,48 +1,118 @@
 import 'package:flutter/material.dart';
-import 'kyawthetnaing_sheet.dart'; // 💾 ဖိုင်အသစ်အား စာလုံးအသေးဖြင့် စနစ်တကျ Import ခေါ်ထားပါသည်
+import 'menu_sidebar.dart';
+import 'kyawthetnaing_sheet.dart';
 
-void main() => runApp(const MaterialApp(home: MainFleetNavigationScreen(), debugShowCheckedModeBanner: false));
+void main() {
+  runApp(const IrrigationFleetApp());
+}
+
+class IrrigationFleetApp extends StatefulWidget {
+  const IrrigationFleetApp({super.key});
+
+  @override
+  State<IrrigationFleetApp> createState() => _IrrigationFleetAppState();
+}
+
+class _IrrigationFleetAppState extends State<IrrigationFleetApp> {
+  bool _isLightMode = false;
+
+  void _toggleTheme() {
+    setState(() {
+      _isLightMode = !_isLightMode;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Irrigation Fleet & POS System',
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        brightness: _isLightMode ? Brightness.light : Brightness.dark,
+        scaffoldBackgroundColor: _isLightMode ? const Color(0xFFF4F6F9) : const Color(0xFF121824),
+      ),
+      home: MainFleetNavigationScreen(isLightMode: _isLightMode, onThemeToggle: _toggleTheme),
+    );
+  }
+}
 
 class MainFleetNavigationScreen extends StatefulWidget {
-  const MainFleetNavigationScreen({super.key});
+  final bool isLightMode;
+  final VoidCallback onThemeToggle;
+  const MainFleetNavigationScreen({super.key, required this.isLightMode, required this.onThemeToggle});
+
   @override
   State<MainFleetNavigationScreen> createState() => _MainFleetNavigationScreenState();
 }
 
 class _MainFleetNavigationScreenState extends State<MainFleetNavigationScreen> {
-  String _currentView = "Dashboard";
+  String _activeMenuTitle = "📄 နေ့စဉ် ခေါက်ရေနှင့် ဝင်ငွေဇယား";
+
+  void _onMenuSelected(String selectedTitle) {
+    setState(() {
+      _activeMenuTitle = selectedTitle;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+    bool isLargeScreen = screenWidth > 800;
+
+    Color appBarBg = widget.isLightMode ? Colors.white : const Color(0xFF1A2333);
+    Color textColor = widget.isLightMode ? const Color(0xFF121824) : Colors.amber;
+
     return Scaffold(
-      backgroundColor: const Color(0xFF121212),
       appBar: AppBar(
-        title: Text(_currentView, style: const TextStyle(color: Colors.amber, fontWeight: FontWeight.bold, fontSize: 14)),
-        backgroundColor: const Color(0xFF1E1E2C),
-      ),
-      drawer: Drawer(
-        child: Container(
-          color: const Color(0xFF1E1E2C),
-          child: ListView(
-            children: [
-              const DrawerHeader(child: Center(child: Text("ဆည်မြောင်းဆောက်လုပ်ရေး\nကားစာရင်းချုပ်", style: TextStyle(color: Colors.amber, fontSize: 14), textAlign: TextAlign.center))),
-              ListTile(
-                leading: const Icon(Icons.dashboard, color: Colors.amber),
-                title: const Text("📁 ၁။ ပင်မ ဒက်ရှ်ဘုတ်"),
-                onTap: () { setState(() { _currentView = "Dashboard"; }); Navigator.pop(context); },
-              ),
-              ListTile(
-                leading: const Icon(Icons.stars, color: Colors.amber),
-                title: const Text("👑 ၂။ ကိုကျော်သက်နိုင် စာရင်း"),
-                onTap: () { setState(() { _currentView = "ကိုကျော်သက်နိုင် စာရင်း"; }); Navigator.pop(context); },
-              ),
-            ],
+        title: Text(_activeMenuTitle, style: TextStyle(color: textColor, fontWeight: FontWeight.bold, fontSize: isLargeScreen ? 18.0 : 14.0)),
+        backgroundColor: appBarBg,
+        elevation: 1,
+        actions: [
+          IconButton(
+            icon: Icon(widget.isLightMode ? Icons.dark_mode : Icons.light_mode, color: Colors.amber),
+            onPressed: widget.onThemeToggle,
           ),
-        ),
+        ],
+        leading: !isLargeScreen
+            ? Builder(
+                builder: (context) => IconButton(
+                  icon: Icon(Icons.menu, color: widget.isLightMode ? Colors.black87 : Colors.amber),
+                  onPressed: () => Scaffold.of(context).openDrawer(),
+                ),
+              )
+            : const Icon(Icons.local_shipping, color: Colors.amber),
       ),
-      body: _currentView == "ကိုကျော်သက်နိုင် စာရင်း"
-          ? const kyawthetnaingsheet(islargescreen: false) // 💾 Class နာမည်အသစ်အား စာလုံးအသေးဖြင့် တိကျစွာ ချက်ဆက်ထားပါသည်
-          : const Center(child: Text("Welcome to Dashboard\n[Google Sheets Active]", textAlign: TextAlign.center, style: TextStyle(color: Colors.white70))),
+      drawer: !isLargeScreen
+          ? Drawer(child: MenuSidebar(activeMenu: _activeMenuTitle, onMenuTap: _onMenuSelected, isDrawer: true, isLightMode: widget.isLightMode))
+          : null,
+      body: Row(
+        children: [
+          if (isLargeScreen)
+            SizedBox(
+              width: screenWidth * 0.20,
+              child: Container(
+                decoration: BoxDecoration(color: appBarBg, border: const Border(right: BorderSide(color: Colors.white12))),
+                child: MenuSidebar(activeMenu: _activeMenuTitle, onMenuTap: _onMenuSelected, isDrawer: false, isLightMode: widget.isLightMode),
+              ),
+            ),
+          Expanded(
+            child: Container(
+              padding: const EdgeInsets.all(6.0),
+              child: Card(
+                color: widget.isLightMode ? Colors.white : const Color(0xFF1A2333),
+                child: Padding(
+                  padding: const EdgeInsets.all(6.0),
+                  child: KyawThetNaingSheet(
+                    isLargeScreen: isLargeScreen,
+                    activeSubMenu: _activeMenuTitle,
+                    isLightMode: widget.isLightMode,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
