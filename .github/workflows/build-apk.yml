@@ -37,3 +37,4 @@ jobs:
         with:
           name: irrigation-fleet-app-debug
           path: build/app/outputs/flutter-apk/app-debug.apk
+
