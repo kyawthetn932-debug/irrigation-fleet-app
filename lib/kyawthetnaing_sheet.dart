@@ -22,7 +22,7 @@ class _KyawThetNaingSheetState extends State<KyawThetNaingSheet> {
   String _driverOptionValue = "10"; 
 
   // Input Controllers
-  final TextEditingController _dateCtrl = TextEditingController(text: "08/10/2026");
+  final TextEditingController _dateCtrl = TextEditingController(text: "09/10/2026");
   final TextEditingController _rateCtrl = TextEditingController(text: "50000");
   final TextEditingController _mornCtrl = TextEditingController(text: "04");
   final TextEditingController _noonCtrl = TextEditingController(text: "04");
@@ -35,10 +35,10 @@ class _KyawThetNaingSheetState extends State<KyawThetNaingSheet> {
 
   final TextEditingController _d1NameCtrl = TextEditingController(text: "မောင်မောင်");
   final TextEditingController _d1TripsCtrl = TextEditingController(text: "6");
-  final TextEditingController _d1AdvanceCtrl = TextEditingController(text: "20000"); // Driver 1 ကြိုတင်ငွေ
+  final TextEditingController _d1AdvanceCtrl = TextEditingController(text: "20000");
   final TextEditingController _d2NameCtrl = TextEditingController(text: "အောင်အောင်");
   final TextEditingController _d2TripsCtrl = TextEditingController(text: "4");
-  final TextEditingController _d2AdvanceCtrl = TextEditingController(text: "15000"); // Driver 2 ကြိုတင်ငွေ
+  final TextEditingController _d2AdvanceCtrl = TextEditingController(text: "15000");
 
   @override
   void dispose() {
@@ -61,7 +61,6 @@ class _KyawThetNaingSheetState extends State<KyawThetNaingSheet> {
     int totalTrips = morn + noon + night;
     int totalRevenue = totalTrips * rate;
 
-    // မောင်းကြေးတွက်ချက်မှုစနစ်
     int d1Trips = int.tryParse(_d1TripsCtrl.text) ?? 0;
     int d2Trips = int.tryParse(_d2TripsCtrl.text) ?? 0;
     int d1Fee = d1Trips * 5000;
@@ -210,3 +209,5 @@ class _KyawThetNaingSheetState extends State<KyawThetNaingSheet> {
             if (widget.activeSubMenu.contains("Driver ၂ ဦး"))
               Card(
                 color: cardColor,
+                child: Padding(
+                  padding: const EdgeInsets.all(12.0),
