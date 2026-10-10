@@ -20,6 +20,8 @@ jobs:
       with:
         flutter-version: 3.24.3
         channel: stable
+    - name: Repair Gradle
+      run: flutter create --platforms=android .
     - name: Get packages
       run: flutter pub get
     - name: Build
