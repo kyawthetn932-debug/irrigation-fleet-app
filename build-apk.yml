@@ -8,27 +8,28 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout
+    - name: Checkout Repository
       uses: actions/checkout@v4
-    - name: Java
+    - name: Set up Java
       uses: actions/setup-java@v4
       with:
         distribution: zulu
         java-version: 17
-    - name: Flutter
+    - name: Set up Flutter
       uses: subosito/flutter-action@v2
       with:
         flutter-version: 3.24.3
         channel: stable
-    - name: Repair Gradle Environment
-      run: flutter create --platforms=android .
+    - name: Reconstruct Android Directory
+      run: |
+        rm -rf android
+        flutter create --platforms=android .
     - name: Get packages
       run: flutter pub get
-    - name: Build
+    - name: Build Debug APK
       run: flutter build apk --debug
-    - name: Upload
+    - name: Upload APK Artifact
       uses: actions/upload-artifact@v4
       with:
         name: irrigation-fleet-app-debug
         path: build/app/outputs/flutter-apk/app-debug.apk
-
