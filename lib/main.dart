@@ -104,7 +104,7 @@ class _MainFleetNavigationScreenState extends State<MainFleetNavigationScreen> {
                   padding: const EdgeInsets.all(6.0),
                   child: KyawThetNaingSheet(
                     
-                    activeSubMenu: _activeMenuTitle,
+                    
                     isLightMode: widget.isLightMode,
                   ),
                 ),
