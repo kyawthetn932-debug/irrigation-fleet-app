@@ -85,28 +85,24 @@ class _MainFleetNavigationScreenState extends State<MainFleetNavigationScreen> {
       drawer: !isLargeScreen
           ? Drawer(child: MenuSidebar(activeMenu: _activeMenuTitle, onMenuTap: _onMenuSelected, isDrawer: true, isLightMode: widget.isLightMode))
           : null,
-      body: Row(
+            body: Row(
         children: [
           if (isLargeScreen)
             SizedBox(
               width: screenWidth * 0.20,
               child: Container(
-                decoration: BoxDecoration(color: appBarBg, border: const Border(right: BorderSide(color: Colors.white12))),
-                child: MenuSidebar(activeMenu: _activeMenuTitle, onMenuTap: _onMenuSelected, isDrawer: false, isLightMode: widget.isLightMode),
+                decoration: BoxDecoration(color: appBgColor, border: const Border(right: BorderSide(color: Colors.white12))),
+                child: MenuSidebar(activeMenuTitle: _activeMenuTitle, onMenuSelected: _onMenuSelected, isDrawer: false, isLightMode: _isLightMode),
               ),
             ),
           Expanded(
             child: Container(
               padding: const EdgeInsets.all(6.0),
               child: Card(
-                color: widget.isLightMode ? Colors.white : const Color(0xFF1A2333),
+                color: _isLightMode ? Colors.white : const Color(0xFF1A2333),
                 child: Padding(
                   padding: const EdgeInsets.all(6.0),
-                  child: KyawThetNaingSheet(
-                    
-                    
-                    isLightMode: widget.isLightMode,
-                  ),
+                  child: const KyawThetNaingSheet(),
                 ),
               ),
             ),
